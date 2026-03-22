@@ -1,0 +1,137 @@
+<template>
+    <div class="composer">
+
+        <!-- Alerts -->
+        <template if:true={errorMessage}>
+            <div class="alert alertError" role="alert">
+                <lightning-icon icon-name="utility:error" size="x-small" class="alertIcon"></lightning-icon>
+                {errorMessage}
+            </div>
+        </template>
+
+        <template if:true={successMessage}>
+            <div class="alert alertSuccess" role="status">
+                <lightning-icon icon-name="utility:success" size="x-small" class="alertIcon"></lightning-icon>
+                {successMessage}
+            </div>
+        </template>
+
+        <!-- Composer Header: recipient info + template picker -->
+        <div class="composerHeader">
+            <div class="recipientInfo">
+                <div class="recipientName">Email Composer</div>
+                <div class="recipientChips">
+                    <template if:true={hasEmail}>
+                        <div class="chip chipEmail">
+                            <lightning-icon icon-name="utility:email" size="x-small" class="chipIcon"></lightning-icon>
+                            <span>{contactEmail}</span>
+                        </div>
+                    </template>
+                    <template if:true={hasPhone}>
+                        <div class="chip chipPhone">
+                            <lightning-icon icon-name="utility:phone_portrait" size="x-small" class="chipIcon"></lightning-icon>
+                            <span>{contactPhone}</span>
+                        </div>
+                    </template>
+                    <template if:false={hasEmail}>
+                        <div class="chip chipWarning">
+                            <lightning-icon icon-name="utility:warning" size="x-small" class="chipIcon"></lightning-icon>
+                            <span>No email on record — cannot send</span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <div class="templatePickerWrap">
+                <lightning-combobox
+                    name="templateSelect"
+                    label="Template"
+                    value={selectedTemplateId}
+                    placeholder="Choose a template..."
+                    options={templateOptions}
+                    onchange={handleTemplateChange}
+                    variant="label-inline"
+                ></lightning-combobox>
+            </div>
+        </div>
+
+        <!-- Compose Window -->
+        <div class="composeWindow">
+
+            <!-- From row -->
+            <div class="composeRow fromRow">
+                <span class="rowLabel">From</span>
+                <lightning-combobox
+                    name="sendFrom"
+                    label="Send From"
+                    variant="label-hidden"
+                    value={selectedSendFromId}
+                    options={senderOptions}
+                    onchange={handleSendFromChange}
+                    class="fromCombobox"
+                ></lightning-combobox>
+            </div>
+            <div class="rowDivider"></div>
+
+            <!-- To row -->
+            <div class="composeRow toRow">
+                <span class="rowLabel">To</span>
+                <div class="toValue">
+                    <template if:true={hasEmail}>
+                        {contactName}&nbsp;&lt;{contactEmail}&gt;
+                    </template>
+                    <template if:false={hasEmail}>
+                        <span class="noEmailText">No email address on this contact</span>
+                    </template>
+                </div>
+            </div>
+
+            <div class="rowDivider"></div>
+
+            <!-- Subject row -->
+            <div class="composeRow subjectRow">
+                <span class="rowLabel">Subject</span>
+                <input
+                    class="subjectInput"
+                    type="text"
+                    placeholder="Enter subject..."
+                    value={editableSubject}
+                    oninput={handleSubjectInput}
+                    aria-label="Email subject"
+                />
+            </div>
+
+            <div class="rowDivider"></div>
+
+            <!-- Body -->
+            <div class="bodyRow">
+                <template if:true={isTemplateLoading}>
+                    <div class="loadingOverlay">
+                        <lightning-spinner alternative-text="Loading template" size="small"></lightning-spinner>
+                        <span class="loadingLabel">Loading template...</span>
+                    </div>
+                </template>
+                <lightning-input-rich-text
+                    class={rteClass}
+                    value={editableBody}
+                    placeholder="Compose your email..."
+                    valid-formats={richTextFormats}
+                    onchange={handleBodyChange}
+                ></lightning-input-rich-text>
+            </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="actionBar">
+            <lightning-button
+                variant="brand"
+                label={sendLabel}
+                onclick={handleSend}
+                disabled={sendDisabled}
+                icon-name="utility:send"
+                icon-position="left"
+            ></lightning-button>
+        </div>
+
+    </div>
+</template>
