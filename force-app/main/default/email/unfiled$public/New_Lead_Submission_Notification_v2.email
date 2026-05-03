@@ -1,0 +1,141 @@
+<messaging:emailTemplate subject="Lead Submitted: {!relatedTo.Name}"
+    recipientType="User"
+    relatedToType="Lead">
+
+<messaging:htmlEmailBody >
+<html>
+<body style="margin:0;padding:0;background-color:#f4f4f0;font-family:Arial,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f4f0;padding:32px 16px;">
+<tr><td align="center">
+<table width="560" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e0e0dc;">
+
+  <tr>
+    <td style="background-color:#032d42;padding:32px 32px 24px;">
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="padding-bottom:20px;">
+            <img src="https://k2insurance.file.force.com/servlet/servlet.ImageServer?id=015PW00000c47kz&amp;oid=00DfI000004b6Kf" alt="K2 Insurance" width="80" style="display:block;" />
+          </td>
+        </tr>
+        <tr>
+          <td style="border-top:1px solid rgba(95,207,195,0.25);padding-top:20px;">
+            <p style="margin:0 0 4px;color:rgba(255,255,255,0.45);font-size:11px;text-transform:uppercase;letter-spacing:2px;">New Submission</p>
+            <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:400;line-height:1.4;">Lead Intake Form<br/><span style="color:#5fcfc3;">Received</span></h1>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <tr>
+    <td style="padding:28px 32px;">
+
+      <p style="margin:0 0 10px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#888;border-bottom:1px solid #e8e8e4;padding-bottom:8px;">Personal Information</p>
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;font-size:14px;">
+        <tr>
+          <td style="color:#999;padding:5px 0;width:38%;">First Name</td>
+          <td style="color:#1a1a1a;font-weight:500;padding:5px 0;">{!relatedTo.FirstName}</td>
+        </tr>
+        <tr>
+          <td style="color:#999;padding:5px 0;">Middle Name</td>
+          <td style="color:#1a1a1a;font-weight:500;padding:5px 0;">{!relatedTo.MiddleName}</td>
+        </tr>
+        <tr>
+          <td style="color:#999;padding:5px 0;">Last Name</td>
+          <td style="color:#1a1a1a;font-weight:500;padding:5px 0;">{!relatedTo.LastName}</td>
+        </tr>
+        <tr>
+          <td style="color:#999;padding:5px 0;">Date of Birth</td>
+          <td style="color:#1a1a1a;font-weight:500;padding:5px 0;">
+            <apex:outputText value="{0, date, MMMM d, yyyy}">
+              <apex:param value="{!relatedTo.Birthdate__c}" />
+            </apex:outputText>
+          </td>
+        </tr>
+        <tr>
+          <td style="color:#999;padding:5px 0;">Gender Identity</td>
+          <td style="color:#1a1a1a;font-weight:500;padding:5px 0;">{!relatedTo.Gender_Identity__c}</td>
+        </tr>
+      </table>
+
+      <p style="margin:0 0 10px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#888;border-bottom:1px solid #e8e8e4;padding-bottom:8px;">Address</p>
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;font-size:14px;">
+        <tr>
+          <td style="color:#999;padding:5px 0;width:38%;">Street</td>
+          <td style="color:#1a1a1a;font-weight:500;padding:5px 0;">{!relatedTo.Street}</td>
+        </tr>
+        <tr>
+          <td style="color:#999;padding:5px 0;">City / State</td>
+          <td style="color:#1a1a1a;font-weight:500;padding:5px 0;">{!relatedTo.City}, {!relatedTo.State} {!relatedTo.PostalCode}</td>
+        </tr>
+      </table>
+
+      <p style="margin:0 0 10px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#888;border-bottom:1px solid #e8e8e4;padding-bottom:8px;">Contact</p>
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;font-size:14px;">
+        <tr>
+          <td style="color:#999;padding:5px 0;width:38%;">Email</td>
+          <td style="color:#1a1a1a;font-weight:500;padding:5px 0;">{!relatedTo.Email}</td>
+        </tr>
+        <tr>
+          <td style="color:#999;padding:5px 0;">Phone</td>
+          <td style="color:#1a1a1a;font-weight:500;padding:5px 0;">{!relatedTo.Phone}</td>
+        </tr>
+      </table>
+
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+        <tr>
+          <td style="background-color:#032d42;border-radius:8px;padding:16px 20px;">
+            <p style="margin:0 0 6px;font-size:10px;text-transform:uppercase;letter-spacing:2px;color:#5fcfc3;">Requested Insurance</p>
+            <p style="margin:0;color:#ffffff;font-size:15px;font-weight:500;">{!relatedTo.Interested_Insurance__c}</p>
+          </td>
+        </tr>
+      </table>
+
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="center">
+            <a href="https://k2insurance.my.salesforce.com/lightning/r/Lead/{!relatedTo.Id}/view"
+               style="display:inline-block;background-color:#5fcfc3;color:#032d42;text-decoration:none;font-size:14px;font-weight:700;padding:13px 32px;border-radius:6px;letter-spacing:0.5px;">
+              Open Lead in Salesforce &#x2192;
+            </a>
+          </td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td style="background-color:#f8f8f6;border-top:1px solid #e8e8e4;padding:16px 32px;text-align:center;">
+      <p style="margin:0;font-size:12px;color:#aaa;">Automated notification &middot; K2 Insurance &middot; Salesforce</p>
+    </td>
+  </tr>
+
+</table>
+</td></tr>
+</table>
+
+</body>
+</html>
+</messaging:htmlEmailBody>
+
+<messaging:plainTextEmailBody >
+New Lead Intake Form Submitted
+
+Name: {!relatedTo.FirstName} {!relatedTo.MiddleName} {!relatedTo.LastName}
+Date of Birth: {!TEXT(MONTH(relatedTo.Birthdate__c))}/{!TEXT(DAY(relatedTo.Birthdate__c))}/{!TEXT(YEAR(relatedTo.Birthdate__c))}
+Gender: {!relatedTo.Gender_Identity__c}
+
+Street: {!relatedTo.Street}
+City / State: {!relatedTo.City}, {!relatedTo.State} {!relatedTo.PostalCode}
+
+Email: {!relatedTo.Email}
+Phone: {!relatedTo.Phone}
+
+Requested Insurance: {!relatedTo.Interested_Insurance__c}
+
+View Lead: https://k2insurance.my.salesforce.com/lightning/r/Lead/{!relatedTo.Id}/view
+</messaging:plainTextEmailBody>
+
+</messaging:emailTemplate>
