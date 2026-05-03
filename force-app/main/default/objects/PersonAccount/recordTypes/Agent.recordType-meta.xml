@@ -11,10 +11,6 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Customer Event</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Employee Referral</fullName>
             <default>false</default>
         </values>
@@ -23,31 +19,11 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Google AdWords</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Other</fullName>
             <default>false</default>
         </values>
         <values>
-            <fullName>Partner</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Purchased List</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Trade Show</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Webinar</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Website</fullName>
+            <fullName>Phone</fullName>
             <default>false</default>
         </values>
     </picklistValues>
@@ -66,6 +42,10 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Father in Law</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Grandfather</fullName>
             <default>false</default>
         </values>
@@ -75,6 +55,10 @@
         </values>
         <values>
             <fullName>Mother</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mother in Law</fullName>
             <default>false</default>
         </values>
         <values>
@@ -241,6 +225,25 @@
         </values>
         <values>
             <fullName>Reseller</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Visa_Status__pc</picklist>
+        <values>
+            <fullName>Green Card</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>N%2FA</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>US Citizen</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Visa</fullName>
             <default>false</default>
         </values>
     </picklistValues>

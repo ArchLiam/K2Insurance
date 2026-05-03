@@ -7,134 +7,151 @@
     <required>false</required>
     <type>Picklist</type>
     <valueSet>
-        <controllingField>Type__c</controllingField>
         <restricted>true</restricted>
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>전자싸인</fullName>
+                <fullName>Billing/pay</fullName>
                 <default>false</default>
-                <label>전자싸인</label>
+                <label>Billing/pay</label>
             </value>
             <value>
-                <fullName>Upload to 상담 전 안내 이메일 발송</fullName>
+                <fullName>Cancellation</fullName>
                 <default>false</default>
-                <label>Upload to 상담 전 안내 이메일 발송</label>
+                <label>Cancellation</label>
             </value>
             <value>
-                <fullName>리뉴얼 안내 자동 이메일</fullName>
+                <fullName>Commission</fullName>
                 <default>false</default>
-                <label>리뉴얼 안내 자동 이메일</label>
+                <label>Commission</label>
             </value>
             <value>
-                <fullName>Other</fullName>
+                <fullName>Consulting</fullName>
                 <default>false</default>
-                <label>Other</label>
+                <label>Consulting</label>
+            </value>
+            <value>
+                <fullName>Emailed</fullName>
+                <default>false</default>
+                <label>Emailed</label>
+            </value>
+            <value>
+                <fullName>Enrolling</fullName>
+                <default>false</default>
+                <label>Enrolling</label>
+            </value>
+            <value>
+                <fullName>Follow-up</fullName>
+                <default>false</default>
+                <label>Follow-up</label>
+            </value>
+            <value>
+                <fullName>Meeting</fullName>
+                <default>false</default>
+                <label>Meeting</label>
+            </value>
+            <value>
+                <fullName>NON ACA</fullName>
+                <default>false</default>
+                <label>NON ACA</label>
+            </value>
+            <value>
+                <fullName>Plan Select</fullName>
+                <default>false</default>
+                <label>Plan Select</label>
+            </value>
+            <value>
+                <fullName>Quote</fullName>
+                <default>false</default>
+                <label>Quote</label>
+            </value>
+            <value>
+                <fullName>Renewal</fullName>
+                <default>false</default>
+                <label>Renewal</label>
+            </value>
+            <value>
+                <fullName>Service</fullName>
+                <default>false</default>
+                <label>Service</label>
+            </value>
+            <value>
+                <fullName>Training</fullName>
+                <default>false</default>
+                <label>Training</label>
+            </value>
+            <value>
+                <fullName>COI/EOI Requested</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>COI/EOI Requested</label>
             </value>
             <value>
                 <fullName>Docs Requested</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>Docs Requested</label>
             </value>
             <value>
                 <fullName>Follow-up Needed</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>Follow-up Needed</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Other</label>
+            </value>
+            <value>
+                <fullName>Payement Requested</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Payement Requested</label>
             </value>
             <value>
                 <fullName>Plan Cancellation</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>Plan Cancellation</label>
             </value>
             <value>
                 <fullName>Renewal Review</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>Renewal Review</label>
-            </value>
-            <value>
-                <fullName>Payement Requested</fullName>
-                <default>false</default>
-                <label>Payement Requested</label>
-            </value>
-            <value>
-                <fullName>COI/EOI Requested</fullName>
-                <default>false</default>
-                <label>COI/EOI Requested</label>
             </value>
             <value>
                 <fullName>Renewal prep</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>Renewal prep</label>
             </value>
             <value>
                 <fullName>Status Follow -up</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>Status Follow -up</label>
             </value>
+            <value>
+                <fullName>Upload to 상담 전 안내 이메일 발송</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Upload to 상담 전 안내 이메일 발송</label>
+            </value>
+            <value>
+                <fullName>리뉴얼 안내 자동 이메일</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>리뉴얼 안내 자동 이메일</label>
+            </value>
+            <value>
+                <fullName>전자싸인</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>전자싸인</label>
+            </value>
         </valueSetDefinition>
-        <valueSettings>
-            <controllingFieldValue>ACA New</controllingFieldValue>
-            <controllingFieldValue>Personal Lines</controllingFieldValue>
-            <controllingFieldValue>Commerccail lines</controllingFieldValue>
-            <controllingFieldValue>Medicare new</controllingFieldValue>
-            <controllingFieldValue>T65 - 4 Months Out</controllingFieldValue>
-            <valueName>전자싸인</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>ACA New</controllingFieldValue>
-            <controllingFieldValue>Personal Lines</controllingFieldValue>
-            <controllingFieldValue>Commerccail lines</controllingFieldValue>
-            <controllingFieldValue>Medicare new</controllingFieldValue>
-            <controllingFieldValue>T65 - 4 Months Out</controllingFieldValue>
-            <valueName>Upload to 상담 전 안내 이메일 발송</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>ACA New</controllingFieldValue>
-            <controllingFieldValue>Personal Lines</controllingFieldValue>
-            <controllingFieldValue>Commerccail lines</controllingFieldValue>
-            <controllingFieldValue>Medicare new</controllingFieldValue>
-            <controllingFieldValue>T65 - 4 Months Out</controllingFieldValue>
-            <valueName>리뉴얼 안내 자동 이메일</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>ACA New</controllingFieldValue>
-            <controllingFieldValue>Personal Lines</controllingFieldValue>
-            <controllingFieldValue>Commerccail lines</controllingFieldValue>
-            <controllingFieldValue>Medicare new</controllingFieldValue>
-            <controllingFieldValue>T65 - 4 Months Out</controllingFieldValue>
-            <valueName>Other</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>ACA New</controllingFieldValue>
-            <valueName>Docs Requested</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>ACA New</controllingFieldValue>
-            <valueName>Follow-up Needed</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>ACA New</controllingFieldValue>
-            <valueName>Plan Cancellation</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Personal Lines</controllingFieldValue>
-            <valueName>Renewal Review</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Commerccail lines</controllingFieldValue>
-            <valueName>Payement Requested</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Commerccail lines</controllingFieldValue>
-            <valueName>COI/EOI Requested</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Commerccail lines</controllingFieldValue>
-            <valueName>Renewal prep</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Medicare new</controllingFieldValue>
-            <valueName>Status Follow -up</valueName>
-        </valueSettings>
     </valueSet>
 </CustomField>

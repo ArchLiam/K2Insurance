@@ -16,28 +16,78 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>ACA New</fullName>
+                <fullName>ACA Health</fullName>
                 <default>false</default>
-                <label>ACA New</label>
+                <label>ACA Health</label>
             </value>
             <value>
-                <fullName>Personal Lines</fullName>
+                <fullName>Admin</fullName>
                 <default>false</default>
-                <label>Personal Lines</label>
+                <label>Admin</label>
+            </value>
+            <value>
+                <fullName>Auto/Home</fullName>
+                <default>false</default>
+                <label>Auto/Home</label>
+            </value>
+            <value>
+                <fullName>Commercial</fullName>
+                <default>false</default>
+                <label>Commercial</label>
+            </value>
+            <value>
+                <fullName>Group Health</fullName>
+                <default>false</default>
+                <label>Group Health</label>
+            </value>
+            <value>
+                <fullName>Life</fullName>
+                <default>false</default>
+                <label>Life</label>
+            </value>
+            <value>
+                <fullName>Medicare</fullName>
+                <default>false</default>
+                <label>Medicare</label>
+            </value>
+            <value>
+                <fullName>Others</fullName>
+                <default>false</default>
+                <label>Others</label>
+            </value>
+            <value>
+                <fullName>Training</fullName>
+                <default>false</default>
+                <label>Training</label>
+            </value>
+            <value>
+                <fullName>ACA New</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>ACA New</label>
             </value>
             <value>
                 <fullName>Commerccail lines</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>Commerccail lines</label>
             </value>
             <value>
                 <fullName>Medicare new</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>Medicare new</label>
+            </value>
+            <value>
+                <fullName>Personal Lines</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Personal Lines</label>
             </value>
             <value>
                 <fullName>T65 - 4 Months Out</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>T65 - 4 Months Out</label>
             </value>
         </valueSetDefinition>
