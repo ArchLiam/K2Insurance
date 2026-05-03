@@ -255,12 +255,9 @@ public without sharing class LeadFormController {
         if (formData.interestedInsurance != null && !formData.interestedInsurance.isEmpty()) {
             newLead.Interested_Insurance__c = String.join(formData.interestedInsurance, ';');
 
-            // Medicare selection should use the Medicare lead record type
-            if (containsValueIgnoreCase(formData.interestedInsurance, 'Medicare')) {
-                Id medicareRecordTypeId = getLeadRecordTypeId('Medicare');
-                if (medicareRecordTypeId != null) {
-                    newLead.RecordTypeId = medicareRecordTypeId;
-                }
+            Id resolvedRecordTypeId = resolveLeadRecordTypeId(formData.interestedInsurance);
+            if (resolvedRecordTypeId != null) {
+                newLead.RecordTypeId = resolvedRecordTypeId;
             }
         }
         
@@ -298,6 +295,21 @@ public without sharing class LeadFormController {
             }
         }
         return false;
+    }
+
+    /**
+     * @description Resolves Lead record type from selected interested insurance values.
+     * Priority: Medicare (regulated) > Health (also covers Group Health) > Others.
+     */
+    private static Id resolveLeadRecordTypeId(List<String> interestedInsurance) {
+        if (containsValueIgnoreCase(interestedInsurance, 'Medicare')) {
+            return getLeadRecordTypeId('Medicare');
+        }
+        if (containsValueIgnoreCase(interestedInsurance, 'Health')
+            || containsValueIgnoreCase(interestedInsurance, 'Group Health')) {
+            return getLeadRecordTypeId('Health');
+        }
+        return getLeadRecordTypeId('Others');
     }
 
     /**

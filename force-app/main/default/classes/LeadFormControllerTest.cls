@@ -352,6 +352,132 @@ private class LeadFormControllerTest {
     }
 
     /**
+     * @description Builds a baseline form data map with required fields populated.
+     */
+    private static Map<String, Object> buildBaseFormData(String emailLocalPart) {
+        return new Map<String, Object>{
+            'firstName' => 'Rec',
+            'lastName' => 'TypeTest',
+            'genderIdentity' => 'Male',
+            'street' => '123 Main St',
+            'city' => 'Los Angeles',
+            'email' => emailLocalPart + '@example.com',
+            'phone' => '5551234567'
+        };
+    }
+
+    /**
+     * @description Resolves a Lead RecordType Id by developer name for assertions.
+     */
+    private static Id getRecordTypeId(String developerName) {
+        Schema.RecordTypeInfo info = Lead.SObjectType.getDescribe()
+            .getRecordTypeInfosByDeveloperName().get(developerName);
+        return info == null ? null : info.getRecordTypeId();
+    }
+
+    /**
+     * @description Medicare selection should map to Medicare record type.
+     */
+    @isTest
+    static void testRecordTypeMedicareOnly() {
+        Map<String, Object> formData = buildBaseFormData('rt.medicare');
+        formData.put('interestedInsurance', new List<String>{'Medicare'});
+
+        Test.startTest();
+        Id leadId = LeadFormController.createLead(JSON.serialize(formData));
+        Test.stopTest();
+
+        Lead createdLead = [SELECT RecordTypeId FROM Lead WHERE Id = :leadId];
+        System.assertEquals(getRecordTypeId('Medicare'), createdLead.RecordTypeId,
+            'Medicare-only selection should map to Medicare RT');
+    }
+
+    /**
+     * @description Health selection should map to Health record type.
+     */
+    @isTest
+    static void testRecordTypeHealthOnly() {
+        Map<String, Object> formData = buildBaseFormData('rt.health');
+        formData.put('interestedInsurance', new List<String>{'Health'});
+
+        Test.startTest();
+        Id leadId = LeadFormController.createLead(JSON.serialize(formData));
+        Test.stopTest();
+
+        Lead createdLead = [SELECT RecordTypeId FROM Lead WHERE Id = :leadId];
+        System.assertEquals(getRecordTypeId('Health'), createdLead.RecordTypeId,
+            'Health-only selection should map to Health RT');
+    }
+
+    /**
+     * @description Group Health selection should map to Health record type.
+     */
+    @isTest
+    static void testRecordTypeGroupHealthOnly() {
+        Map<String, Object> formData = buildBaseFormData('rt.grouphealth');
+        formData.put('interestedInsurance', new List<String>{'Group Health'});
+
+        Test.startTest();
+        Id leadId = LeadFormController.createLead(JSON.serialize(formData));
+        Test.stopTest();
+
+        Lead createdLead = [SELECT RecordTypeId FROM Lead WHERE Id = :leadId];
+        System.assertEquals(getRecordTypeId('Health'), createdLead.RecordTypeId,
+            'Group Health-only selection should map to Health RT');
+    }
+
+    /**
+     * @description Mixed selection containing Group Health (no Medicare) should map to Health RT.
+     */
+    @isTest
+    static void testRecordTypeGroupHealthWithLife() {
+        Map<String, Object> formData = buildBaseFormData('rt.grouphealth.life');
+        formData.put('interestedInsurance', new List<String>{'Group Health', 'Life', 'Other'});
+
+        Test.startTest();
+        Id leadId = LeadFormController.createLead(JSON.serialize(formData));
+        Test.stopTest();
+
+        Lead createdLead = [SELECT RecordTypeId FROM Lead WHERE Id = :leadId];
+        System.assertEquals(getRecordTypeId('Health'), createdLead.RecordTypeId,
+            'Group Health among multiple selections should map to Health RT');
+    }
+
+    /**
+     * @description When both Medicare and Health are selected, Medicare priority wins.
+     */
+    @isTest
+    static void testRecordTypeMedicareBeatsHealth() {
+        Map<String, Object> formData = buildBaseFormData('rt.medicare.health');
+        formData.put('interestedInsurance', new List<String>{'Medicare', 'Health'});
+
+        Test.startTest();
+        Id leadId = LeadFormController.createLead(JSON.serialize(formData));
+        Test.stopTest();
+
+        Lead createdLead = [SELECT RecordTypeId FROM Lead WHERE Id = :leadId];
+        System.assertEquals(getRecordTypeId('Medicare'), createdLead.RecordTypeId,
+            'Medicare should take priority over Health');
+    }
+
+    /**
+     * @description Selections with neither Medicare nor Health should fall back to Others RT.
+     */
+    @isTest
+    static void testRecordTypeOthersFallback() {
+        Map<String, Object> formData = buildBaseFormData('rt.others');
+        formData.put('interestedInsurance', new List<String>{'Life', 'Other'});
+
+        Test.startTest();
+        Id leadId = LeadFormController.createLead(JSON.serialize(formData));
+        Test.stopTest();
+
+        Lead createdLead = [SELECT RecordTypeId FROM Lead WHERE Id = :leadId];
+        System.assertEquals(getRecordTypeId('Others'), createdLead.RecordTypeId,
+            'Selections without Medicare/Health should fall back to Others RT');
+    }
+
+    /**
      * @description Test Lead creation with whitespace in fields (should be trimmed)
      */
     @isTest
