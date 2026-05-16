@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Renewal_Compact_Layout</fullName>
+    <fields>Name</fields>
+    <fields>Original_Insurance__c</fields>
+    <fields>StageName</fields>
+    <fields>Insurance_End_Date__c</fields>
+    <fields>CloseDate</fields>
+    <label>Renewal Compact Layout</label>
+</CompactLayout>

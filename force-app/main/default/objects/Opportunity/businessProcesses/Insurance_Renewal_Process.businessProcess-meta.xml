@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BusinessProcess xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Insurance_Renewal_Process</fullName>
+    <description>Sales process used by the Insurance Renewal record type. Restricts the StageName picklist to renewal-specific stages.</description>
+    <isActive>true</isActive>
+    <values>
+        <fullName>Renewal Identified</fullName>
+    </values>
+    <values>
+        <fullName>Customer Notified</fullName>
+    </values>
+    <values>
+        <fullName>Quote Requested</fullName>
+    </values>
+    <values>
+        <fullName>Quote Received</fullName>
+    </values>
+    <values>
+        <fullName>Presented to Customer</fullName>
+    </values>
+    <values>
+        <fullName>Closed Won</fullName>
+    </values>
+    <values>
+        <fullName>Closed Lost</fullName>
+    </values>
+</BusinessProcess>

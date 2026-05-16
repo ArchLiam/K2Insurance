@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>New_Insurance__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The newly created Insurance policy generated when the renewal is Closed Won (either with the same provider or a switched provider).</description>
+    <inlineHelpText>This field is populated automatically when the renewal is Closed Won. It links to the new Insurance record that replaces the original policy.</inlineHelpText>
+    <label>New Insurance</label>
+    <referenceTo>Insurance__c</referenceTo>
+    <relationshipLabel>Source Renewal Opportunity</relationshipLabel>
+    <relationshipName>Source_Renewal_Opportunities</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Lookup</type>
+</CustomField>

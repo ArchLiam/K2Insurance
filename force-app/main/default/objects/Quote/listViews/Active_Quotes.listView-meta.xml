@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ListView xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>mine</fullName>
+    <fullName>Active_Quotes</fullName>
     <columns>QUOTE.NAME</columns>
     <columns>OPPORTUNITY.NAME</columns>
     <columns>Insurance_Provider__c</columns>
@@ -9,6 +9,11 @@
     <columns>QUOTE.STATUS</columns>
     <columns>QUOTE.ISSYNCING</columns>
     <columns>QUOTE.EXPIRATIONDATE</columns>
-    <filterScope>Mine</filterScope>
-    <label>My Quotes</label>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>QUOTE.STATUS</field>
+        <operation>notEqual</operation>
+        <value>Denied,Rejected</value>
+    </filters>
+    <label>Active Quotes</label>
 </ListView>

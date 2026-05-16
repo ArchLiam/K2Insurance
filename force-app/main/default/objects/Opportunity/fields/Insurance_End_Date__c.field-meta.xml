@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Insurance_End_Date__c</fullName>
+    <description>End date of the original Insurance policy. Pulled from Original_Insurance__c for convenience on the Renewal record and in list views.</description>
+    <formula>Original_Insurance__r.Insurance_End_Date__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Read-only — derived from the linked original Insurance policy.</inlineHelpText>
+    <label>Insurance End Date</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Date</type>
+</CustomField>

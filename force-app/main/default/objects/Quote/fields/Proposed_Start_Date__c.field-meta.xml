@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Proposed_Start_Date__c</fullName>
+    <description>Start date of coverage proposed by the insurance provider for this quote.</description>
+    <inlineHelpText>Enter the start date the provider is offering. This typically aligns with the day after the original policy ends. Copied to the new Insurance record if accepted.</inlineHelpText>
+    <label>Proposed Start Date</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Date</type>
+</CustomField>

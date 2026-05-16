@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Original_Insurance__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The original Insurance policy this renewal is for. Set when the renewal Opportunity is created (typically 60 days before the policy end date).</description>
+    <inlineHelpText>Select the existing Insurance policy that is being renewed. The renewal pipeline is tracked against this policy until the customer accepts, switches, or cancels.</inlineHelpText>
+    <label>Original Insurance</label>
+    <referenceTo>Insurance__c</referenceTo>
+    <relationshipLabel>Renewal Opportunities</relationshipLabel>
+    <relationshipName>Renewal_Opportunities</relationshipName>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Lookup</type>
+</CustomField>
