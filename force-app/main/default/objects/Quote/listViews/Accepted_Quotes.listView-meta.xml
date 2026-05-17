@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ListView xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Active_Quotes</fullName>
+    <fullName>Accepted_Quotes</fullName>
     <columns>QUOTE.NAME</columns>
     <columns>OPPORTUNITY.NAME</columns>
     <columns>Insurance_Provider__c</columns>
     <columns>Plan_Name__c</columns>
     <columns>Proposed_Premium__c</columns>
-    <columns>QUOTE.STATUS</columns>
+    <columns>Proposed_Start_Date__c</columns>
+    <columns>Proposed_Term_months__c</columns>
     <columns>QUOTE.ISSYNCING</columns>
-    <columns>QUOTE.EXPIRATIONDATE</columns>
     <filterScope>Everything</filterScope>
     <filters>
         <field>QUOTE.STATUS</field>
-        <operation>notEqual</operation>
-        <value>Denied,Rejected</value>
+        <operation>equals</operation>
+        <value>Accepted</value>
     </filters>
-    <label>Active Quotes</label>
+    <label>Accepted Quotes</label>
 </ListView>

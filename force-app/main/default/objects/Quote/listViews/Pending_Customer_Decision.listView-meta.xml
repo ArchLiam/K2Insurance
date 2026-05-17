@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Pending_Customer_Decision</fullName>
+    <columns>QUOTE.NAME</columns>
+    <columns>OPPORTUNITY.NAME</columns>
+    <columns>Insurance_Provider__c</columns>
+    <columns>Plan_Name__c</columns>
+    <columns>Proposed_Premium__c</columns>
+    <columns>Proposed_Start_Date__c</columns>
+    <columns>QUOTE.STATUS</columns>
+    <columns>QUOTE.EXPIRATIONDATE</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>QUOTE.STATUS</field>
+        <operation>equals</operation>
+        <value>Presented</value>
+    </filters>
+    <label>Pending Customer Decision</label>
+</ListView>

@@ -5,6 +5,6 @@
     <inlineHelpText>Enter the start date the provider is offering. This typically aligns with the day after the original policy ends. Copied to the new Insurance record if accepted.</inlineHelpText>
     <label>Proposed Start Date</label>
     <required>false</required>
-    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <type>Date</type>
 </CustomField>

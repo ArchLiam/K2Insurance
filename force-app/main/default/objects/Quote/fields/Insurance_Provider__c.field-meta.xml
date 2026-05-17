@@ -2,24 +2,24 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Insurance_Provider__c</fullName>
     <deleteConstraint>SetNull</deleteConstraint>
-    <description>The Insurance Provider (Account) that issued this quote. Each quote on a renewal Opportunity represents one provider's offer.</description>
+    <description>The Insurance Provider (Account) that issued this quote. Each quote on a renewal Opportunity represents one provider&apos;s offer.</description>
     <inlineHelpText>Select the insurance company that provided this quote. Only Accounts with the Insurance Provider record type are allowed.</inlineHelpText>
     <label>Insurance Provider</label>
     <lookupFilter>
         <active>true</active>
-        <errorMessage>Selected company must have the record type 'Insurance Provider'. Please choose a valid insurance provider.</errorMessage>
+        <errorMessage>Selected company must have the record type &apos;Insurance Provider&apos;. Please choose a valid insurance provider.</errorMessage>
         <filterItems>
             <field>Account.RecordType.DeveloperName</field>
             <operation>equals</operation>
             <value>Insurance_Provider</value>
         </filterItems>
-        <infoMessage>Only companies with the record type "Insurance Provider" are available for selection in this field.</infoMessage>
+        <infoMessage>Only companies with the record type &quot;Insurance Provider&quot; are available for selection in this field.</infoMessage>
         <isOptional>false</isOptional>
     </lookupFilter>
     <referenceTo>Account</referenceTo>
     <relationshipLabel>Quotes</relationshipLabel>
     <relationshipName>Quotes</relationshipName>
     <required>false</required>
-    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <type>Lookup</type>
 </CustomField>

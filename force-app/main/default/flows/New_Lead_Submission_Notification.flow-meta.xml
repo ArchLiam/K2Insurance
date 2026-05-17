@@ -61,10 +61,10 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>ccAddresses</name>
+            <name>bccAddresses</name>
             <value>
                 <collectionElements>
-                    <stringValue> liam.jeong@5sinfusion.com</stringValue>
+                    <stringValue>liam.jeong@5sinfusion.com</stringValue>
                 </collectionElements>
             </value>
         </inputParameters>
@@ -92,7 +92,7 @@
             <name>emailTemplateId</name>
             <value>
                 <inputConfiguratorMode>Custom</inputConfiguratorMode>
-                <stringValue>00XPW00000Oakpi2AB</stringValue>
+                <stringValue>00XPW00000ervfR2AQ</stringValue>
             </value>
         </inputParameters>
         <inputParameters>
@@ -104,8 +104,8 @@
         <inputParameters>
             <name>relatedRecordId</name>
             <value>
+                <elementReference>varNewLead.Id</elementReference>
                 <inputConfiguratorMode>Resource</inputConfiguratorMode>
-                <stringValue></stringValue>
             </value>
         </inputParameters>
         <nameSegment>emailSimple</nameSegment>
@@ -130,7 +130,7 @@
             <targetReference>Get_Custom_Notification_Type</targetReference>
         </connector>
     </assignments>
-    <description>Add Custom Notification(final version)</description>
+    <description>Updated Email Template to VF</description>
     <environments>Default</environments>
     <interviewLabel>New Lead Submission Notification {!$Flow.CurrentDateTime}</interviewLabel>
     <label>New Lead Submission Notification</label>

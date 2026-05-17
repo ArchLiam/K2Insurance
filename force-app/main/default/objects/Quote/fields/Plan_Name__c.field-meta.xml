@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Plan_Name__c</fullName>
-    <description>Plan name offered by the insurance provider for this quote (e.g., "Gold HMO", "Silver PPO").</description>
+    <description>Plan name offered by the insurance provider for this quote (e.g., &quot;Gold HMO&quot;, &quot;Silver PPO&quot;).</description>
     <externalId>false</externalId>
     <inlineHelpText>Enter the marketing or internal plan name the provider uses for this offering. Copied to the new Insurance record if accepted.</inlineHelpText>
     <label>Plan Name</label>
     <length>255</length>
     <required>false</required>
-    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
     <type>Text</type>
     <unique>false</unique>
 </CustomField>
