@@ -5,6 +5,18 @@
     <label>K2 Insurance Admin</label>
     <license>Salesforce</license>
 
+    <!-- Apex Class Access -->
+    <classAccesses>
+        <apexClass>QuotePdfController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+
+    <!-- Visualforce Page Access -->
+    <pageAccesses>
+        <apexPage>K2QuotePdf</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+
     <!-- Object Permissions -->
     <objectPermissions>
         <allowCreate>true</allowCreate>
