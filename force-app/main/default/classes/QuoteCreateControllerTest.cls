@@ -41,6 +41,8 @@ private class QuoteCreateControllerTest {
             provider.Id,
             'Gold Plan',
             1234.56,
+            Date.today().addDays(30),
+            12,
             'Test description'
         );
         Test.stopTest();
@@ -51,7 +53,8 @@ private class QuoteCreateControllerTest {
 
         Quote saved = [
             SELECT Id, Name, OpportunityId, Insurance_Provider__c,
-                   Plan_Name__c, Proposed_Premium__c, Description, Status
+                   Plan_Name__c, Proposed_Premium__c, Proposed_Start_Date__c,
+                   Proposed_Term_months__c, Description, Status
             FROM Quote
             WHERE Id = :result.quoteId
         ];
@@ -59,6 +62,8 @@ private class QuoteCreateControllerTest {
         Assert.areEqual(provider.Id, saved.Insurance_Provider__c);
         Assert.areEqual('Gold Plan', saved.Plan_Name__c);
         Assert.areEqual(1234.56, saved.Proposed_Premium__c);
+        Assert.areEqual(Date.today().addDays(30), saved.Proposed_Start_Date__c);
+        Assert.areEqual(12, saved.Proposed_Term_months__c);
         Assert.areEqual('Test description', saved.Description);
         Assert.areEqual('Draft', saved.Status);
     }
@@ -70,7 +75,7 @@ private class QuoteCreateControllerTest {
 
         Test.startTest();
         QuoteCreateController.CreateResult result = QuoteCreateController.createQuote(
-            opp.Id, provider.Id, null, null, null
+            opp.Id, provider.Id, null, 100, Date.today().addDays(10), 6, null
         );
         Test.stopTest();
 
@@ -83,7 +88,9 @@ private class QuoteCreateControllerTest {
         Boolean thrown = false;
         Test.startTest();
         try {
-            QuoteCreateController.createQuote(null, provider.Id, 'p', 1, 'd');
+            QuoteCreateController.createQuote(
+                null, provider.Id, 'p', 1, Date.today(), 12, 'd'
+            );
         } catch (AuraHandledException ex) {
             thrown = true;
         }
@@ -98,7 +105,60 @@ private class QuoteCreateControllerTest {
         Boolean thrown = false;
         Test.startTest();
         try {
-            QuoteCreateController.createQuote(opp.Id, null, 'p', 1, 'd');
+            QuoteCreateController.createQuote(
+                opp.Id, null, 'p', 1, Date.today(), 12, 'd'
+            );
+        } catch (AuraHandledException ex) {
+            thrown = true;
+        }
+        Test.stopTest();
+        Assert.isTrue(thrown);
+    }
+
+    @IsTest
+    static void createQuote_nullPremium_throws() {
+        Account provider = insertProvider();
+        Opportunity opp = insertOpportunity(provider.Id, null);
+        Boolean thrown = false;
+        Test.startTest();
+        try {
+            QuoteCreateController.createQuote(
+                opp.Id, provider.Id, 'p', null, Date.today(), 12, 'd'
+            );
+        } catch (AuraHandledException ex) {
+            thrown = true;
+        }
+        Test.stopTest();
+        Assert.isTrue(thrown);
+    }
+
+    @IsTest
+    static void createQuote_nullStartDate_throws() {
+        Account provider = insertProvider();
+        Opportunity opp = insertOpportunity(provider.Id, null);
+        Boolean thrown = false;
+        Test.startTest();
+        try {
+            QuoteCreateController.createQuote(
+                opp.Id, provider.Id, 'p', 1, null, 12, 'd'
+            );
+        } catch (AuraHandledException ex) {
+            thrown = true;
+        }
+        Test.stopTest();
+        Assert.isTrue(thrown);
+    }
+
+    @IsTest
+    static void createQuote_nullTerm_throws() {
+        Account provider = insertProvider();
+        Opportunity opp = insertOpportunity(provider.Id, null);
+        Boolean thrown = false;
+        Test.startTest();
+        try {
+            QuoteCreateController.createQuote(
+                opp.Id, provider.Id, 'p', 1, Date.today(), null, 'd'
+            );
         } catch (AuraHandledException ex) {
             thrown = true;
         }
@@ -113,7 +173,9 @@ private class QuoteCreateControllerTest {
         Id fakeOppId = '006000000000001AAA';
         Test.startTest();
         try {
-            QuoteCreateController.createQuote(fakeOppId, provider.Id, 'p', 1, 'd');
+            QuoteCreateController.createQuote(
+                fakeOppId, provider.Id, 'p', 1, Date.today(), 12, 'd'
+            );
         } catch (AuraHandledException ex) {
             thrown = true;
         }

@@ -22,6 +22,8 @@ public with sharing class QuoteCreateController {
      * @param insuranceProviderId Account Id (Insurance Provider RT)
      * @param planName            Plan Name (Quote.Plan_Name__c)
      * @param proposedPremium     Proposed Premium amount (Quote.Proposed_Premium__c)
+     * @param proposedStartDate   Proposed Start Date (Quote.Proposed_Start_Date__c)
+     * @param proposedTerm        Proposed Term in months (Quote.Proposed_Term_months__c)
      * @param description         Optional Description
      * @return CreateResult with the new Quote's Id and Name
      */
@@ -31,6 +33,8 @@ public with sharing class QuoteCreateController {
         Id insuranceProviderId,
         String planName,
         Decimal proposedPremium,
+        Date proposedStartDate,
+        Decimal proposedTerm,
         String description
     ) {
         if (opportunityId == null) {
@@ -38,6 +42,15 @@ public with sharing class QuoteCreateController {
         }
         if (insuranceProviderId == null) {
             throw new AuraHandledException('Insurance Provider is required.');
+        }
+        if (proposedPremium == null) {
+            throw new AuraHandledException('Proposed Premium is required.');
+        }
+        if (proposedStartDate == null) {
+            throw new AuraHandledException('Proposed Start Date is required.');
+        }
+        if (proposedTerm == null) {
+            throw new AuraHandledException('Proposed Term is required.');
         }
 
         Opportunity opp = loadOpportunity(opportunityId);
@@ -50,12 +63,12 @@ public with sharing class QuoteCreateController {
         q.Insurance_Provider__c = insuranceProviderId;
         q.Status = 'Draft';
         q.Name = buildQuoteName(providerName);
+        q.Proposed_Premium__c = proposedPremium;
+        q.Proposed_Start_Date__c = proposedStartDate;
+        q.Proposed_Term_months__c = proposedTerm;
 
         if (String.isNotBlank(planName)) {
             q.Plan_Name__c = planName;
-        }
-        if (proposedPremium != null) {
-            q.Proposed_Premium__c = proposedPremium;
         }
         if (String.isNotBlank(description)) {
             q.Description = description;

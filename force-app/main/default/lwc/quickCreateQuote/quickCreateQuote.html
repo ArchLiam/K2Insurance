@@ -26,6 +26,27 @@
 			value={proposedPremium}
 			onchange={handlePremiumChange}
 			formatter="currency"
+			required
+			class="slds-m-top_small"
+		></lightning-input>
+
+		<lightning-input
+			label="Proposed Start Date"
+			type="date"
+			value={proposedStartDate}
+			onchange={handleStartDateChange}
+			required
+			class="slds-m-top_small"
+		></lightning-input>
+
+		<lightning-input
+			label="Proposed Term (months)"
+			type="number"
+			step="1"
+			min="1"
+			value={proposedTerm}
+			onchange={handleTermChange}
+			required
 			class="slds-m-top_small"
 		></lightning-input>
 
