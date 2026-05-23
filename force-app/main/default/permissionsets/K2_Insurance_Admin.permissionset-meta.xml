@@ -10,6 +10,10 @@
         <apexClass>QuotePdfController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <classAccesses>
+        <apexClass>QuoteCreateController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
 
     <!-- Visualforce Page Access -->
     <pageAccesses>

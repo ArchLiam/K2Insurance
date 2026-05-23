@@ -1,0 +1,57 @@
+<template>
+	<div class="slds-p-around_medium">
+		<lightning-record-picker
+			label="Insurance Provider"
+			placeholder="Search Insurance Providers..."
+			object-api-name="Account"
+			matching-info={providerFilter}
+			required
+			onchange={handleProviderChange}
+		></lightning-record-picker>
+
+		<lightning-input
+			label="Plan Name"
+			type="text"
+			value={planName}
+			onchange={handlePlanNameChange}
+			class="slds-m-top_small"
+		></lightning-input>
+
+		<lightning-input
+			label="Proposed Premium"
+			type="number"
+			step="0.01"
+			value={proposedPremium}
+			onchange={handlePremiumChange}
+			formatter="currency"
+			class="slds-m-top_small"
+		></lightning-input>
+
+		<lightning-textarea
+			label="Description"
+			value={description}
+			onchange={handleDescriptionChange}
+			class="slds-m-top_small"
+		></lightning-textarea>
+
+		<template if:true={errorMessage}>
+			<div class="slds-text-color_error slds-m-top_small">
+				{errorMessage}
+			</div>
+		</template>
+	</div>
+
+	<footer class="slds-modal__footer slds-clearfix">
+		<lightning-button
+			label="Cancel"
+			onclick={handleCancel}
+			class="slds-m-right_x-small"
+		></lightning-button>
+		<lightning-button
+			label={submitLabel}
+			variant="brand"
+			onclick={handleSubmit}
+			disabled={isSubmitDisabled}
+		></lightning-button>
+	</footer>
+</template>
