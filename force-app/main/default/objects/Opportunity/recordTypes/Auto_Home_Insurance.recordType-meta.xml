@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Auto_Home_Insurance</fullName>
+    <active>true</active>
+    <businessProcess>Insurance_Renewal_Process</businessProcess>
+    <compactLayoutAssignment>Renewal_Compact_Layout</compactLayoutAssignment>
+    <description>Renewal opportunities for Auto/Home insurance policies.</description>
+    <label>Auto/Home</label>
+</RecordType>
