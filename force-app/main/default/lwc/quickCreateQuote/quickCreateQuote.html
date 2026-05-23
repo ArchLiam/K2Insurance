@@ -4,7 +4,9 @@
 			label="Insurance Provider"
 			placeholder="Search Insurance Providers..."
 			object-api-name="Account"
-			matching-info={providerFilter}
+			matching-info={providerMatchingInfo}
+			display-info={providerDisplayInfo}
+			filter={providerFilter}
 			required
 			onchange={handleProviderChange}
 		></lightning-record-picker>

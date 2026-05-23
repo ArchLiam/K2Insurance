@@ -28,8 +28,16 @@ export default class QuickCreateQuote extends NavigationMixin(
 	isSubmitting = false;
 	errorMessage = null;
 
+	get providerMatchingInfo() {
+		return { primaryField: { fieldPath: "Name" } };
+	}
+
+	get providerDisplayInfo() {
+		return { primaryField: "Name" };
+	}
+
 	get providerFilter() {
-		// Constrain the Account lookup to Insurance Provider record type.
+		// Server-side filter: only show Accounts with the Insurance Provider record type.
 		return {
 			criteria: [
 				{
