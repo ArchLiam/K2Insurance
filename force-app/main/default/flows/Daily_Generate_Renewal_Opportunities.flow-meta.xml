@@ -242,7 +242,7 @@
             <field>DeveloperName</field>
             <operator>EqualTo</operator>
             <value>
-                <stringValue>Insurance_Renewal</stringValue>
+                <elementReference>$Record.RecordType.DeveloperName</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
