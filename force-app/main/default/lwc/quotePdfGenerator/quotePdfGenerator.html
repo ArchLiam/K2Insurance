@@ -1,0 +1,158 @@
+<template>
+	<lightning-card title="K2 Quote PDF" icon-name="standard:document">
+		<div slot="actions">
+			<lightning-button
+				label={previewLabel}
+				variant="brand"
+				onclick={handlePreview}
+				disabled={isGenerating}
+			></lightning-button>
+		</div>
+
+		<div class="slds-p-around_medium">
+			<p class="slds-text-body_regular slds-m-bottom_x-small">
+				Generate a K2-branded PDF for this Quote. Preview it, attach it
+				to the record, or email it to the contact in one step.
+			</p>
+			<template if:true={contactEmail}>
+				<p class="slds-text-body_small slds-text-color_weak">
+					Default recipient: <strong>{contactEmail}</strong>
+				</p>
+			</template>
+			<template if:true={errorMessage}>
+				<div class="slds-text-color_error slds-m-top_x-small">
+					{errorMessage}
+				</div>
+			</template>
+		</div>
+	</lightning-card>
+
+	<!-- PDF Preview Modal -->
+	<template if:true={isPreviewOpen}>
+		<section
+			role="dialog"
+			tabindex="-1"
+			class="slds-modal slds-fade-in-open slds-modal_large"
+			aria-modal="true"
+		>
+			<div class="slds-modal__container">
+				<header class="slds-modal__header">
+					<button
+						class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+						title="Close"
+						onclick={handleClosePreview}
+					>
+						<lightning-icon
+							icon-name="utility:close"
+							size="small"
+							alternative-text="Close"
+							variant="inverse"
+						></lightning-icon>
+					</button>
+					<h2 class="slds-modal__title slds-hyphenate">PDF Preview</h2>
+				</header>
+
+				<div class="slds-modal__content slds-p-around_none">
+					<template if:true={pdfDataUrl}>
+						<iframe
+							src={pdfDataUrl}
+							title="Quote PDF preview"
+							class="pdf-frame"
+						></iframe>
+					</template>
+				</div>
+
+				<footer class="slds-modal__footer">
+					<lightning-button
+						label="Cancel"
+						onclick={handleClosePreview}
+						class="slds-m-right_x-small"
+					></lightning-button>
+					<lightning-button
+						label={saveLabel}
+						variant="neutral"
+						onclick={handleSaveToQuote}
+						disabled={isPreviewBusy}
+						class="slds-m-right_x-small"
+					></lightning-button>
+					<lightning-button
+						label="Save and Email Quote"
+						variant="brand"
+						onclick={handleOpenEmail}
+						disabled={isPreviewBusy}
+					></lightning-button>
+				</footer>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+
+	<!-- Email Modal -->
+	<template if:true={isEmailOpen}>
+		<section
+			role="dialog"
+			tabindex="-1"
+			class="slds-modal slds-fade-in-open slds-modal_medium"
+			aria-modal="true"
+		>
+			<div class="slds-modal__container">
+				<header class="slds-modal__header">
+					<button
+						class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+						title="Close"
+						onclick={handleCloseEmail}
+					>
+						<lightning-icon
+							icon-name="utility:close"
+							size="small"
+							alternative-text="Close"
+							variant="inverse"
+						></lightning-icon>
+					</button>
+					<h2 class="slds-modal__title slds-hyphenate">
+						Send Quote PDF
+					</h2>
+				</header>
+
+				<div class="slds-modal__content slds-p-around_medium">
+					<lightning-input
+						label="To"
+						type="email"
+						value={emailTo}
+						onchange={handleEmailToChange}
+						required
+					></lightning-input>
+					<lightning-input
+						label="Subject"
+						type="text"
+						value={emailSubject}
+						onchange={handleEmailSubjectChange}
+						required
+						class="slds-m-top_small"
+					></lightning-input>
+					<lightning-input-rich-text
+						label="Message"
+						value={emailBody}
+						onchange={handleEmailBodyChange}
+						class="slds-m-top_small"
+					></lightning-input-rich-text>
+				</div>
+
+				<footer class="slds-modal__footer">
+					<lightning-button
+						label="Cancel"
+						onclick={handleCloseEmail}
+						class="slds-m-right_x-small"
+					></lightning-button>
+					<lightning-button
+						label={sendEmailLabel}
+						variant="brand"
+						onclick={handleSendEmail}
+						disabled={isSendingEmail}
+					></lightning-button>
+				</footer>
+			</div>
+		</section>
+		<div class="slds-backdrop slds-backdrop_open"></div>
+	</template>
+</template>
