@@ -209,6 +209,11 @@
         <field>Insurance__c.Renewal_Opportunity__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Insurance__c.Commission_Rate__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
 
     <!-- Record Type Visibility -->
     <recordTypeVisibilities>
