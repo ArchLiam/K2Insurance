@@ -19,29 +19,26 @@
         </connector>
     </assignments>
     <decisions>
-        <name>Insurance_Status_Changed_To</name>
-        <label>Insurance Status Changed To</label>
+        <name>Newly_Cancelled</name>
+        <label>Newly Cancelled?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>Update_Cancelation_Date</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
         <rules>
             <name>Cancelled</name>
             <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>varOldInsuranceRecord.Status__c</leftValueReference>
-                <operator>NotEqualTo</operator>
-                <rightValue>
-                    <stringValue>Cancelled</stringValue>
-                </rightValue>
-            </conditions>
             <conditions>
                 <leftValueReference>varNewInsuranceRecord.Status__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>Cancelled</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>varNewInsuranceRecord.Cancellation_Date__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -50,6 +47,7 @@
             <label>Cancelled</label>
         </rules>
     </decisions>
+    <description>Stamps the Cancellation Date the first time a policy's Status is Cancelled (only when the date is still blank).</description>
     <environments>Default</environments>
     <interviewLabel>Capture Cancellation Date {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Capture Cancellation Date</label>
@@ -83,20 +81,12 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Insurance_Status_Changed_To</targetReference>
+            <targetReference>Newly_Cancelled</targetReference>
         </connector>
     </start>
     <status>Active</status>
     <variables>
         <name>varNewInsuranceRecord</name>
-        <dataType>SObject</dataType>
-        <isCollection>false</isCollection>
-        <isInput>true</isInput>
-        <isOutput>false</isOutput>
-        <objectType>Insurance__c</objectType>
-    </variables>
-    <variables>
-        <name>varOldInsuranceRecord</name>
         <dataType>SObject</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>

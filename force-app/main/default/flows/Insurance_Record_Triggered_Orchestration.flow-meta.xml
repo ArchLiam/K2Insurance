@@ -110,12 +110,6 @@
                     <elementReference>$Record</elementReference>
                 </value>
             </inputParameters>
-            <inputParameters>
-                <name>varOldInsuranceRecord</name>
-                <value>
-                    <elementReference>$Record__Prior</elementReference>
-                </value>
-            </inputParameters>
             <label>Capture Cancellation Date</label>
             <requiresAsyncProcessing>false</requiresAsyncProcessing>
             <runAsUser>true</runAsUser>
@@ -176,12 +170,6 @@
                     <elementReference>$Record</elementReference>
                 </value>
             </inputParameters>
-            <inputParameters>
-                <name>varOldInsuranceRecord</name>
-                <value>
-                    <elementReference>$Record__Prior</elementReference>
-                </value>
-            </inputParameters>
             <label>Set Commission Rate from Subagent</label>
             <requiresAsyncProcessing>false</requiresAsyncProcessing>
             <runAsUser>false</runAsUser>
@@ -195,13 +183,6 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <exitConditionLogic>and</exitConditionLogic>
-        <exitConditions>
-            <leftValueReference>$Record__Prior.Status__c</leftValueReference>
-            <operator>EqualTo</operator>
-            <rightValue>
-                <stringValue>Active</stringValue>
-            </rightValue>
-        </exitConditions>
         <exitConditions>
             <leftValueReference>$Record.Status__c</leftValueReference>
             <operator>EqualTo</operator>
