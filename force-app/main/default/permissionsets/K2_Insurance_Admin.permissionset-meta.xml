@@ -141,6 +141,11 @@
         <field>Opportunity.ROI_Analysis_Completed__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Opportunity.Important_Note__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
 
     <!-- Quote Custom Field Permissions -->
     <fieldPermissions>
