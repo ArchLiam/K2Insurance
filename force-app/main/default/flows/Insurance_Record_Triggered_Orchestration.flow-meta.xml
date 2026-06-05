@@ -129,7 +129,7 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Record_Type</targetReference>
+            <targetReference>Set_Commission_Rate_Stage</targetReference>
         </connector>
         <exitConditionLogic>and</exitConditionLogic>
         <stageSteps>
@@ -147,6 +147,42 @@
                 </value>
             </inputParameters>
             <label>Engrave Status to the Name</label>
+            <requiresAsyncProcessing>false</requiresAsyncProcessing>
+            <runAsUser>false</runAsUser>
+            <shouldLock>false</shouldLock>
+            <stepSubtype>BackgroundStep</stepSubtype>
+        </stageSteps>
+    </orchestratedStages>
+    <orchestratedStages>
+        <name>Set_Commission_Rate_Stage</name>
+        <label>Set Commission Rate from Subagent</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Record_Type</targetReference>
+        </connector>
+        <exitConditionLogic>and</exitConditionLogic>
+        <stageSteps>
+            <name>Set_Commission_Rate_from_Subagent</name>
+            <actionName>Insurance_Set_Commission_Rate_from_Subagent</actionName>
+            <actionType>stepBackground</actionType>
+            <canAssigneeEdit>false</canAssigneeEdit>
+            <debugSimulateStep>false</debugSimulateStep>
+            <entryConditionLogic>and</entryConditionLogic>
+            <exitConditionLogic>and</exitConditionLogic>
+            <inputParameters>
+                <name>varNewInsuranceRecord</name>
+                <value>
+                    <elementReference>$Record</elementReference>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>varOldInsuranceRecord</name>
+                <value>
+                    <elementReference>$Record__Prior</elementReference>
+                </value>
+            </inputParameters>
+            <label>Set Commission Rate from Subagent</label>
             <requiresAsyncProcessing>false</requiresAsyncProcessing>
             <runAsUser>false</runAsUser>
             <shouldLock>false</shouldLock>

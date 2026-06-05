@@ -215,6 +215,13 @@
         <readable>true</readable>
     </fieldPermissions>
 
+    <!-- Account (Agent) Custom Field Permissions -->
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Account.Commission_Rate__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+
     <!-- Record Type Visibility -->
     <recordTypeVisibilities>
         <recordType>Opportunity.Insurance_Renewal</recordType>
