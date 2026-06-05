@@ -352,6 +352,16 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.Commission_Rate__c</fieldItem>
+                <identifier>RecordCommission_Rate__cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.Policy_Holder__c</fieldItem>
                 <identifier>RecordPolicy_Holder_cField</identifier>
             </fieldInstance>
@@ -454,16 +464,6 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Payment_Method__c</fieldItem>
                 <identifier>RecordPayment_Method__cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Commission_Rate__c</fieldItem>
-                <identifier>RecordCommission_Rate__cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
