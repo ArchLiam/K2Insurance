@@ -222,6 +222,13 @@
         <readable>true</readable>
     </fieldPermissions>
 
+    <!-- Commission_Line__c Custom Field Permissions -->
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Commission_Line__c.Commission_Rate__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+
     <!-- Record Type Visibility -->
     <recordTypeVisibilities>
         <recordType>Opportunity.Insurance_Renewal</recordType>
