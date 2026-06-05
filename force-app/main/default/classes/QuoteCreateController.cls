@@ -25,6 +25,11 @@ public with sharing class QuoteCreateController {
      * @param proposedStartDate   Proposed Start Date (Quote.Proposed_Start_Date__c)
      * @param proposedTerm        Proposed Term in months (Quote.Proposed_Term_months__c)
      * @param description         Optional Description
+     * @param policyNumber        Optional carrier policy/quote number (Quote.Policy_Number__c)
+     * @param paymentFrequency    Optional Payment Frequency picklist value (Quote.Payment_Frequency__c)
+     * @param paymentMethod       Optional Payment Method picklist value (Quote.Payment_Method__c)
+     * @param deductible          Optional Deductible amount (Quote.Deductible__c)
+     * @param coverageAmount      Optional Coverage amount (Quote.Coverage_Amount__c)
      * @return CreateResult with the new Quote's Id and Name
      */
     @AuraEnabled
@@ -35,7 +40,12 @@ public with sharing class QuoteCreateController {
         Decimal proposedPremium,
         Date proposedStartDate,
         Decimal proposedTerm,
-        String description
+        String description,
+        String policyNumber,
+        String paymentFrequency,
+        String paymentMethod,
+        Decimal deductible,
+        Decimal coverageAmount
     ) {
         if (opportunityId == null) {
             throw new AuraHandledException('Opportunity Id is required.');
@@ -72,6 +82,21 @@ public with sharing class QuoteCreateController {
         }
         if (String.isNotBlank(description)) {
             q.Description = description;
+        }
+        if (String.isNotBlank(policyNumber)) {
+            q.Policy_Number__c = policyNumber;
+        }
+        if (String.isNotBlank(paymentFrequency)) {
+            q.Payment_Frequency__c = paymentFrequency;
+        }
+        if (String.isNotBlank(paymentMethod)) {
+            q.Payment_Method__c = paymentMethod;
+        }
+        if (deductible != null) {
+            q.Deductible__c = deductible;
+        }
+        if (coverageAmount != null) {
+            q.Coverage_Amount__c = coverageAmount;
         }
         if (opp.ContactId != null) {
             q.ContactId = opp.ContactId;

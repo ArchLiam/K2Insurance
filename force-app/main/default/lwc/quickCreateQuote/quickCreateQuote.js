@@ -32,6 +32,11 @@ export default class QuickCreateQuote extends NavigationMixin(
 	proposedStartDate = null;
 	proposedTerm = null;
 	description = "";
+	policyNumber = "";
+	coverageAmount = null;
+	deductible = null;
+	paymentFrequency = "";
+	paymentMethod = "";
 
 	isSubmitting = false;
 	errorMessage = null;
@@ -69,6 +74,27 @@ export default class QuickCreateQuote extends NavigationMixin(
 				}
 			]
 		};
+	}
+
+	get paymentFrequencyOptions() {
+		return [
+			{ label: "Full", value: "Full" },
+			{ label: "Monthly", value: "Monthly" },
+			{ label: "Full(Auto Renewal)", value: "Full(Auto Renewal)" },
+			{ label: "Monthly(Auto Renewal)", value: "Monthly(Auto Renewal)" },
+			{ label: "Quarterly", value: "Quarterly" },
+			{ label: "Quarterly(Auto Renewal)", value: "Quarterly(Auto Renewal)" },
+			{ label: "2 Pay", value: "2 Pay" }
+		];
+	}
+
+	get paymentMethodOptions() {
+		return [
+			{ label: "Check", value: "Check" },
+			{ label: "Credit Card", value: "Credit Card" },
+			{ label: "Debit Card", value: "Debit Card" },
+			{ label: "Escrow", value: "Escrow" }
+		];
 	}
 
 	get submitLabel() {
@@ -112,6 +138,28 @@ export default class QuickCreateQuote extends NavigationMixin(
 		this.description = event.target.value;
 	}
 
+	handlePolicyNumberChange(event) {
+		this.policyNumber = event.target.value;
+	}
+
+	handleCoverageChange(event) {
+		const value = event.target.value;
+		this.coverageAmount = value === "" ? null : parseFloat(value);
+	}
+
+	handleDeductibleChange(event) {
+		const value = event.target.value;
+		this.deductible = value === "" ? null : parseFloat(value);
+	}
+
+	handlePaymentFrequencyChange(event) {
+		this.paymentFrequency = event.detail.value;
+	}
+
+	handlePaymentMethodChange(event) {
+		this.paymentMethod = event.detail.value;
+	}
+
 	async handleSubmit() {
 		this.errorMessage = null;
 		if (!this.insuranceProviderId) {
@@ -139,7 +187,12 @@ export default class QuickCreateQuote extends NavigationMixin(
 				proposedPremium: this.proposedPremium,
 				proposedStartDate: this.proposedStartDate,
 				proposedTerm: this.proposedTerm,
-				description: this.description
+				description: this.description,
+				policyNumber: this.policyNumber,
+				paymentFrequency: this.paymentFrequency,
+				paymentMethod: this.paymentMethod,
+				deductible: this.deductible,
+				coverageAmount: this.coverageAmount
 			});
 			this.toast(
 				"Quote Created",

@@ -79,9 +79,33 @@
             <targetReference>Update_Renewal_with_New_Insurance</targetReference>
         </connector>
         <inputAssignments>
+            <field>Business_Personal_Property__c</field>
+            <value>
+                <elementReference>Get_Synced_Quote.Coverage_Amount__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Company__c</field>
             <value>
                 <elementReference>Get_Original_Insurance.Company__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Deductible__c</field>
+            <value>
+                <elementReference>Get_Synced_Quote.Deductible__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Payment_Frequency__c</field>
+            <value>
+                <elementReference>Get_Synced_Quote.Payment_Frequency__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Payment_Method__c</field>
+            <value>
+                <elementReference>Get_Synced_Quote.Payment_Method__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
