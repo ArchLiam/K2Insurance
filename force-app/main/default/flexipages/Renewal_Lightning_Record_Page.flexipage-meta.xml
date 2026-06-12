@@ -460,10 +460,20 @@
             <fieldInstance>
                 <fieldInstanceProperties>
                     <name>uiBehavior</name>
-                    <value>none</value>
+                    <value>readonly</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Amount</fieldItem>
-                <identifier>RecordAmountField</identifier>
+                <fieldItem>Record.Original_Premium__c</fieldItem>
+                <identifier>RecordOriginal_Premium_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>readonly</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Renewed_Premium__c</fieldItem>
+                <identifier>RecordRenewed_Premium_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
