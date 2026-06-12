@@ -47,7 +47,7 @@
             <label>ON</label>
         </rules>
     </decisions>
-    <description>When a Renewal Opportunity is Closed Won with Renewed Same Provider or Switched Provider, creates a new Insurance__c record from the synced Quote.</description>
+    <description>When a Renewal Opportunity is Closed Won, creates a new Insurance__c record from the synced Quote. Skips automatically if there is no synced Quote.</description>
     <environments>Default</environments>
     <interviewLabel>Renewal Closed Won — Create New Insurance {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Renewal Closed Won — Create New Insurance</label>
@@ -246,26 +246,11 @@
             <targetReference>Is_TRIGGER_ACTIVATED</targetReference>
         </connector>
         <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
-        <filterLogic>1 AND (2 OR 3)</filterLogic>
         <filters>
             <field>StageName</field>
             <operator>EqualTo</operator>
             <value>
                 <stringValue>Closed Won</stringValue>
-            </value>
-        </filters>
-        <filters>
-            <field>Renewal_Outcome__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Renewed Same Provider</stringValue>
-            </value>
-        </filters>
-        <filters>
-            <field>Renewal_Outcome__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Switched Provider</stringValue>
             </value>
         </filters>
         <object>Opportunity</object>
