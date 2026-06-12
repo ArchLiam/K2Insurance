@@ -335,10 +335,10 @@
             <fieldInstance>
                 <fieldInstanceProperties>
                     <name>uiBehavior</name>
-                    <value>none</value>
+                    <value>readonly</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.OpportunityId</fieldItem>
-                <identifier>RecordOpportunityIdField</identifier>
+                <fieldItem>Record.Renewal_Name__c</fieldItem>
+                <identifier>RecordRenewal_Name_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -355,10 +355,10 @@
             <fieldInstance>
                 <fieldInstanceProperties>
                     <name>uiBehavior</name>
-                    <value>none</value>
+                    <value>readonly</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.ExpirationDate</fieldItem>
-                <identifier>RecordExpirationDateField</identifier>
+                <fieldItem>Record.Original_Policy_Expiration_Date__c</fieldItem>
+                <identifier>RecordOriginal_Policy_Expiration_Date_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-6ed79971-8b34-4faf-a836-8cb4b8ff0909</name>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Original_Policy_Expiration_Date__c</fullName>
+    <description>End date of the original Insurance policy being renewed. Derived from the Renewal Opportunity's Original Insurance (Original_Insurance__r.Insurance_End_Date__c). Shown under the "Expiration Date" label on the Quote record page.</description>
+    <formula>Opportunity.Original_Insurance__r.Insurance_End_Date__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Read-only — the original policy's end date, pulled from the Renewal's Original Insurance.</inlineHelpText>
+    <label>Expiration Date</label>
+    <required>false</required>
+    <type>Date</type>
+</CustomField>

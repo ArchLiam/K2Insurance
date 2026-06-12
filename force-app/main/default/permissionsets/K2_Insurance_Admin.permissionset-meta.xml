@@ -202,6 +202,16 @@
         <field>Quote.Payment_Method__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Quote.Renewal_Name__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Quote.Original_Policy_Expiration_Date__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
 
     <!-- Insurance__c Custom Field Permissions (new field) -->
     <fieldPermissions>
