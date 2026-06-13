@@ -10,6 +10,9 @@
         <connector>
             <targetReference>New_Lead_Submission_Notification</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>Log_the_Error</targetReference>
+        </faultConnector>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>customNotifTypeId</name>
@@ -51,6 +54,9 @@
         <locationY>0</locationY>
         <actionName>emailSimple</actionName>
         <actionType>emailSimple</actionType>
+        <faultConnector>
+            <targetReference>Log_the_Error</targetReference>
+        </faultConnector>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>recipientAddresses</name>
@@ -203,6 +209,49 @@
         </connector>
     </start>
     <status>Active</status>
+    <subflows>
+        <name>Log_the_Error</name>
+        <label>Log the Error</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>Log_Error</flowName>
+        <inputAssignments>
+            <name>varContext</name>
+            <value>
+                <stringValue>Failed to send the new-lead notification/email to Kay.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varErrorMessage</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varRecordId</name>
+            <value>
+                <elementReference>varNewLead.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSeverity</name>
+            <value>
+                <stringValue>Medium</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceFlow</name>
+            <value>
+                <stringValue>New_Lead_Submission_Notification</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceStep</name>
+            <value>
+                <stringValue>Custom Notification / Email send</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
     <variables>
         <name>varCustomNotificaitonTitle</name>
         <dataType>String</dataType>

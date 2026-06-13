@@ -14,6 +14,13 @@
                 <booleanValue>false</booleanValue>
             </value>
         </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varRecordsToUpdate</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>Iterate_ContactInsuranceAssociation_Records</elementReference>
+            </value>
+        </assignmentItems>
         <connector>
             <targetReference>Iterate_ContactInsuranceAssociation_Records</targetReference>
         </connector>
@@ -82,8 +89,54 @@
         <label>Update the Related ContactInsuranceAssociation Records</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <inputReference>Get_All_Related_ContactInsuranceAssociation_Records</inputReference>
+        <faultConnector>
+            <targetReference>Log_the_Error</targetReference>
+        </faultConnector>
+        <inputReference>varRecordsToUpdate</inputReference>
     </recordUpdates>
+    <subflows>
+        <name>Log_the_Error</name>
+        <label>Log the Error</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>Log_Error</flowName>
+        <inputAssignments>
+            <name>varContext</name>
+            <value>
+                <stringValue>Failed to inactivate related ContactInsuranceAssociation records when the Insurance went Inactive.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varErrorMessage</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varRecordId</name>
+            <value>
+                <elementReference>varInsuranceId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSeverity</name>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceFlow</name>
+            <value>
+                <stringValue>Inactivate_All_Related_ContactInsuranceAssociation_Records</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceStep</name>
+            <value>
+                <stringValue>Update_the_Related_ContactInsuranceAssociation_Records</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
     <start>
         <locationX>0</locationX>
         <locationY>0</locationY>
@@ -98,5 +151,13 @@
         <isCollection>false</isCollection>
         <isInput>true</isInput>
         <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varRecordsToUpdate</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>ContactInsuranceAssociation__c</objectType>
     </variables>
 </Flow>

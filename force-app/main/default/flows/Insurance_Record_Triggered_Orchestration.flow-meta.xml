@@ -3,32 +3,7 @@
     <apiVersion>64.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <decisions>
-        <name>Is_Created_or_Updated</name>
-        <label>Is Created or Updated?</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>After_Update_for_All_Record_Types_of_Insurance</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Updated</defaultConnectorLabel>
-        <rules>
-            <name>Created</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>varIsNEW</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>AllRecordTypesofInsurance</targetReference>
-            </connector>
-            <label>Created</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <description>Is custom label &quot;TRIGGER_ACTIVATION&quot; &quot;ON&quot; or &quot;OFF&quot;.</description>
+        <description>Is custom label &quot;TRIGGER_ACTIVATION&quot; &quot;ON&quot; or &quot;OFF&quot;, AND the per-object Automation Setting active.</description>
         <name>Is_TRIGGER_ACTIVATED</name>
         <label>Is TRIGGER ACTIVATED?</label>
         <locationX>0</locationX>
@@ -44,8 +19,15 @@
                     <stringValue>ON</stringValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <leftValueReference>$CustomMetadata.Automation_Setting__mdt.Insurance_Orchestration.Is_Active__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
-                <targetReference>Is_Created_or_Updated</targetReference>
+                <targetReference>Record_Type</targetReference>
             </connector>
             <label>ON</label>
         </rules>
@@ -72,111 +54,10 @@
             <label>Group Health</label>
         </rules>
     </decisions>
-    <description>Engrave Status to the Name</description>
+    <description>After-save cross-object work for Insurance. Same-record field defaults (Name engrave, Cancellation Date, Commission Rate) were moved to the before-save flow Insurance_Before_Save_Defaults; this orchestration now only inactivates related ContactInsuranceAssociation records when a Group Health policy goes Inactive.</description>
     <environments>Default</environments>
-    <formulas>
-        <name>varIsNEW</name>
-        <dataType>Boolean</dataType>
-        <expression>ISNEW()</expression>
-    </formulas>
     <interviewLabel>Insurance {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Insurance Record-Triggered Orchestration</label>
-    <orchestratedStages>
-        <name>After_Update_for_All_Record_Types_of_Insurance</name>
-        <label>After Update for All Record Types of Insurance</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <connector>
-            <targetReference>AllRecordTypesofInsurance</targetReference>
-        </connector>
-        <exitConditionLogic>and</exitConditionLogic>
-        <stageSteps>
-            <name>Capture_Cancellation_Date</name>
-            <actionName>Capture_Cancellation_Date</actionName>
-            <actionType>stepBackground</actionType>
-            <assignees>
-                <assignee>
-                    <elementReference>$User.Username</elementReference>
-                </assignee>
-                <assigneeType>User</assigneeType>
-            </assignees>
-            <canAssigneeEdit>false</canAssigneeEdit>
-            <debugSimulateStep>false</debugSimulateStep>
-            <entryConditionLogic>and</entryConditionLogic>
-            <exitConditionLogic>and</exitConditionLogic>
-            <inputParameters>
-                <name>varNewInsuranceRecord</name>
-                <value>
-                    <elementReference>$Record</elementReference>
-                </value>
-            </inputParameters>
-            <label>Capture Cancellation Date</label>
-            <requiresAsyncProcessing>false</requiresAsyncProcessing>
-            <runAsUser>true</runAsUser>
-            <shouldLock>false</shouldLock>
-            <stepSubtype>BackgroundStep</stepSubtype>
-        </stageSteps>
-    </orchestratedStages>
-    <orchestratedStages>
-        <name>AllRecordTypesofInsurance</name>
-        <label>All Record Types of Insurance</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <connector>
-            <targetReference>Set_Commission_Rate_Stage</targetReference>
-        </connector>
-        <exitConditionLogic>and</exitConditionLogic>
-        <stageSteps>
-            <name>Engrave_Status_to_the_Name</name>
-            <actionName>Insurance_Status_Name_Engraver</actionName>
-            <actionType>stepBackground</actionType>
-            <canAssigneeEdit>false</canAssigneeEdit>
-            <debugSimulateStep>false</debugSimulateStep>
-            <entryConditionLogic>and</entryConditionLogic>
-            <exitConditionLogic>and</exitConditionLogic>
-            <inputParameters>
-                <name>varInsuranceRecord</name>
-                <value>
-                    <elementReference>$Record</elementReference>
-                </value>
-            </inputParameters>
-            <label>Engrave Status to the Name</label>
-            <requiresAsyncProcessing>false</requiresAsyncProcessing>
-            <runAsUser>false</runAsUser>
-            <shouldLock>false</shouldLock>
-            <stepSubtype>BackgroundStep</stepSubtype>
-        </stageSteps>
-    </orchestratedStages>
-    <orchestratedStages>
-        <name>Set_Commission_Rate_Stage</name>
-        <label>Set Commission Rate from Subagent</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <connector>
-            <targetReference>Record_Type</targetReference>
-        </connector>
-        <exitConditionLogic>and</exitConditionLogic>
-        <stageSteps>
-            <name>Set_Commission_Rate_from_Subagent</name>
-            <actionName>Insurance_Set_Commission_Rate_from_Subagent</actionName>
-            <actionType>stepBackground</actionType>
-            <canAssigneeEdit>false</canAssigneeEdit>
-            <debugSimulateStep>false</debugSimulateStep>
-            <entryConditionLogic>and</entryConditionLogic>
-            <exitConditionLogic>and</exitConditionLogic>
-            <inputParameters>
-                <name>varNewInsuranceRecord</name>
-                <value>
-                    <elementReference>$Record</elementReference>
-                </value>
-            </inputParameters>
-            <label>Set Commission Rate from Subagent</label>
-            <requiresAsyncProcessing>false</requiresAsyncProcessing>
-            <runAsUser>false</runAsUser>
-            <shouldLock>false</shouldLock>
-            <stepSubtype>BackgroundStep</stepSubtype>
-        </stageSteps>
-    </orchestratedStages>
     <orchestratedStages>
         <name>Inactivation</name>
         <label>Inactivation</label>

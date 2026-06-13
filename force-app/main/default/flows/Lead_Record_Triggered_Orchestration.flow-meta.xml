@@ -12,8 +12,11 @@
             <name>Created</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>$Record__Prior.Id</leftValueReference>
+                <leftValueReference>varIsNEW</leftValueReference>
                 <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
             </conditions>
             <connector>
                 <targetReference>Lead_Source</targetReference>
@@ -36,6 +39,13 @@
                 <operator>EqualTo</operator>
                 <rightValue>
                     <stringValue>ON</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$CustomMetadata.Automation_Setting__mdt.Lead_Orchestration.Is_Active__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -67,6 +77,11 @@
         </rules>
     </decisions>
     <environments>Default</environments>
+    <formulas>
+        <name>varIsNEW</name>
+        <dataType>Boolean</dataType>
+        <expression>ISNEW()</expression>
+    </formulas>
     <interviewLabel>Lead Record-Triggered Orchestration {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Lead Record-Triggered Orchestration</label>
     <orchestratedStages>
