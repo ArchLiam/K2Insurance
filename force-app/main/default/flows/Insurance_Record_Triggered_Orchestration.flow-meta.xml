@@ -19,13 +19,6 @@
                     <stringValue>ON</stringValue>
                 </rightValue>
             </conditions>
-            <conditions>
-                <leftValueReference>$CustomMetadata.Automation_Setting__mdt.Insurance_Orchestration.Is_Active__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
             <connector>
                 <targetReference>Record_Type</targetReference>
             </connector>

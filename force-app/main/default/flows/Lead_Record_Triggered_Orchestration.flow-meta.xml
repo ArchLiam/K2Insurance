@@ -41,13 +41,6 @@
                     <stringValue>ON</stringValue>
                 </rightValue>
             </conditions>
-            <conditions>
-                <leftValueReference>$CustomMetadata.Automation_Setting__mdt.Lead_Orchestration.Is_Active__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
             <connector>
                 <targetReference>Is_Created_or_Updated</targetReference>
             </connector>

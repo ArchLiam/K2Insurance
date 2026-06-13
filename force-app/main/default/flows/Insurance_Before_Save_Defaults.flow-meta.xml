@@ -48,13 +48,6 @@
                     <stringValue>ON</stringValue>
                 </rightValue>
             </conditions>
-            <conditions>
-                <leftValueReference>Get_Insurance_Automation_Setting.Is_Active__c</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <booleanValue>true</booleanValue>
-                </rightValue>
-            </conditions>
             <connector>
                 <targetReference>Set_Name</targetReference>
             </connector>
@@ -90,7 +83,7 @@
             <label>Cancelled</label>
         </rules>
     </decisions>
-    <description>Before-save defaults for Insurance: engraves Status into Name and stamps Cancellation Date on first Cancelled (zero DML). Commission Rate is intentionally NOT set here — it is edited per-Insurance manually. Gated by TRIGGER_ACTIVATION label + Automation_Setting__mdt.Insurance_Orchestration.</description>
+    <description>Before-save defaults for Insurance: engraves Status into Name and stamps Cancellation Date on first Cancelled (zero DML). Commission Rate is intentionally NOT set here — it is edited per-Insurance manually. Gated by the TRIGGER_ACTIVATION custom label.</description>
     <environments>Default</environments>
     <formulas>
         <description>Insurance Name with its Status engraved in parentheses; strips any existing parenthetical first. Blank status returns just the base name.</description>
@@ -124,34 +117,11 @@
         </value>
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
-    <recordLookups>
-        <name>Get_Insurance_Automation_Setting</name>
-        <label>Get Insurance Automation Setting</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Is_TRIGGER_ACTIVATED</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>DeveloperName</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Insurance_Orchestration</stringValue>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>Automation_Setting__mdt</object>
-        <queriedFields>Id</queriedFields>
-        <queriedFields>Is_Active__c</queriedFields>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
     <start>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Get_Insurance_Automation_Setting</targetReference>
+            <targetReference>Is_TRIGGER_ACTIVATED</targetReference>
         </connector>
         <object>Insurance__c</object>
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
