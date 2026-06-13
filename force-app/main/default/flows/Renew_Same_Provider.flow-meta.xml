@@ -255,26 +255,55 @@
             <fieldType>DisplayText</fieldType>
         </fields>
         <fields>
-            <name>RenewalPremium</name>
-            <dataType>Currency</dataType>
-            <defaultValue>
-                <elementReference>Get_Original_Insurance.Premium__c</elementReference>
-            </defaultValue>
-            <fieldText>Renewal Premium</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>true</isRequired>
-            <scale>2</scale>
-        </fields>
-        <fields>
-            <name>TermMonths</name>
-            <dataType>Number</dataType>
-            <defaultValue>
-                <elementReference>Get_Original_Insurance.Insurance_Term_months__c</elementReference>
-            </defaultValue>
-            <fieldText>Term (months)</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>true</isRequired>
-            <scale>0</scale>
+            <name>Section_Terms</name>
+            <fieldText>Renewal Terms</fieldText>
+            <fields>
+                <name>Section_Terms_C1</name>
+                <fields>
+                    <name>RenewalPremium</name>
+                    <dataType>Currency</dataType>
+                    <defaultValue>
+                        <elementReference>Get_Original_Insurance.Premium__c</elementReference>
+                    </defaultValue>
+                    <fieldText>Renewal Premium</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>true</isRequired>
+                    <scale>2</scale>
+                </fields>
+                <fieldType>Region</fieldType>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Section_Terms_C2</name>
+                <fields>
+                    <name>TermMonths</name>
+                    <dataType>Number</dataType>
+                    <defaultValue>
+                        <elementReference>Get_Original_Insurance.Insurance_Term_months__c</elementReference>
+                    </defaultValue>
+                    <fieldText>Term (months)</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>true</isRequired>
+                    <scale>0</scale>
+                </fields>
+                <fieldType>Region</fieldType>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fieldType>RegionContainer</fieldType>
+            <isRequired>false</isRequired>
+            <regionContainerType>SectionWithHeader</regionContainerType>
         </fields>
         <fields>
             <name>StartDate</name>
@@ -287,48 +316,106 @@
             <isRequired>true</isRequired>
         </fields>
         <fields>
-            <name>PaymentFrequency</name>
-            <choiceReferences>Choice_PaymentFrequency</choiceReferences>
-            <dataType>String</dataType>
-            <defaultValue>
-                <elementReference>Get_Original_Insurance.Payment_Frequency__c</elementReference>
-            </defaultValue>
-            <fieldText>Payment Frequency</fieldText>
-            <fieldType>DropdownBox</fieldType>
+            <name>Section_Payment</name>
+            <fieldText>Payment</fieldText>
+            <fields>
+                <name>Section_Payment_C1</name>
+                <fields>
+                    <name>PaymentFrequency</name>
+                    <choiceReferences>Choice_PaymentFrequency</choiceReferences>
+                    <dataType>String</dataType>
+                    <defaultValue>
+                        <elementReference>Get_Original_Insurance.Payment_Frequency__c</elementReference>
+                    </defaultValue>
+                    <fieldText>Payment Frequency</fieldText>
+                    <fieldType>DropdownBox</fieldType>
+                    <isRequired>false</isRequired>
+                </fields>
+                <fieldType>Region</fieldType>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Section_Payment_C2</name>
+                <fields>
+                    <name>PaymentMethod</name>
+                    <choiceReferences>Choice_PaymentMethod</choiceReferences>
+                    <dataType>String</dataType>
+                    <defaultValue>
+                        <elementReference>Get_Original_Insurance.Payment_Method__c</elementReference>
+                    </defaultValue>
+                    <fieldText>Payment Method</fieldText>
+                    <fieldType>DropdownBox</fieldType>
+                    <isRequired>false</isRequired>
+                </fields>
+                <fieldType>Region</fieldType>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fieldType>RegionContainer</fieldType>
             <isRequired>false</isRequired>
+            <regionContainerType>SectionWithHeader</regionContainerType>
         </fields>
         <fields>
-            <name>PaymentMethod</name>
-            <choiceReferences>Choice_PaymentMethod</choiceReferences>
-            <dataType>String</dataType>
-            <defaultValue>
-                <elementReference>Get_Original_Insurance.Payment_Method__c</elementReference>
-            </defaultValue>
-            <fieldText>Payment Method</fieldText>
-            <fieldType>DropdownBox</fieldType>
+            <name>Section_Coverage</name>
+            <fieldText>Coverage</fieldText>
+            <fields>
+                <name>Section_Coverage_C1</name>
+                <fields>
+                    <name>Coverage</name>
+                    <dataType>Currency</dataType>
+                    <defaultValue>
+                        <elementReference>Get_Original_Insurance.Business_Personal_Property__c</elementReference>
+                    </defaultValue>
+                    <fieldText>Coverage Amount</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>false</isRequired>
+                    <scale>2</scale>
+                </fields>
+                <fieldType>Region</fieldType>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Section_Coverage_C2</name>
+                <fields>
+                    <name>Deductible</name>
+                    <dataType>Currency</dataType>
+                    <defaultValue>
+                        <elementReference>Get_Original_Insurance.Deductible__c</elementReference>
+                    </defaultValue>
+                    <fieldText>Deductible</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>false</isRequired>
+                    <scale>2</scale>
+                </fields>
+                <fieldType>Region</fieldType>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fieldType>RegionContainer</fieldType>
             <isRequired>false</isRequired>
-        </fields>
-        <fields>
-            <name>Coverage</name>
-            <dataType>Currency</dataType>
-            <defaultValue>
-                <elementReference>Get_Original_Insurance.Business_Personal_Property__c</elementReference>
-            </defaultValue>
-            <fieldText>Coverage Amount</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
-            <scale>2</scale>
-        </fields>
-        <fields>
-            <name>Deductible</name>
-            <dataType>Currency</dataType>
-            <defaultValue>
-                <elementReference>Get_Original_Insurance.Deductible__c</elementReference>
-            </defaultValue>
-            <fieldText>Deductible</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
-            <scale>2</scale>
+            <regionContainerType>SectionWithHeader</regionContainerType>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
