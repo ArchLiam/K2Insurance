@@ -30,22 +30,6 @@
                 <elementReference>$Flow.CurrentDate</elementReference>
             </value>
         </assignmentItems>
-        <connector>
-            <targetReference>Has_Subagent</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
-        <name>Set_Commission_Rate</name>
-        <label>Set Commission Rate from Subagent</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Record.Commission_Rate__c</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>Get_Subagent.Commission_Rate__c</elementReference>
-            </value>
-        </assignmentItems>
     </assignments>
     <decisions>
         <description>Global TRIGGER_ACTIVATION label AND the per-object Automation Setting must both be on.</description>
@@ -65,7 +49,7 @@
                 </rightValue>
             </conditions>
             <conditions>
-                <leftValueReference>$CustomMetadata.Automation_Setting__mdt.Insurance_Orchestration.Is_Active__c</leftValueReference>
+                <leftValueReference>Get_Insurance_Automation_Setting.Is_Active__c</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
                     <booleanValue>true</booleanValue>
@@ -82,9 +66,6 @@
         <label>Newly Cancelled?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <defaultConnector>
-            <targetReference>Has_Subagent</targetReference>
-        </defaultConnector>
         <defaultConnectorLabel>No</defaultConnectorLabel>
         <rules>
             <name>Cancelled</name>
@@ -109,58 +90,7 @@
             <label>Cancelled</label>
         </rules>
     </decisions>
-    <decisions>
-        <name>Has_Subagent</name>
-        <label>Has Subagent?</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <defaultConnectorLabel>No</defaultConnectorLabel>
-        <rules>
-            <name>Yes</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>$Record.Subagent__c</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Get_Subagent</targetReference>
-            </connector>
-            <label>Yes</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <name>Rate_Differs</name>
-        <label>Rate Differs?</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <defaultConnectorLabel>In Sync</defaultConnectorLabel>
-        <rules>
-            <name>Differs</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>Get_Subagent.Commission_Rate__c</leftValueReference>
-                <operator>IsNull</operator>
-                <rightValue>
-                    <booleanValue>false</booleanValue>
-                </rightValue>
-            </conditions>
-            <conditions>
-                <leftValueReference>$Record.Commission_Rate__c</leftValueReference>
-                <operator>NotEqualTo</operator>
-                <rightValue>
-                    <elementReference>Get_Subagent.Commission_Rate__c</elementReference>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Set_Commission_Rate</targetReference>
-            </connector>
-            <label>Differs</label>
-        </rules>
-    </decisions>
-    <description>Before-save defaults for Insurance: engraves Status into Name, stamps Cancellation Date on first Cancelled, and syncs Commission Rate from the Subagent. Replaces the same-record after-save subflows (zero DML). Gated by TRIGGER_ACTIVATION + Automation_Setting__mdt.Insurance_Orchestration.</description>
+    <description>Before-save defaults for Insurance: engraves Status into Name and stamps Cancellation Date on first Cancelled (zero DML). Commission Rate is intentionally NOT set here — it is edited per-Insurance manually. Gated by TRIGGER_ACTIVATION label + Automation_Setting__mdt.Insurance_Orchestration.</description>
     <environments>Default</environments>
     <formulas>
         <description>Insurance Name with its Status engraved in parentheses; strips any existing parenthetical first. Blank status returns just the base name.</description>
@@ -195,33 +125,33 @@
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <recordLookups>
-        <name>Get_Subagent</name>
-        <label>Get Subagent</label>
+        <name>Get_Insurance_Automation_Setting</name>
+        <label>Get Insurance Automation Setting</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Rate_Differs</targetReference>
+            <targetReference>Is_TRIGGER_ACTIVATED</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>Id</field>
+            <field>DeveloperName</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>$Record.Subagent__c</elementReference>
+                <stringValue>Insurance_Orchestration</stringValue>
             </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>Account</object>
+        <object>Automation_Setting__mdt</object>
         <queriedFields>Id</queriedFields>
-        <queriedFields>Commission_Rate__c</queriedFields>
+        <queriedFields>Is_Active__c</queriedFields>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <start>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Is_TRIGGER_ACTIVATED</targetReference>
+            <targetReference>Get_Insurance_Automation_Setting</targetReference>
         </connector>
         <object>Insurance__c</object>
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
