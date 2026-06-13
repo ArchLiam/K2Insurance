@@ -180,14 +180,28 @@
                     <numberValue>2.0</numberValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <leftValueReference>varIsPlaceholderCompany</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
                 <targetReference>Get_Client_Business_Account_Record_Types</targetReference>
             </connector>
             <label>Valid</label>
         </rules>
     </decisions>
-    <description>Added conversion of Company</description>
+    <description>Added conversion of Company. Placeholder company names ("[Not Provided]"/"Not Provided") are treated as invalid so individual leads convert to an account-less Contact instead of creating a junk Account.</description>
     <environments>Default</environments>
+    <formulas>
+        <name>varIsPlaceholderCompany</name>
+        <dataType>Boolean</dataType>
+        <expression>OR(
+  UPPER(TRIM({!Get_the_Lead.Company})) = &quot;[NOT PROVIDED]&quot;,
+  UPPER(TRIM({!Get_the_Lead.Company})) = &quot;NOT PROVIDED&quot;)</expression>
+    </formulas>
     <formulas>
         <name>varLenOfCompany</name>
         <dataType>Number</dataType>
