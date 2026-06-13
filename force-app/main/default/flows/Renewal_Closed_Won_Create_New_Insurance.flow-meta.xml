@@ -3,6 +3,28 @@
     <apiVersion>66.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <decisions>
+        <name>Not_Yet_Created</name>
+        <label>Not Yet Created?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Already Created</defaultConnectorLabel>
+        <rules>
+            <name>Not_Created</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>varRenewalOpportunity.New_Insurance__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Synced_Quote</targetReference>
+            </connector>
+            <label>Not Created</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>Has_Synced_Quote</name>
         <label>Has Synced Quote?</label>
         <locationX>0</locationX>
@@ -24,30 +46,7 @@
             <label>Yes</label>
         </rules>
     </decisions>
-    <decisions>
-        <description>Is custom label &quot;TRIGGER_ACTIVATION&quot; &quot;ON&quot; or &quot;OFF&quot;.</description>
-        <name>Is_TRIGGER_ACTIVATED</name>
-        <label>Is TRIGGER ACTIVATED?</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <defaultConnectorLabel>OFF</defaultConnectorLabel>
-        <rules>
-            <name>ON</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>$Label.TRIGGER_ACTIVATION</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>ON</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Get_Synced_Quote</targetReference>
-            </connector>
-            <label>ON</label>
-        </rules>
-    </decisions>
-    <description>When a Renewal Opportunity is Closed Won, creates a new Insurance__c record from the synced Quote. Skips automatically if there is no synced Quote.</description>
+    <description>Subflow (called by Renewal_Record_Triggered_Orchestration): given a Renewal Opportunity, creates a new Insurance__c from the synced Quote and links it back. Skips automatically if there is no synced Quote.</description>
     <environments>Default</environments>
     <interviewLabel>Renewal Closed Won — Create New Insurance {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Renewal Closed Won — Create New Insurance</label>
@@ -150,7 +149,7 @@
         <inputAssignments>
             <field>Renewal_Opportunity__c</field>
             <value>
-                <elementReference>$Record.Id</elementReference>
+                <elementReference>varRenewalOpportunity.Id</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -194,7 +193,7 @@
             <field>Id</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>$Record.Original_Insurance__c</elementReference>
+                <elementReference>varRenewalOpportunity.Original_Insurance__c</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
@@ -215,7 +214,7 @@
             <field>OpportunityId</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>$Record.Id</elementReference>
+                <elementReference>varRenewalOpportunity.Id</elementReference>
             </value>
         </filters>
         <filters>
@@ -237,13 +236,21 @@
         <faultConnector>
             <targetReference>Log_the_Error</targetReference>
         </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>varRenewalOpportunity.Id</elementReference>
+            </value>
+        </filters>
         <inputAssignments>
             <field>New_Insurance__c</field>
             <value>
                 <elementReference>Create_New_Insurance.Id</elementReference>
             </value>
         </inputAssignments>
-        <inputReference>$Record</inputReference>
+        <object>Opportunity</object>
     </recordUpdates>
     <subflows>
         <name>Log_the_Error</name>
@@ -266,7 +273,7 @@
         <inputAssignments>
             <name>varRecordId</name>
             <value>
-                <elementReference>$Record.Id</elementReference>
+                <elementReference>varRenewalOpportunity.Id</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -292,20 +299,16 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Is_TRIGGER_ACTIVATED</targetReference>
+            <targetReference>Not_Yet_Created</targetReference>
         </connector>
-        <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>StageName</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Closed Won</stringValue>
-            </value>
-        </filters>
-        <object>Opportunity</object>
-        <recordTriggerType>Update</recordTriggerType>
-        <triggerType>RecordAfterSave</triggerType>
     </start>
     <status>Active</status>
+    <variables>
+        <name>varRenewalOpportunity</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Opportunity</objectType>
+    </variables>
 </Flow>
