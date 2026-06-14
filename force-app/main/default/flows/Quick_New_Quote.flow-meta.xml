@@ -80,11 +80,6 @@
         <expression>&quot;Quote - &quot; &amp; {!Get_Selected_Provider.Name} &amp; &quot; - &quot; &amp; TEXT(TODAY())</expression>
     </formulas>
     <formulas>
-        <name>fxQuoteStatus</name>
-        <dataType>String</dataType>
-        <expression>IF({!AutoSync} = &quot;Yes&quot;, &quot;Accepted&quot;, &quot;Draft&quot;)</expression>
-    </formulas>
-    <formulas>
         <name>fxStartDateDefault</name>
         <dataType>Date</dataType>
         <expression>IF(ISBLANK({!Get_Original_Insurance.Insurance_End_Date__c}), TODAY(), {!Get_Original_Insurance.Insurance_End_Date__c} + 1)</expression>
@@ -193,7 +188,7 @@
         <inputAssignments>
             <field>Status</field>
             <value>
-                <elementReference>fxQuoteStatus</elementReference>
+                <stringValue>Draft</stringValue>
             </value>
         </inputAssignments>
         <object>Quote</object>
@@ -333,7 +328,7 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Done_Synced</targetReference>
+            <targetReference>Accept_Quote</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -350,6 +345,30 @@
             </value>
         </inputAssignments>
         <object>Opportunity</object>
+    </recordUpdates>
+    <recordUpdates>
+        <name>Accept_Quote</name>
+        <label>Set Quote Accepted</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Done_Synced</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>Create_Quote</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Accepted</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Quote</object>
     </recordUpdates>
     <screens>
         <name>Quote_Inputs</name>
