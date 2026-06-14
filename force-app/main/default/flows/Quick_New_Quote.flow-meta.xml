@@ -2,6 +2,22 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>64.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <choices>
+        <name>Choice_SyncNo</name>
+        <choiceText>No — I&apos;ll Start Sync manually</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>No</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>Choice_SyncYes</name>
+        <choiceText>Yes — start syncing this quote now</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Yes</stringValue>
+        </value>
+    </choices>
     <decisions>
         <name>Auto_Sync_Decision</name>
         <label>Auto Sync?</label>
@@ -18,7 +34,7 @@
                 <leftValueReference>AutoSync</leftValueReference>
                 <operator>EqualTo</operator>
                 <rightValue>
-                    <booleanValue>true</booleanValue>
+                    <stringValue>Yes</stringValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -517,13 +533,15 @@
         </fields>
         <fields>
             <name>AutoSync</name>
-            <dataType>Boolean</dataType>
+            <choiceReferences>Choice_SyncYes</choiceReferences>
+            <choiceReferences>Choice_SyncNo</choiceReferences>
+            <dataType>String</dataType>
             <defaultValue>
-                <booleanValue>true</booleanValue>
+                <stringValue>Yes</stringValue>
             </defaultValue>
-            <fieldText>Start Sync this quote now (so the Renewal is ready to mark Closed Won)</fieldText>
-            <fieldType>InputField</fieldType>
-            <isRequired>false</isRequired>
+            <fieldText>Start Sync this quote now? (so the Renewal is ready to mark Closed Won)</fieldText>
+            <fieldType>RadioButtons</fieldType>
+            <isRequired>true</isRequired>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
