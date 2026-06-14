@@ -2,7 +2,7 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>64.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
-    <description>Quick Action on a Renewal Opportunity: pre-fills a renewal Quote from the Original Insurance (same provider) and lets the user edit the changed values (premium, term, start date, payment frequency/method, coverage, deductible), then creates the Quote. Replaces the quickCreateQuote LWC + QuoteCreateController Apex.</description>
+    <description>Quick Action on a Renewal Opportunity: lets the user pick the Service Provider and edit the quote details (pre-filled from the Original Insurance when present), then creates the Quote. Replaces the quickCreateQuote LWC + QuoteCreateController Apex.</description>
     <dynamicChoiceSets>
         <name>Choice_PaymentFrequency</name>
         <dataType>Picklist</dataType>
@@ -15,19 +15,36 @@
         <picklistField>Payment_Method__c</picklistField>
         <picklistObject>Quote</picklistObject>
     </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>Choice_Providers</name>
+        <dataType>String</dataType>
+        <displayField>Name</displayField>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>RecordType.DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Insurance_Provider</stringValue>
+            </value>
+        </filters>
+        <object>Account</object>
+        <sortField>Name</sortField>
+        <sortOrder>Asc</sortOrder>
+        <valueField>Id</valueField>
+    </dynamicChoiceSets>
     <environments>Default</environments>
     <formulas>
         <name>fxQuoteName</name>
         <dataType>String</dataType>
-        <expression>&quot;Quote - &quot; &amp; {!Get_Provider.Name} &amp; &quot; - &quot; &amp; TEXT(TODAY())</expression>
+        <expression>&quot;Quote - &quot; &amp; {!Get_Selected_Provider.Name} &amp; &quot; - &quot; &amp; TEXT(TODAY())</expression>
     </formulas>
     <formulas>
         <name>fxStartDateDefault</name>
         <dataType>Date</dataType>
-        <expression>{!Get_Original_Insurance.Insurance_End_Date__c} + 1</expression>
+        <expression>IF(ISBLANK({!Get_Original_Insurance.Insurance_End_Date__c}), TODAY(), {!Get_Original_Insurance.Insurance_End_Date__c} + 1)</expression>
     </formulas>
-    <interviewLabel>Renew — Same Provider {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>Renew — Same Provider</label>
+    <interviewLabel>Quick New Quote {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Quick New Quote</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -76,7 +93,7 @@
         <inputAssignments>
             <field>Insurance_Provider__c</field>
             <value>
-                <elementReference>Get_Original_Insurance.Insurance_Provider__c</elementReference>
+                <elementReference>ServiceProvider</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -167,11 +184,8 @@
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Get_Provider</targetReference>
+            <targetReference>Get_Standard_Pricebook</targetReference>
         </connector>
-        <faultConnector>
-            <targetReference>No_Original_Insurance</targetReference>
-        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
@@ -194,36 +208,13 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <name>Get_Provider</name>
-        <label>Get Provider</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Get_Standard_Pricebook</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Id</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>Get_Original_Insurance.Insurance_Provider__c</elementReference>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>Account</object>
-        <queriedFields>Id</queriedFields>
-        <queriedFields>Name</queriedFields>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
         <name>Get_Standard_Pricebook</name>
         <label>Get Standard Pricebook</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Renewal_Quote_Inputs</targetReference>
+            <targetReference>Quote_Inputs</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -238,25 +229,54 @@
         <queriedFields>Id</queriedFields>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
+    <recordLookups>
+        <name>Get_Selected_Provider</name>
+        <label>Get Selected Provider</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Create_Quote</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>ServiceProvider</elementReference>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Account</object>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>Name</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
     <screens>
-        <name>Renewal_Quote_Inputs</name>
-        <label>Renewal Quote — Same Provider</label>
+        <name>Quote_Inputs</name>
+        <label>New Quote</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Create_Quote</targetReference>
+            <targetReference>Get_Selected_Provider</targetReference>
         </connector>
         <fields>
-            <name>ProviderDisplay</name>
-            <fieldText>&lt;p&gt;&lt;b&gt;Provider (same as current):&lt;/b&gt; {!Get_Provider.Name}&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
+            <name>ServiceProvider</name>
+            <choiceReferences>Choice_Providers</choiceReferences>
+            <dataType>String</dataType>
+            <defaultValue>
+                <elementReference>Get_Original_Insurance.Insurance_Provider__c</elementReference>
+            </defaultValue>
+            <fieldText>Service Provider</fieldText>
+            <fieldType>DropdownBox</fieldType>
+            <isRequired>true</isRequired>
         </fields>
         <fields>
             <name>Section_Terms</name>
-            <fieldText>Renewal Terms</fieldText>
+            <fieldText>Quote Terms</fieldText>
             <fields>
                 <name>Section_Terms_C1</name>
                 <fields>
@@ -265,7 +285,7 @@
                     <defaultValue>
                         <elementReference>Get_Original_Insurance.Premium__c</elementReference>
                     </defaultValue>
-                    <fieldText>Renewal Premium</fieldText>
+                    <fieldText>Premium</fieldText>
                     <fieldType>InputField</fieldType>
                     <isRequired>true</isRequired>
                     <scale>2</scale>
@@ -430,23 +450,7 @@
         <allowPause>false</allowPause>
         <fields>
             <name>DoneMessage</name>
-            <fieldText>&lt;p&gt;✅ &lt;b&gt;Renewal quote created:&lt;/b&gt; {!fxQuoteName}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Next: open the Quote, click &lt;b&gt;Start Sync&lt;/b&gt;, then move this Renewal to &lt;b&gt;Closed Won&lt;/b&gt; to create the new policy.&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-        </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
-    <screens>
-        <name>No_Original_Insurance</name>
-        <label>No Original Insurance</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <allowBack>false</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <fields>
-            <name>NoOrigMessage</name>
-            <fieldText>&lt;p&gt;⚠️ This Renewal has no linked &lt;b&gt;Original Insurance&lt;/b&gt;, so the provider and policy details can&apos;t be pre-filled. Set the Original Insurance on the Renewal first.&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;✅ &lt;b&gt;Quote created:&lt;/b&gt; {!fxQuoteName}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Next: open the Quote, click &lt;b&gt;Start Sync&lt;/b&gt;, then move this Renewal to &lt;b&gt;Closed Won&lt;/b&gt; to create the new policy.&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>

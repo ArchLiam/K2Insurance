@@ -7,7 +7,7 @@
                     <name>actionNames</name>
                     <valueList>
                         <valueListItems>
-                            <value>Opportunity.Renew_Same_Provider</value>
+                            <value>Opportunity.Quick_New_Quote</value>
                         </valueListItems>
                         <valueListItems>
                             <value>Edit</value>
