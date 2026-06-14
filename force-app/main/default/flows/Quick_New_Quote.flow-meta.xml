@@ -479,7 +479,7 @@
         <allowPause>false</allowPause>
         <fields>
             <name>DoneMessage</name>
-            <fieldText>&lt;p&gt;✅ &lt;b&gt;Quote created:&lt;/b&gt; {!fxQuoteName}&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Next: open the Quote, click &lt;b&gt;Start Sync&lt;/b&gt;, then move this Renewal to &lt;b&gt;Closed Won&lt;/b&gt; to create the new policy.&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;✅ &lt;b&gt;Quote created:&lt;/b&gt; &lt;a href=&quot;/{!Create_Quote}&quot; target=&quot;_blank&quot;&gt;{!fxQuoteName}&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Next: open the Quote (link above), click &lt;b&gt;Start Sync&lt;/b&gt;, then move this Renewal to &lt;b&gt;Closed Won&lt;/b&gt; to create the new policy.&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
