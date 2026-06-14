@@ -2,6 +2,31 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>64.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <decisions>
+        <name>Auto_Sync_Decision</name>
+        <label>Auto Sync?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Done</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Sync</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>AutoSync</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Sync_Quote</targetReference>
+            </connector>
+            <label>Sync</label>
+        </rules>
+    </decisions>
     <description>Quick Action on a Renewal Opportunity: lets the user pick the Service Provider and edit the quote details (pre-filled from the Original Insurance when present), then creates the Quote. Replaces the quickCreateQuote LWC + QuoteCreateController Apex.</description>
     <dynamicChoiceSets>
         <name>Choice_PaymentFrequency</name>
@@ -70,7 +95,7 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Done</targetReference>
+            <targetReference>Auto_Sync_Decision</targetReference>
         </connector>
         <inputAssignments>
             <field>ContactId</field>
@@ -281,6 +306,30 @@
         <queriedFields>Name</queriedFields>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
+    <recordUpdates>
+        <name>Sync_Quote</name>
+        <label>Sync Quote</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Done_Synced</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>SyncedQuoteId</field>
+            <value>
+                <elementReference>Create_Quote</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Opportunity</object>
+    </recordUpdates>
     <screens>
         <name>Quote_Inputs</name>
         <label>New Quote</label>
@@ -466,6 +515,16 @@
             <isRequired>false</isRequired>
             <regionContainerType>SectionWithHeader</regionContainerType>
         </fields>
+        <fields>
+            <name>AutoSync</name>
+            <dataType>Boolean</dataType>
+            <defaultValue>
+                <booleanValue>true</booleanValue>
+            </defaultValue>
+            <fieldText>Start Sync this quote now (so the Renewal is ready to mark Closed Won)</fieldText>
+            <fieldType>InputField</fieldType>
+            <isRequired>false</isRequired>
+        </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
     </screens>
@@ -479,7 +538,23 @@
         <allowPause>false</allowPause>
         <fields>
             <name>DoneMessage</name>
-            <fieldText>&lt;p&gt;✅ &lt;b&gt;Quote created:&lt;/b&gt; &lt;a href=&quot;/{!Create_Quote}&quot; target=&quot;_blank&quot;&gt;{!fxQuoteName}&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Next: open the Quote (link above), click &lt;b&gt;Start Sync&lt;/b&gt;, then move this Renewal to &lt;b&gt;Closed Won&lt;/b&gt; to create the new policy.&lt;/p&gt;</fieldText>
+            <fieldText>&lt;p&gt;✅ &lt;b&gt;Quote created:&lt;/b&gt; &lt;a href=&quot;/{!Create_Quote}&quot;&gt;{!fxQuoteName}&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Next: open the Quote (link above), click &lt;b&gt;Start Sync&lt;/b&gt;, then move this Renewal to &lt;b&gt;Closed Won&lt;/b&gt; to create the new policy.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Done_Synced</name>
+        <label>Done</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>DoneSyncedMessage</name>
+            <fieldText>&lt;p&gt;✅ &lt;b&gt;Quote created &amp; syncing:&lt;/b&gt; &lt;a href=&quot;/{!Create_Quote}&quot;&gt;{!fxQuoteName}&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Now just move this Renewal to &lt;b&gt;Closed Won&lt;/b&gt; to create the new policy.&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
         </fields>
         <showFooter>true</showFooter>
