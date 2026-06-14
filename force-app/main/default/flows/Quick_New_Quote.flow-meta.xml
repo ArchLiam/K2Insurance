@@ -21,10 +21,10 @@
         <displayField>Name</displayField>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>RecordType.DeveloperName</field>
+            <field>RecordTypeId</field>
             <operator>EqualTo</operator>
             <value>
-                <stringValue>Insurance_Provider</stringValue>
+                <elementReference>Get_Provider_RecordType.Id</elementReference>
             </value>
         </filters>
         <object>Account</object>
@@ -214,7 +214,7 @@
         <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Quote_Inputs</targetReference>
+            <targetReference>Get_Provider_RecordType</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -226,6 +226,35 @@
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
         <object>Pricebook2</object>
+        <queriedFields>Id</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <recordLookups>
+        <name>Get_Provider_RecordType</name>
+        <label>Get Provider Record Type</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Quote_Inputs</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>SobjectType</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Account</stringValue>
+            </value>
+        </filters>
+        <filters>
+            <field>DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Insurance_Provider</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>RecordType</object>
         <queriedFields>Id</queriedFields>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
