@@ -80,6 +80,11 @@
         <expression>&quot;Quote - &quot; &amp; {!Get_Selected_Provider.Name} &amp; &quot; - &quot; &amp; TEXT(TODAY())</expression>
     </formulas>
     <formulas>
+        <name>fxQuoteStatus</name>
+        <dataType>String</dataType>
+        <expression>IF({!AutoSync} = &quot;Yes&quot;, &quot;Accepted&quot;, &quot;Draft&quot;)</expression>
+    </formulas>
+    <formulas>
         <name>fxStartDateDefault</name>
         <dataType>Date</dataType>
         <expression>IF(ISBLANK({!Get_Original_Insurance.Insurance_End_Date__c}), TODAY(), {!Get_Original_Insurance.Insurance_End_Date__c} + 1)</expression>
@@ -188,7 +193,7 @@
         <inputAssignments>
             <field>Status</field>
             <value>
-                <stringValue>Draft</stringValue>
+                <elementReference>fxQuoteStatus</elementReference>
             </value>
         </inputAssignments>
         <object>Quote</object>
