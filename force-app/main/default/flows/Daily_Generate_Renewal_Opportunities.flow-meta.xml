@@ -114,7 +114,7 @@
         <inputAssignments>
             <field>OwnerId</field>
             <value>
-                <stringValue>005fI000002lJXWQA2</stringValue>
+                <elementReference>$Label.RENEWAL_OWNER_ID</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -188,7 +188,7 @@
         <inputAssignments>
             <field>OwnerId</field>
             <value>
-                <stringValue>005fI000002lJXWQA2</stringValue>
+                <elementReference>$Label.RENEWAL_OWNER_ID</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>

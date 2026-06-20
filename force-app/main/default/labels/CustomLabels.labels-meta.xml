@@ -377,6 +377,14 @@
         <value>Validation Error</value>
     </labels>
     <labels>
+        <fullName>RENEWAL_OWNER_ID</fullName>
+        <categories>Development</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Active User/Queue Id owning auto-generated Renewal Opps/Tasks (Kay Kim)</shortDescription>
+        <value>005fI000002lJXWQA2</value>
+    </labels>
+    <labels>
         <fullName>TRIGGER_ACTIVATION</fullName>
         <categories>Development</categories>
         <language>en_US</language>

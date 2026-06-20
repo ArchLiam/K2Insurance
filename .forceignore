@@ -10,3 +10,8 @@ package.xml
 
 # LWC Jest
 **/__tests__/**
+
+# Orphaned static resources: all 8 -meta.xml files (committed dd7bcb9) are missing their
+# payload files, which halts all source deploys. Ignored to unblock the renewal deploy;
+# restore the payloads or remove these metas to fix the repo properly.
+force-app/main/default/staticresources/**

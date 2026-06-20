@@ -12,7 +12,14 @@
         <members>Quote.Proposed_Term_months__c</members>
         <members>Quote.Plan_Name__c</members>
         <members>Insurance__c.Renewal_Opportunity__c</members>
+        <members>Error_Log__c.Error_Message__c</members>
+        <members>Error_Log__c.Stack_Trace__c</members>
+        <members>Error_Log__c.Context_Info__c</members>
         <name>CustomField</name>
+    </types>
+    <types>
+        <members>RENEWAL_OWNER_ID</members>
+        <name>CustomLabel</name>
     </types>
     <types>
         <members>Opportunity.Insurance_Renewal_Process</members>
