@@ -1,0 +1,32 @@
+<template>
+    <template if:true={hasNotices}>
+        <div class="slds-var-p-around_x-small">
+            <template for:each={notices} for:item="n">
+                <div key={n.key} class={n.themeClass} role="alert">
+                    <lightning-icon
+                        icon-name={n.iconName}
+                        size="x-small"
+                        variant="inverse"
+                        class="slds-var-m-right_x-small"
+                    ></lightning-icon>
+                    <span class="renewalNotice__body">
+                        <template if:true={n.title}><strong>{n.title}</strong>&nbsp;</template>
+                        {n.message}
+                        <template if:true={n.linkUrl}>
+                            &nbsp;<a href={n.linkUrl} target="_top"><u>View</u></a>
+                        </template>
+                    </span>
+                    <button
+                        type="button"
+                        title="Dismiss"
+                        data-key={n.key}
+                        onclick={handleDismiss}
+                        class="slds-button slds-button_icon slds-button_icon-inverse slds-notify__close"
+                    >
+                        <lightning-icon icon-name="utility:close" size="x-small" variant="inverse"></lightning-icon>
+                    </button>
+                </div>
+            </template>
+        </div>
+    </template>
+</template>

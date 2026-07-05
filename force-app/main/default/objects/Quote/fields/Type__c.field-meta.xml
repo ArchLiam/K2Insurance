@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Type__c</fullName>
+    <description>Specifies the category of the insurance contract based on its duration and coverage scope.</description>
+    <inlineHelpText>Specifies the category of the insurance contract based on its duration and coverage scope.</inlineHelpText>
+    <label>Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>false</restricted>
+        <valueSetDefinition>
+            <sorted>true</sorted>
+            <value>
+                <fullName>Annuity</fullName>
+                <default>false</default>
+                <label>Annuity</label>
+            </value>
+            <value>
+                <fullName>Auto</fullName>
+                <default>false</default>
+                <label>Auto</label>
+            </value>
+            <value>
+                <fullName>Business</fullName>
+                <default>false</default>
+                <label>Business</label>
+            </value>
+            <value>
+                <fullName>Cancer</fullName>
+                <default>false</default>
+                <label>Cancer</label>
+            </value>
+            <value>
+                <fullName>Cancer Insurnace</fullName>
+                <default>false</default>
+                <label>Cancer Insurnace</label>
+            </value>
+            <value>
+                <fullName>Commecial Auto</fullName>
+                <default>false</default>
+                <label>Commecial Auto</label>
+            </value>
+            <value>
+                <fullName>Condo</fullName>
+                <default>false</default>
+                <label>Condo</label>
+            </value>
+            <value>
+                <fullName>CSNP</fullName>
+                <default>false</default>
+                <label>CSNP</label>
+            </value>
+            <value>
+                <fullName>Dental</fullName>
+                <default>false</default>
+                <label>Dental</label>
+            </value>
+            <value>
+                <fullName>Disability</fullName>
+                <default>false</default>
+                <label>Disability</label>
+            </value>
+            <value>
+                <fullName>DSNP w MQMB</fullName>
+                <default>false</default>
+                <label>DSNP w MQMB</label>
+            </value>
+            <value>
+                <fullName>DSNP w QMB</fullName>
+                <default>false</default>
+                <label>DSNP w QMB</label>
+            </value>
+            <value>
+                <fullName>E&amp;O</fullName>
+                <default>false</default>
+                <label>E&amp;O</label>
+            </value>
+            <value>
+                <fullName>Fully</fullName>
+                <default>false</default>
+                <label>Fully</label>
+            </value>
+            <value>
+                <fullName>Giveback</fullName>
+                <default>false</default>
+                <label>Giveback</label>
+            </value>
+            <value>
+                <fullName>Global</fullName>
+                <default>false</default>
+                <label>Global</label>
+            </value>
+            <value>
+                <fullName>Home DP3</fullName>
+                <default>false</default>
+                <label>Home DP3</label>
+            </value>
+            <value>
+                <fullName>Home HO3</fullName>
+                <default>false</default>
+                <label>Home HO3</label>
+            </value>
+            <value>
+                <fullName>Indexed Universal Life</fullName>
+                <default>false</default>
+                <label>Indexed Universal Life</label>
+            </value>
+            <value>
+                <fullName>Ind Health</fullName>
+                <default>false</default>
+                <label>Ind Health</label>
+            </value>
+            <value>
+                <fullName>Individual</fullName>
+                <default>false</default>
+                <label>Individual</label>
+            </value>
+            <value>
+                <fullName>Leveled</fullName>
+                <default>false</default>
+                <label>Leveled</label>
+            </value>
+            <value>
+                <fullName>LTC</fullName>
+                <default>false</default>
+                <label>LTC</label>
+            </value>
+            <value>
+                <fullName>MA</fullName>
+                <default>false</default>
+                <label>MA</label>
+            </value>
+            <value>
+                <fullName>Med Supp</fullName>
+                <default>false</default>
+                <label>Med Supp</label>
+            </value>
+            <value>
+                <fullName>PDP</fullName>
+                <default>false</default>
+                <label>PDP</label>
+            </value>
+            <value>
+                <fullName>PPO</fullName>
+                <default>false</default>
+                <label>PPO</label>
+            </value>
+            <value>
+                <fullName>Renters</fullName>
+                <default>false</default>
+                <label>Renters</label>
+            </value>
+            <value>
+                <fullName>R-MAPD (HMO)</fullName>
+                <default>false</default>
+                <label>R-MAPD (HMO)</label>
+            </value>
+            <value>
+                <fullName>Short Term</fullName>
+                <default>false</default>
+                <label>Short Term</label>
+            </value>
+            <value>
+                <fullName>Term Life</fullName>
+                <default>false</default>
+                <label>Term Life</label>
+            </value>
+            <value>
+                <fullName>Travel Insurance</fullName>
+                <default>false</default>
+                <label>Travel Insurance</label>
+            </value>
+            <value>
+                <fullName>Tricare</fullName>
+                <default>false</default>
+                <label>Tricare</label>
+            </value>
+            <value>
+                <fullName>Umbrella</fullName>
+                <default>false</default>
+                <label>Umbrella</label>
+            </value>
+            <value>
+                <fullName>Vision</fullName>
+                <default>false</default>
+                <label>Vision</label>
+            </value>
+            <value>
+                <fullName>Workers Com</fullName>
+                <default>false</default>
+                <label>Workers Com</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

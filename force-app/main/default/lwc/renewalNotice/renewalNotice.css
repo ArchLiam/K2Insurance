@@ -1,0 +1,12 @@
+.renewalNotice__alert {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    padding-right: 2.5rem;
+}
+
+.renewalNotice__body {
+    flex: 1;
+    white-space: pre-line;
+    word-break: break-word;
+}

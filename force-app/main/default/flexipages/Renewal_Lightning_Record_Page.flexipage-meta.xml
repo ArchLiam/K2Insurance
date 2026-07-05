@@ -52,6 +52,10 @@
                     <value>false</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
+                    <name>hideSlackAction</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
                     <name>numVisibleActions</name>
                     <value>3</value>
                 </componentInstanceProperties>
@@ -92,6 +96,12 @@
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentName>renewalNotice</componentName>
+                <identifier>c_renewalNotice</identifier>
+            </componentInstance>
+        </itemInstances>
         <itemInstances>
             <componentInstance>
                 <componentInstanceProperties>
@@ -208,7 +218,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>label</name>
-                    <value>Section</value>
+                    <value>Old &amp; New Insurances</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:fieldSection</componentName>
                 <identifier>flexipage_fieldSection2</identifier>
@@ -247,22 +257,22 @@
                             <value>QUOTE.QUOTENUMBER</value>
                         </valueListItems>
                         <valueListItems>
+                            <value>Policy_Number__c</value>
+                        </valueListItems>
+                        <valueListItems>
+                            <value>Type__c</value>
+                        </valueListItems>
+                        <valueListItems>
+                            <value>Subtype__c</value>
+                        </valueListItems>
+                        <valueListItems>
                             <value>Insurance_Provider__c</value>
                         </valueListItems>
                         <valueListItems>
                             <value>QUOTE.ISSYNCING</value>
                         </valueListItems>
                         <valueListItems>
-                            <value>QUOTE.EXPIRATIONDATE</value>
-                        </valueListItems>
-                        <valueListItems>
                             <value>Proposed_Premium__c</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Proposed_Start_Date__c</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Proposed_Term_months__c</value>
                         </valueListItems>
                     </valueList>
                 </componentInstanceProperties>

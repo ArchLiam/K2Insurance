@@ -2,7 +2,11 @@
 .sf
 .gitignore
 .vscode
+.DS_Store
 force-app/main/.DS_Store
 force-app/main/default/lwc/jsconfig.json
 force-app/main/default/lwc/.DS_Store
 force-app/main/default/.DS_Store
+docs
+
+

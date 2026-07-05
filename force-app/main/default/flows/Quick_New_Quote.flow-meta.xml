@@ -2,6 +2,29 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>64.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Carry_Defaults</name>
+        <label>Carry Original Defaults</label>
+        <locationX>400</locationX>
+        <locationY>650</locationY>
+        <assignmentItems>
+            <assignToReference>varPremiumDefault</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Original_Insurance.Premium__c</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>varPolicyNumberDefault</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Original_Insurance.Policy_Number__c</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Quote_Details</targetReference>
+        </connector>
+    </assignments>
     <choices>
         <name>Choice_SyncNo</name>
         <choiceText>No — I&apos;ll Start Sync manually</choiceText>
@@ -19,10 +42,35 @@
         </value>
     </choices>
     <decisions>
+        <name>Same_Provider</name>
+        <label>Same Provider?</label>
+        <locationX>176</locationX>
+        <locationY>550</locationY>
+        <defaultConnector>
+            <targetReference>Quote_Details</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Provider Changed</defaultConnectorLabel>
+        <rules>
+            <name>Same</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>ServiceProvider</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>Get_Original_Insurance.Insurance_Provider__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Carry_Defaults</targetReference>
+            </connector>
+            <label>Same</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>Auto_Sync_Decision</name>
         <label>Auto Sync?</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
+        <locationX>176</locationX>
+        <locationY>1050</locationY>
         <defaultConnector>
             <targetReference>Done</targetReference>
         </defaultConnector>
@@ -43,7 +91,7 @@
             <label>Sync</label>
         </rules>
     </decisions>
-    <description>Quick Action on a Renewal Opportunity: lets the user pick the Service Provider and edit the quote details (pre-filled from the Original Insurance when present), then creates the Quote. Replaces the quickCreateQuote LWC + QuoteCreateController Apex.</description>
+    <description>Quick Action on a Renewal Opportunity. Two-screen: (1) pick the Service Provider; (2) edit quote details. Premium and Policy Number default from the Original Insurance only when the provider is unchanged (blank when the provider is switched) — set via a decision + variables so no conditional field is read by a formula.</description>
     <dynamicChoiceSets>
         <name>Choice_PaymentFrequency</name>
         <dataType>Picklist</dataType>
@@ -54,6 +102,18 @@
         <name>Choice_PaymentMethod</name>
         <dataType>Picklist</dataType>
         <picklistField>Payment_Method__c</picklistField>
+        <picklistObject>Quote</picklistObject>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>Choice_QuoteSubtype</name>
+        <dataType>Picklist</dataType>
+        <picklistField>Subtype__c</picklistField>
+        <picklistObject>Quote</picklistObject>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>Choice_QuoteType</name>
+        <dataType>Picklist</dataType>
+        <picklistField>Type__c</picklistField>
         <picklistObject>Quote</picklistObject>
     </dynamicChoiceSets>
     <dynamicChoiceSets>
@@ -82,7 +142,7 @@
     <formulas>
         <name>fxStartDateDefault</name>
         <dataType>Date</dataType>
-        <expression>IF(ISBLANK({!Get_Original_Insurance.Insurance_End_Date__c}), TODAY(), {!Get_Original_Insurance.Insurance_End_Date__c} + 1)</expression>
+        <expression>IF(ISBLANK({!Get_Original_Insurance.Insurance_End_Date__c}), TODAY(), {!Get_Original_Insurance.Insurance_End_Date__c})</expression>
     </formulas>
     <interviewLabel>Quick New Quote {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Quick New Quote</label>
@@ -95,7 +155,7 @@
     <processMetadataValues>
         <name>CanvasMode</name>
         <value>
-            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
         </value>
     </processMetadataValues>
     <processMetadataValues>
@@ -108,8 +168,8 @@
     <recordCreates>
         <name>Create_Quote</name>
         <label>Create Quote</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
+        <locationX>176</locationX>
+        <locationY>950</locationY>
         <connector>
             <targetReference>Auto_Sync_Decision</targetReference>
         </connector>
@@ -168,6 +228,12 @@
             </value>
         </inputAssignments>
         <inputAssignments>
+            <field>Policy_Number__c</field>
+            <value>
+                <elementReference>PolicyNumber</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>Proposed_Premium__c</field>
             <value>
                 <elementReference>RenewalPremium</elementReference>
@@ -191,14 +257,26 @@
                 <stringValue>Draft</stringValue>
             </value>
         </inputAssignments>
+        <inputAssignments>
+            <field>Subtype__c</field>
+            <value>
+                <elementReference>QuoteSubtype</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Type__c</field>
+            <value>
+                <elementReference>QuoteType</elementReference>
+            </value>
+        </inputAssignments>
         <object>Quote</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
     <recordLookups>
         <name>Get_Opportunity</name>
         <label>Get Opportunity</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
+        <locationX>176</locationX>
+        <locationY>100</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Get_Original_Insurance</targetReference>
@@ -221,8 +299,8 @@
     <recordLookups>
         <name>Get_Original_Insurance</name>
         <label>Get Original Insurance</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
+        <locationX>176</locationX>
+        <locationY>200</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Get_Standard_Pricebook</targetReference>
@@ -246,13 +324,16 @@
         <queriedFields>Payment_Method__c</queriedFields>
         <queriedFields>Business_Personal_Property__c</queriedFields>
         <queriedFields>Deductible__c</queriedFields>
+        <queriedFields>Policy_Number__c</queriedFields>
+        <queriedFields>Type__c</queriedFields>
+        <queriedFields>Subtype__c</queriedFields>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
         <name>Get_Standard_Pricebook</name>
         <label>Get Standard Pricebook</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
+        <locationX>176</locationX>
+        <locationY>300</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Get_Provider_RecordType</targetReference>
@@ -273,11 +354,11 @@
     <recordLookups>
         <name>Get_Provider_RecordType</name>
         <label>Get Provider Record Type</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
+        <locationX>176</locationX>
+        <locationY>400</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Quote_Inputs</targetReference>
+            <targetReference>Pick_Provider</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -302,8 +383,8 @@
     <recordLookups>
         <name>Get_Selected_Provider</name>
         <label>Get Selected Provider</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
+        <locationX>176</locationX>
+        <locationY>850</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Create_Quote</targetReference>
@@ -325,8 +406,8 @@
     <recordUpdates>
         <name>Sync_Quote</name>
         <label>Sync Quote</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
+        <locationX>400</locationX>
+        <locationY>1150</locationY>
         <connector>
             <targetReference>Accept_Quote</targetReference>
         </connector>
@@ -349,8 +430,8 @@
     <recordUpdates>
         <name>Accept_Quote</name>
         <label>Set Quote Accepted</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
+        <locationX>400</locationX>
+        <locationY>1250</locationY>
         <connector>
             <targetReference>Done_Synced</targetReference>
         </connector>
@@ -371,16 +452,21 @@
         <object>Quote</object>
     </recordUpdates>
     <screens>
-        <name>Quote_Inputs</name>
-        <label>New Quote</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
+        <name>Pick_Provider</name>
+        <label>Choose Provider</label>
+        <locationX>176</locationX>
+        <locationY>500</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
         <connector>
-            <targetReference>Get_Selected_Provider</targetReference>
+            <targetReference>Same_Provider</targetReference>
         </connector>
+        <fields>
+            <name>ProviderHelp</name>
+            <fieldText>&lt;p&gt;Pick the carrier for this renewal quote, then click &lt;b&gt;Next&lt;/b&gt;. If you keep the original carrier, the Premium and Policy Number will pre-fill; if you switch carriers, they start blank.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
         <fields>
             <name>ServiceProvider</name>
             <choiceReferences>Choice_Providers</choiceReferences>
@@ -392,6 +478,20 @@
             <fieldType>DropdownBox</fieldType>
             <isRequired>true</isRequired>
         </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Quote_Details</name>
+        <label>Quote Details</label>
+        <locationX>176</locationX>
+        <locationY>750</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <connector>
+            <targetReference>Get_Selected_Provider</targetReference>
+        </connector>
         <fields>
             <name>Section_Terms</name>
             <fieldText>Quote Terms</fieldText>
@@ -401,7 +501,7 @@
                     <name>RenewalPremium</name>
                     <dataType>Currency</dataType>
                     <defaultValue>
-                        <elementReference>Get_Original_Insurance.Premium__c</elementReference>
+                        <elementReference>varPremiumDefault</elementReference>
                     </defaultValue>
                     <fieldText>Premium</fieldText>
                     <fieldType>InputField</fieldType>
@@ -429,6 +529,67 @@
                     <fieldType>InputField</fieldType>
                     <isRequired>true</isRequired>
                     <scale>0</scale>
+                </fields>
+                <fieldType>Region</fieldType>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fieldType>RegionContainer</fieldType>
+            <isRequired>false</isRequired>
+            <regionContainerType>SectionWithHeader</regionContainerType>
+        </fields>
+        <fields>
+            <name>Section_Policy</name>
+            <fieldText>Policy Details</fieldText>
+            <fields>
+                <name>Section_Policy_C1</name>
+                <fields>
+                    <name>PolicyNumber</name>
+                    <dataType>String</dataType>
+                    <defaultValue>
+                        <elementReference>varPolicyNumberDefault</elementReference>
+                    </defaultValue>
+                    <fieldText>Policy Number</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>false</isRequired>
+                </fields>
+                <fieldType>Region</fieldType>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>6</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <fields>
+                <name>Section_Policy_C2</name>
+                <fields>
+                    <name>QuoteType</name>
+                    <choiceReferences>Choice_QuoteType</choiceReferences>
+                    <dataType>String</dataType>
+                    <defaultValue>
+                        <elementReference>Get_Original_Insurance.Type__c</elementReference>
+                    </defaultValue>
+                    <fieldText>Type</fieldText>
+                    <fieldType>DropdownBox</fieldType>
+                    <isRequired>false</isRequired>
+                </fields>
+                <fields>
+                    <name>QuoteSubtype</name>
+                    <choiceReferences>Choice_QuoteSubtype</choiceReferences>
+                    <dataType>String</dataType>
+                    <defaultValue>
+                        <elementReference>Get_Original_Insurance.Subtype__c</elementReference>
+                    </defaultValue>
+                    <fieldText>Subtype</fieldText>
+                    <fieldType>DropdownBox</fieldType>
+                    <isRequired>false</isRequired>
                 </fields>
                 <fieldType>Region</fieldType>
                 <inputParameters>
@@ -573,8 +734,8 @@
     <screens>
         <name>Done</name>
         <label>Done</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
+        <locationX>50</locationX>
+        <locationY>1150</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -589,8 +750,8 @@
     <screens>
         <name>Done_Synced</name>
         <label>Done</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
+        <locationX>400</locationX>
+        <locationY>1350</locationY>
         <allowBack>false</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>false</allowPause>
@@ -603,7 +764,7 @@
         <showHeader>true</showHeader>
     </screens>
     <start>
-        <locationX>0</locationX>
+        <locationX>176</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Get_Opportunity</targetReference>
@@ -616,5 +777,20 @@
         <isCollection>false</isCollection>
         <isInput>true</isInput>
         <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varPolicyNumberDefault</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varPremiumDefault</name>
+        <dataType>Currency</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <scale>2</scale>
     </variables>
 </Flow>

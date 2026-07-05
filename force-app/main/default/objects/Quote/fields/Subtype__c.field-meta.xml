@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Subtype__c</fullName>
+    <description>Specifies the subcategory of the insurance plan, such as market classification, plan type, or brand.</description>
+    <inlineHelpText>Select the appropriate subtype for the insurance policy</inlineHelpText>
+    <label>Subtype</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>Type__c</controllingField>
+        <restricted>false</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>On market</fullName>
+                <default>false</default>
+                <label>On market</label>
+            </value>
+            <value>
+                <fullName>Off Market</fullName>
+                <default>false</default>
+                <label>Off Market</label>
+            </value>
+            <value>
+                <fullName>G01</fullName>
+                <default>false</default>
+                <label>G01</label>
+            </value>
+            <value>
+                <fullName>G02</fullName>
+                <default>false</default>
+                <label>G02</label>
+            </value>
+            <value>
+                <fullName>F01</fullName>
+                <default>false</default>
+                <label>F01</label>
+            </value>
+            <value>
+                <fullName>F02</fullName>
+                <default>false</default>
+                <label>F02</label>
+            </value>
+            <value>
+                <fullName>T-IRA</fullName>
+                <default>false</default>
+                <label>T-IRA</label>
+            </value>
+            <value>
+                <fullName>R-IRA</fullName>
+                <default>false</default>
+                <label>R-IRA</label>
+            </value>
+            <value>
+                <fullName>Non Qualified</fullName>
+                <default>false</default>
+                <label>Non Qualified</label>
+            </value>
+            <value>
+                <fullName>H0609 061</fullName>
+                <default>false</default>
+                <label>H0609 061 (TX27)</label>
+            </value>
+            <value>
+                <fullName>H0609 062</fullName>
+                <default>false</default>
+                <label>H0609 062 (CSNP TX3P)</label>
+            </value>
+            <value>
+                <fullName>H0609 052</fullName>
+                <default>false</default>
+                <label>H0609 052 (TXD004)</label>
+            </value>
+            <value>
+                <fullName>H1278 003</fullName>
+                <default>false</default>
+                <label>H1278 003</label>
+            </value>
+            <value>
+                <fullName>H1889 014</fullName>
+                <default>false</default>
+                <label>H1889 014</label>
+            </value>
+            <value>
+                <fullName>H4514 021</fullName>
+                <default>false</default>
+                <label>H4514 021(TXS003)</label>
+            </value>
+            <value>
+                <fullName>S5921 403</fullName>
+                <default>false</default>
+                <label>S5921 403</label>
+            </value>
+            <value>
+                <fullName>H1278 013</fullName>
+                <default>false</default>
+                <label>H1278 013</label>
+            </value>
+            <value>
+                <fullName>G</fullName>
+                <default>false</default>
+                <label>G</label>
+            </value>
+            <value>
+                <fullName>F</fullName>
+                <default>false</default>
+                <label>F</label>
+            </value>
+            <value>
+                <fullName>H0609 060</fullName>
+                <default>false</default>
+                <label>H0609 060</label>
+            </value>
+            <value>
+                <fullName>H0609 051</fullName>
+                <default>false</default>
+                <label>H0609 051 (TX22)</label>
+            </value>
+            <value>
+                <fullName>H4527 002</fullName>
+                <default>false</default>
+                <label>H4527 002</label>
+            </value>
+            <value>
+                <fullName>UHC_ RX Preferred</fullName>
+                <default>false</default>
+                <label>UHC_ RX Preferred</label>
+            </value>
+            <value>
+                <fullName>Wellcare_ Value RX</fullName>
+                <default>false</default>
+                <label>Wellcare_ Value RX</label>
+            </value>
+            <value>
+                <fullName>Humana_Value RX</fullName>
+                <default>false</default>
+                <label>Humana_Value RX</label>
+            </value>
+            <value>
+                <fullName>H1278-015</fullName>
+                <default>false</default>
+                <label>H1278-015</label>
+            </value>
+            <value>
+                <fullName>Cigna Saver RX</fullName>
+                <default>false</default>
+                <label>Cigna Saver RX</label>
+            </value>
+            <value>
+                <fullName>Cigna Healthcare Saver Rx</fullName>
+                <default>false</default>
+                <label>Cigna Healthcare Saver Rx</label>
+            </value>
+            <value>
+                <fullName>Humana Value Choice  PPO</fullName>
+                <default>false</default>
+                <label>Humana Value Choice  PPO</label>
+            </value>
+            <value>
+                <fullName>Humana gold Plus (HMO D-SNP)</fullName>
+                <default>false</default>
+                <label>Humana gold Plus (HMO D-SNP)</label>
+            </value>
+            <value>
+                <fullName>H0609 066 (GivebackTX39)</fullName>
+                <default>false</default>
+                <label>H0609 066 (GivebackTX39)</label>
+            </value>
+            <value>
+                <fullName>Giveback</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Giveback</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>PPO</controllingFieldValue>
+            <valueName>H1278 003</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PPO</controllingFieldValue>
+            <valueName>H1889 014</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PPO</controllingFieldValue>
+            <valueName>H1278 013</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PPO</controllingFieldValue>
+            <valueName>H1278-015</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>DSNP w QMB</controllingFieldValue>
+            <valueName>H0609 052</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>DSNP w QMB</controllingFieldValue>
+            <valueName>Humana gold Plus (HMO D-SNP)</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
+            <valueName>H0609 061</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
+            <valueName>H0609 060</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
+            <valueName>H0609 051</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
+            <valueName>H4527 002</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
+            <valueName>Humana Value Choice  PPO</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Med Supp</controllingFieldValue>
+            <valueName>G01</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Med Supp</controllingFieldValue>
+            <valueName>G02</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Med Supp</controllingFieldValue>
+            <valueName>F01</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Med Supp</controllingFieldValue>
+            <valueName>F02</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Med Supp</controllingFieldValue>
+            <valueName>G</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Med Supp</controllingFieldValue>
+            <valueName>F</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Ind Health</controllingFieldValue>
+            <controllingFieldValue>Individual</controllingFieldValue>
+            <valueName>On market</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Ind Health</controllingFieldValue>
+            <controllingFieldValue>Individual</controllingFieldValue>
+            <valueName>Off Market</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PDP</controllingFieldValue>
+            <valueName>S5921 403</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PDP</controllingFieldValue>
+            <valueName>UHC_ RX Preferred</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PDP</controllingFieldValue>
+            <valueName>Wellcare_ Value RX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PDP</controllingFieldValue>
+            <valueName>Humana_Value RX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PDP</controllingFieldValue>
+            <valueName>Cigna Saver RX</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PDP</controllingFieldValue>
+            <valueName>Cigna Healthcare Saver Rx</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>CSNP</controllingFieldValue>
+            <valueName>H0609 062</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>DSNP w MQMB</controllingFieldValue>
+            <valueName>H4514 021</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Annuity</controllingFieldValue>
+            <valueName>T-IRA</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Annuity</controllingFieldValue>
+            <valueName>R-IRA</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Annuity</controllingFieldValue>
+            <valueName>Non Qualified</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

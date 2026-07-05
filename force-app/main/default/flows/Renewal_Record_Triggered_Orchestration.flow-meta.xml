@@ -46,23 +46,8 @@
             </connector>
             <label>Customer Notified</label>
         </rules>
-        <rules>
-            <name>Closed_Won</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>$Record.StageName</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>Closed Won</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Create_New_Insurance_Stage</targetReference>
-            </connector>
-            <label>Closed Won</label>
-        </rules>
     </decisions>
-    <description>Single record-triggered orchestration for the Renewal (Opportunity) lifecycle. Routes by stage: Customer Notified -> stamp date (Capture_Customer_Notified_Date subflow); Closed Won -> create new Insurance (Renewal_Closed_Won_Create_New_Insurance subflow). Gated by the TRIGGER_ACTIVATION label.</description>
+    <description>Record-triggered orchestration for the Renewal (Opportunity) lifecycle. Customer Notified -> stamp date (Capture_Customer_Notified_Date subflow). Closed Won handling is done by the separate Renewal_On_Closed_Won record-triggered flow. Gated by the TRIGGER_ACTIVATION label.</description>
     <environments>Default</environments>
     <interviewLabel>Renewal Record-Triggered Orchestration {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Renewal Record-Triggered Orchestration</label>
@@ -87,33 +72,6 @@
                 </value>
             </inputParameters>
             <label>Stamp Customer Notified Date</label>
-            <requiresAsyncProcessing>false</requiresAsyncProcessing>
-            <runAsUser>false</runAsUser>
-            <shouldLock>false</shouldLock>
-            <stepSubtype>BackgroundStep</stepSubtype>
-        </stageSteps>
-    </orchestratedStages>
-    <orchestratedStages>
-        <name>Create_New_Insurance_Stage</name>
-        <label>Create New Insurance</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <exitConditionLogic>and</exitConditionLogic>
-        <stageSteps>
-            <name>Create_New_Insurance</name>
-            <actionName>Renewal_Closed_Won_Create_New_Insurance</actionName>
-            <actionType>stepBackground</actionType>
-            <canAssigneeEdit>false</canAssigneeEdit>
-            <debugSimulateStep>false</debugSimulateStep>
-            <entryConditionLogic>and</entryConditionLogic>
-            <exitConditionLogic>and</exitConditionLogic>
-            <inputParameters>
-                <name>varRenewalOpportunity</name>
-                <value>
-                    <elementReference>$Record</elementReference>
-                </value>
-            </inputParameters>
-            <label>Create New Insurance</label>
             <requiresAsyncProcessing>false</requiresAsyncProcessing>
             <runAsUser>false</runAsUser>
             <shouldLock>false</shouldLock>
@@ -145,19 +103,12 @@
         <connector>
             <targetReference>Is_TRIGGER_ACTIVATED</targetReference>
         </connector>
-        <filterLogic>or</filterLogic>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>StageName</field>
             <operator>EqualTo</operator>
             <value>
                 <stringValue>Customer Notified</stringValue>
-            </value>
-        </filters>
-        <filters>
-            <field>StageName</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>Closed Won</stringValue>
             </value>
         </filters>
         <object>Opportunity</object>
