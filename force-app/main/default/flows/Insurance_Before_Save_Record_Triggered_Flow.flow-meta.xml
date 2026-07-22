@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>64.0</apiVersion>
+    <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
         <name>Set_Name</name>
@@ -30,6 +30,23 @@
                 <elementReference>$Flow.CurrentDate</elementReference>
             </value>
         </assignmentItems>
+        <connector>
+            <targetReference>Set_Subagent_From_Holder</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Health/Medicare only: mirror the Policy Holder Contact's Subagent (Agent__c) onto this Insurance. Contact is the source of truth.</description>
+        <name>Set_Subagent</name>
+        <label>Set Subagent (from Policy Holder)</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Subagent__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Policy_Holder__r.Agent__c</elementReference>
+            </value>
+        </assignmentItems>
     </assignments>
     <decisions>
         <description>Global TRIGGER_ACTIVATION label AND the per-object Automation Setting must both be on.</description>
@@ -39,7 +56,7 @@
         <locationY>0</locationY>
         <defaultConnectorLabel>OFF</defaultConnectorLabel>
         <rules>
-            <name>ON</name>
+            <name>Is_TRIGGER_ACTIVATED_ON</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>$Label.TRIGGER_ACTIVATION</leftValueReference>
@@ -59,9 +76,12 @@
         <label>Newly Cancelled?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Set_Subagent_From_Holder</targetReference>
+        </defaultConnector>
         <defaultConnectorLabel>No</defaultConnectorLabel>
         <rules>
-            <name>Cancelled</name>
+            <name>Newly_Cancelled_Yes</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>$Record.Status__c</leftValueReference>
@@ -83,7 +103,58 @@
             <label>Cancelled</label>
         </rules>
     </decisions>
-    <description>Before-save defaults for Insurance: engraves Status into Name and stamps Cancellation Date on first Cancelled (zero DML). Commission Rate is intentionally NOT set here — it is edited per-Insurance manually. Gated by the TRIGGER_ACTIVATION custom label.</description>
+    <decisions>
+        <description>Set Subagent from the Policy Holder only for Health/Medicare policies whose holder Contact has a Subagent, and only when it differs (idempotent, zero DML).</description>
+        <name>Set_Subagent_From_Holder</name>
+        <label>Set Subagent From Holder?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Set_Subagent_From_Holder_Yes</name>
+            <conditionLogic>(1 OR 2) AND 3 AND 4 AND 5</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.RecordType.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Health_Insurance</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.RecordType.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Medicare</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Policy_Holder__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Policy_Holder__r.Agent__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Subagent__c</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <elementReference>$Record.Policy_Holder__r.Agent__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Set_Subagent</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <description>2026-07-21: Before-save record-triggered flow for Insurance — inline branches: engrave Status into Name, stamp Cancellation Date on first Cancelled, and mirror the Policy Holder Contact's Subagent onto Health/Medicare policies (Contact is source of truth). Zero DML; gated by TRIGGER_ACTIVATION. Cross-object DML lives in the after-save orchestration.</description>
     <environments>Default</environments>
     <formulas>
         <description>Insurance Name with its Status engraved in parentheses; strips any existing parenthetical first. Blank status returns just the base name.</description>
@@ -96,8 +167,8 @@
     &quot; (&quot; &amp; TEXT({!$Record.Status__c}) &amp; &quot;)&quot;
 )</expression>
     </formulas>
-    <interviewLabel>Insurance Before Save Defaults {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>Insurance Before Save Defaults</label>
+    <interviewLabel>Insurance Before Save Record-Triggered Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Insurance | Before Save Record-Triggered Flow</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>

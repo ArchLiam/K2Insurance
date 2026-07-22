@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>66.0</apiVersion>
+    <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <decisions>
         <name>Is_Created_or_Updated</name>
         <label>Is Created or Updated?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Recalculate_Contacts</targetReference>
+        </defaultConnector>
         <defaultConnectorLabel>Updating</defaultConnectorLabel>
         <rules>
             <name>Inserting</name>
@@ -47,6 +50,7 @@
             <label>ON</label>
         </rules>
     </decisions>
+    <description>2026-07-21: On CIA insert, sync dates from the Group Health Insurance then recalculate the holder Contact's active-insurance rollup (Has/Count/Summary/Holding Health); on update, recalculate only. Delegates to subflows; gated by TRIGGER_ACTIVATION.</description>
     <environments>Default</environments>
     <formulas>
         <name>fxisNEW</name>
@@ -60,6 +64,9 @@
         <label>After Insert</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
+        <connector>
+            <targetReference>Recalculate_Contacts</targetReference>
+        </connector>
         <exitConditionLogic>and</exitConditionLogic>
         <stageSteps>
             <name>Sync_ContactInsuranceAssociation_Dates_from_Group_Health_Insurance</name>
@@ -76,6 +83,33 @@
                 </value>
             </inputParameters>
             <label>Sync ContactInsuranceAssociation Dates from Group Health Insurance</label>
+            <requiresAsyncProcessing>false</requiresAsyncProcessing>
+            <runAsUser>false</runAsUser>
+            <shouldLock>false</shouldLock>
+            <stepSubtype>BackgroundStep</stepSubtype>
+        </stageSteps>
+    </orchestratedStages>
+    <orchestratedStages>
+        <name>Recalculate_Contacts</name>
+        <label>Recalculate Contacts</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <exitConditionLogic>and</exitConditionLogic>
+        <stageSteps>
+            <name>Recalculate_Related_Contacts</name>
+            <actionName>Recalculate_Related_Contacts_Active_Insurance</actionName>
+            <actionType>stepBackground</actionType>
+            <canAssigneeEdit>false</canAssigneeEdit>
+            <debugSimulateStep>false</debugSimulateStep>
+            <entryConditionLogic>and</entryConditionLogic>
+            <exitConditionLogic>and</exitConditionLogic>
+            <inputParameters>
+                <name>varInsuranceId</name>
+                <value>
+                    <elementReference>$Record.Insurance__c</elementReference>
+                </value>
+            </inputParameters>
+            <label>Recalculate Related Contacts</label>
             <requiresAsyncProcessing>false</requiresAsyncProcessing>
             <runAsUser>false</runAsUser>
             <shouldLock>false</shouldLock>
