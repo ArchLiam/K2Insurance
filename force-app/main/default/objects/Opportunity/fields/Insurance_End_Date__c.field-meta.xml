@@ -7,6 +7,5 @@
     <inlineHelpText>Read-only — derived from the linked original Insurance policy.</inlineHelpText>
     <label>Insurance End Date</label>
     <required>false</required>
-    <trackFeedHistory>false</trackFeedHistory>
     <type>Date</type>
 </CustomField>

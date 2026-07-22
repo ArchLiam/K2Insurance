@@ -2,8 +2,13 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Source_Flow__c</fullName>
     <description>API name of the flow that hit the fault. Maps to Error_Log__c.Apex_Class__c.</description>
+    <externalId>false</externalId>
+    <isFilteringDisabled>false</isFilteringDisabled>
+    <isNameField>false</isNameField>
+    <isSortingDisabled>false</isSortingDisabled>
     <label>Source Flow</label>
     <length>80</length>
     <required>false</required>
     <type>Text</type>
+    <unique>false</unique>
 </CustomField>

@@ -1,8 +1,3 @@
-/**
- * @description Portfolio Contact LWC. Contact form that sends email via Apex (PortfolioContactController).
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2025-03-07
- */
 import { LightningElement, api } from "lwc";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import sendContactEmail from "@salesforce/apex/PortfolioContactController.sendContactEmail";
@@ -40,56 +35,42 @@ export default class PortfolioContact extends LightningElement {
 	statusMessage = "";
 	statusVariant = "";
 
-	/** Submit button label (Sending... vs Send message). */
 	get submitLabel() {
 		return this.isSubmitting ? "Sending..." : "Send message";
 	}
 
-	/** CSS class for name field (includes has-error when invalid). */
 	get nameClass() {
 		return this.errors.name ? "input-control has-error" : "input-control";
 	}
 
-	/** CSS class for email field (includes has-error when invalid). */
 	get emailClass() {
 		return this.errors.email ? "input-control has-error" : "input-control";
 	}
 
-	/** CSS class for subject field (includes has-error when invalid). */
 	get subjectClass() {
 		return this.errors.subject
 			? "input-control has-error"
 			: "input-control";
 	}
 
-	/** CSS class for message field (includes has-error when invalid). */
 	get messageClass() {
 		return this.errors.message
 			? "input-control has-error"
 			: "input-control";
 	}
 
-	/** CSS class for status message (success vs error variant). */
 	get statusClass() {
 		return this.statusVariant === "success"
 			? "form-status form-status--success"
 			: "form-status form-status--error";
 	}
 
-	/**
-	 * Handles input change; updates form and clears that field's error.
-	 * @param {Event} event - change event with event.target.name and event.target.value
-	 */
 	handleInputChange(event) {
 		const { name, value } = event.target;
 		this.form = { ...this.form, [name]: value };
 		this.errors = { ...this.errors, [name]: "" };
 	}
 
-	/**
-	 * Validates form fields and sets errors. Returns true if valid.
-	 * @returns {boolean} True if no validation errors
-	 */
 	validate() {
 		const nextErrors = {};
 		const name = this.form.name?.trim();
@@ -121,10 +102,6 @@ export default class PortfolioContact extends LightningElement {
 		return Object.keys(nextErrors).length === 0;
 	}
 
-	/**
-	 * Submits the contact form via Apex (sendContactEmail). Shows toast and status message.
-	 * @param {Event} event - submit event (preventDefault called)
-	 */
 	async handleSubmit(event) {
 		event.preventDefault();
 		this.statusMessage = "";
@@ -164,12 +141,6 @@ export default class PortfolioContact extends LightningElement {
 		}
 	}
 
-	/**
-	 * Dispatches a ShowToastEvent with the given title, message, and variant.
-	 * @param {string} title - Toast title
-	 * @param {string} message - Toast message
-	 * @param {string} variant - success | error | warning | info
-	 */
 	showToast(title, message, variant) {
 		this.dispatchEvent(
 			new ShowToastEvent({

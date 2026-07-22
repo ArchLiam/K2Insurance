@@ -97,6 +97,7 @@
         <connector>
             <targetReference>Create_Error_Log</targetReference>
         </connector>
+        <flowRunAsUser>TriggeringUser</flowRunAsUser>
         <object>Exception__e</object>
         <triggerType>PlatformEvent</triggerType>
     </start>

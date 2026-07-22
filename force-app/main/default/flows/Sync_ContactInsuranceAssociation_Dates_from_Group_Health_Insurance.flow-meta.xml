@@ -143,6 +143,14 @@
         </faultConnector>
         <inputReference>varContactInsuranceAssociationRecord</inputReference>
     </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Is_ContactInsuranceAssociation_Valid</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
     <subflows>
         <name>Log_the_Error</name>
         <label>Log the Error</label>
@@ -186,14 +194,6 @@
             </value>
         </inputAssignments>
     </subflows>
-    <start>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <connector>
-            <targetReference>Is_ContactInsuranceAssociation_Valid</targetReference>
-        </connector>
-    </start>
-    <status>Active</status>
     <variables>
         <name>varContactInsuranceAssociationRecord</name>
         <dataType>SObject</dataType>

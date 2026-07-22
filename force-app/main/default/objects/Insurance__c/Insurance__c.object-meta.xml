@@ -157,11 +157,11 @@
     <label>Insurance</label>
     <nameField>
         <label>Insurance Policy #</label>
-        <trackHistory>false</trackHistory>
+        <trackHistory>true</trackHistory>
         <type>Text</type>
     </nameField>
     <pluralLabel>Insurance</pluralLabel>
-    <recordTypeTrackHistory>false</recordTypeTrackHistory>
+    <recordTypeTrackHistory>true</recordTypeTrackHistory>
     <searchLayouts>
         <excludedStandardButtons>OpenListInQuip</excludedStandardButtons>
         <excludedStandardButtons>NewFromDocument</excludedStandardButtons>

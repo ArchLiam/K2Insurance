@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Medicare_Supp_UHC</fullName>
+    <columns>NAME</columns>
+    <columns>Policy_Holder__c</columns>
+    <columns>Type__c</columns>
+    <columns>Subtype__c</columns>
+    <columns>Insurance_Provider__c</columns>
+    <columns>Status__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>RECORDTYPE</field>
+        <operation>equals</operation>
+        <value>Insurance__c.Medicare</value>
+    </filters>
+    <filters>
+        <field>Type__c</field>
+        <operation>equals</operation>
+        <value>Med Supp</value>
+    </filters>
+    <filters>
+        <field>Insurance_Provider__c</field>
+        <operation>equals</operation>
+        <value>UHC</value>
+    </filters>
+    <label>Medicare Supp UHC</label>
+</ListView>

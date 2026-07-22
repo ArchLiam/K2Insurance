@@ -6,11 +6,9 @@
     <label>Subtype</label>
     <required>false</required>
     <trackHistory>false</trackHistory>
-    <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>
         <controllingField>Type__c</controllingField>
-        <restricted>false</restricted>
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
@@ -168,57 +166,7 @@
                 <default>false</default>
                 <label>H0609 066 (GivebackTX39)</label>
             </value>
-            <value>
-                <fullName>Giveback</fullName>
-                <default>false</default>
-                <isActive>false</isActive>
-                <label>Giveback</label>
-            </value>
         </valueSetDefinition>
-        <valueSettings>
-            <controllingFieldValue>PPO</controllingFieldValue>
-            <valueName>H1278 003</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>PPO</controllingFieldValue>
-            <valueName>H1889 014</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>PPO</controllingFieldValue>
-            <valueName>H1278 013</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>PPO</controllingFieldValue>
-            <valueName>H1278-015</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>DSNP w QMB</controllingFieldValue>
-            <valueName>H0609 052</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>DSNP w QMB</controllingFieldValue>
-            <valueName>Humana gold Plus (HMO D-SNP)</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
-            <valueName>H0609 061</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
-            <valueName>H0609 060</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
-            <valueName>H0609 051</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
-            <valueName>H4527 002</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
-            <valueName>Humana Value Choice  PPO</valueName>
-        </valueSettings>
         <valueSettings>
             <controllingFieldValue>Med Supp</controllingFieldValue>
             <valueName>G01</valueName>
@@ -242,16 +190,6 @@
         <valueSettings>
             <controllingFieldValue>Med Supp</controllingFieldValue>
             <valueName>F</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Ind Health</controllingFieldValue>
-            <controllingFieldValue>Individual</controllingFieldValue>
-            <valueName>On market</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Ind Health</controllingFieldValue>
-            <controllingFieldValue>Individual</controllingFieldValue>
-            <valueName>Off Market</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>PDP</controllingFieldValue>
@@ -278,12 +216,52 @@
             <valueName>Cigna Healthcare Saver Rx</valueName>
         </valueSettings>
         <valueSettings>
-            <controllingFieldValue>CSNP</controllingFieldValue>
-            <valueName>H0609 062</valueName>
+            <controllingFieldValue>PPO</controllingFieldValue>
+            <valueName>H1278 003</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PPO</controllingFieldValue>
+            <valueName>H1889 014</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PPO</controllingFieldValue>
+            <valueName>H1278 013</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>PPO</controllingFieldValue>
+            <valueName>H1278-015</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
+            <valueName>H0609 061</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
+            <valueName>H0609 060</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
+            <valueName>H0609 051</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
+            <valueName>H4527 002</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
+            <valueName>Humana Value Choice  PPO</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>DSNP w MQMB</controllingFieldValue>
             <valueName>H4514 021</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>DSNP w QMB</controllingFieldValue>
+            <valueName>H0609 052</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>DSNP w QMB</controllingFieldValue>
+            <valueName>Humana gold Plus (HMO D-SNP)</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>Annuity</controllingFieldValue>
@@ -296,6 +274,20 @@
         <valueSettings>
             <controllingFieldValue>Annuity</controllingFieldValue>
             <valueName>Non Qualified</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>CSNP</controllingFieldValue>
+            <valueName>H0609 062</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Ind Health</controllingFieldValue>
+            <controllingFieldValue>Individual</controllingFieldValue>
+            <valueName>On market</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Ind Health</controllingFieldValue>
+            <controllingFieldValue>Individual</controllingFieldValue>
+            <valueName>Off Market</valueName>
         </valueSettings>
     </valueSet>
 </CustomField>

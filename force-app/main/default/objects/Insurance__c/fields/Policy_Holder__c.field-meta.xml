@@ -9,7 +9,7 @@
     <relationshipLabel>Insurances</relationshipLabel>
     <relationshipName>Insurance</relationshipName>
     <required>true</required>
-    <trackHistory>false</trackHistory>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Lookup</type>
 </CustomField>

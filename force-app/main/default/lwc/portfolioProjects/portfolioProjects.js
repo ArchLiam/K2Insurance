@@ -1,8 +1,3 @@
-/**
- * @description Portfolio Projects list LWC. Displays project cards and opens a modal for project details.
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2025-03-07
- */
 import { LightningElement, api } from "lwc";
 
 const WI_PROJECT = {
@@ -69,7 +64,6 @@ export default class PortfolioProjects extends LightningElement {
 	showModal = false;
 	selectedProject = null;
 
-	/** Projects list with normalized id and status. */
 	get normalizedProjects() {
 		return (this.projects || []).map((project, index) => ({
 			id: project.id || `proj-${index}`,
@@ -78,32 +72,24 @@ export default class PortfolioProjects extends LightningElement {
 		}));
 	}
 
-	/** Project to show in the modal (selected or default). */
 	get modalProject() {
 		return this.selectedProject || WI_PROJECT;
 	}
 
-	/**
-	 * Handles project card select; opens modal with selected project.
-	 * @param {Event} event - custom event with event.detail.project
-	 */
 	handleProjectSelect(event) {
 		this.selectedProject = event.detail.project;
 		this.showModal = true;
 	}
 
-	/** Closes the project detail modal and clears selection. */
 	closeModal() {
 		this.showModal = false;
 		this.selectedProject = null;
 	}
 
-	/** Stops click propagation (e.g. to prevent closing modal when clicking inside). */
 	stopClick(event) {
 		event.stopPropagation();
 	}
 
-	/** Handles Escape key in modal to close it. */
 	handleModalKeydown(event) {
 		if (event.key === "Escape") {
 			event.preventDefault();

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Is_Converted__c</fullName>
-    <description>Read-only formula flag that is TRUE when this Lead has been converted into a Contact by either path used in this org: (1) the custom "Lead to Contact Conversion" screen flow, which populates the Contact__c lookup, or (2) the native Salesforce Convert action, which sets the standard IsConverted field. IMPORTANT: the standard IsConverted / ConvertedContactId / ConvertedDate fields are read-only system fields and are NOT persisted by the custom flow (its assignments to them are silently ignored), so IsConverted alone misses every flow-converted Lead. Use THIS field for reports, list-view filters, and validation rules. Formula: OR(NOT(ISBLANK(Contact__c)), IsConverted).</description>
+    <description>Read-only formula flag that is TRUE when this Lead has been converted into a Contact by either path used in this org: (1) the custom &quot;Lead to Contact Conversion&quot; screen flow, which populates the Contact__c lookup, or (2) the native Salesforce Convert action, which sets the standard IsConverted field. IMPORTANT: the standard IsConverted / ConvertedContactId / ConvertedDate fields are read-only system fields and are NOT persisted by the custom flow (its assignments to them are silently ignored), so IsConverted alone misses every flow-converted Lead. Use THIS field for reports, list-view filters, and validation rules. Formula: OR(NOT(ISBLANK(Contact__c)), IsConverted).</description>
     <formula>OR( NOT(ISBLANK(Contact__c)) ,  IsConverted )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <inlineHelpText>Checked when this Lead has already been converted into a Contact — either through the "Convert to Contact" action (the resulting Contact is shown in the Contact field) or the standard Convert button. Use it to tell at a glance whether a Lead still needs to be worked and to avoid converting the same Lead twice.</inlineHelpText>
+    <inlineHelpText>Checked when this Lead has already been converted into a Contact — either through the &quot;Convert to Contact&quot; action (the resulting Contact is shown in the Contact field) or the standard Convert button. Use it to tell at a glance whether a Lead still needs to be worked and to avoid converting the same Lead twice.</inlineHelpText>
     <label>Converted to Contact</label>
     <type>Checkbox</type>
 </CustomField>

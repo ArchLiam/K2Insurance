@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Coverage_Amount__c</fullName>
-    <description>Quoted coverage amount (e.g. Business Personal Property / BPP). Copied to the new policy's Business Personal Property when the renewal is Closed Won.</description>
+    <description>Quoted coverage amount (e.g. Business Personal Property / BPP). Copied to the new policy&apos;s Business Personal Property when the renewal is Closed Won.</description>
     <inlineHelpText>Coverage amount from the carrier quote (e.g. BPP coverage).</inlineHelpText>
     <label>Coverage Amount</label>
     <precision>18</precision>
     <required>false</required>
     <scale>2</scale>
     <trackHistory>false</trackHistory>
-    <trackTrending>false</trackTrending>
     <type>Currency</type>
 </CustomField>

@@ -1,11 +1,9 @@
 /**
- * @description Best-effort creation of a standard Note (ContentNote) from text,
- * linked to a parent record. Exposed as an Invocable Action so Flows can create
- * Notes — Flow can't base64-encode ContentNote.Content natively. Used by the
- * Lead → Contact conversion flow to carry the Lead's Important Note over as a
- * Note on the new Contact.
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2026-06-04
+ * @description Best-effort creation of a standard Note (ContentNote) from text, linked to a
+ * parent record. Exposed as an Invocable Action so Flows can create Notes — Flow can't
+ * base64-encode ContentNote.Content natively. Used by the Lead to Contact conversion flow to
+ * carry the Lead's Important Note over as a Note on the new Contact.
+ * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 public with sharing class ContentNoteCreator {
 
@@ -13,7 +11,9 @@ public with sharing class ContentNoteCreator {
     @TestVisible
     private static final Integer MAX_CONTENT_CHARS = 100000;
 
-    /** Invocable input — one Note to create against one parent record. */
+    /**
+     * @description Invocable input — one Note to create against one parent record.
+     */
     public class Request {
         @InvocableVariable(label='Parent Record Id' required=true)
         public Id parentId;
@@ -26,10 +26,10 @@ public with sharing class ContentNoteCreator {
     }
 
     /**
-     * @description Creates one ContentNote per request with a non-blank body and
-     * links it to the request's parent. Best-effort: never throws, so a note
-     * failure can't break the caller (e.g. Lead conversion).
-     * @param requests note requests supplied by Flow
+     * @description Creates one ContentNote per request with a non-blank body and links it to the
+     * request's parent. Best-effort: never throws, so a note failure can't break the caller
+     * (e.g. Lead conversion); any failure is published as telemetry instead.
+     * @param requests Note requests supplied by Flow.
      */
     @InvocableMethod(label='Create Note (ContentNote)' description='Creates a standard Note from text and links it to a record')
     public static void createNotes(List<Request> requests) {
@@ -65,17 +65,18 @@ public with sharing class ContentNoteCreator {
             }
             insert links;
         } catch (Exception e) {
-            // Best-effort: log and swallow so note creation can't block the flow.
-            System.debug(LoggingLevel.ERROR, 'ContentNoteCreator failed: ' + e.getMessage());
+            // Best-effort: publish telemetry and degrade so note creation can't block the flow.
+            Id contextId = (requests[0] != null) ? requests[0].parentId : null;
+            ExceptionLogger.log('ContentNoteCreator.createNotes', contextId, e);
         }
     }
 
     /**
-     * @description Converts arbitrary text/HTML into the simply-formatted,
-     * escaped HTML that ContentNote.Content accepts: block/line tags become line
-     * breaks, remaining tags are stripped, and special characters are escaped.
-     * @param raw source text (may contain rich-text HTML)
-     * @return ContentNote-safe HTML string
+     * @description Converts arbitrary text/HTML into the simply-formatted, escaped HTML that
+     * ContentNote.Content accepts: block/line tags become line breaks, remaining tags are
+     * stripped, and special characters are escaped.
+     * @param raw Source text (may contain rich-text HTML).
+     * @return ContentNote-safe HTML string.
      */
     @TestVisible
     private static String toNoteContent(String raw) {

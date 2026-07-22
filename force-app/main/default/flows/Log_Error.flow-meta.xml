@@ -2,7 +2,7 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
-    <description>2026-07-21: Reusable error logger. Publishes an Exception__e platform event (PublishImmediately) from a caught Flow fault; the Exception_Event_Logger subscriber persists the Error_Log__c row. Publishing (not direct DML) means the log survives even when the caller's transaction rolls back (e.g. a Custom Error block). Call from a fault path with the fault message, source flow/step, and record. Source flow/element land on Error_Log__c.Apex_Class__c/Apex_Method__c.</description>
+    <description>2026-07-21: Reusable error logger. Publishes an Exception__e platform event (PublishImmediately) from a caught Flow fault; the Exception_Event_Logger subscriber persists the Error_Log__c row. Publishing (not direct DML) means the log survives even when the caller&apos;s transaction rolls back (e.g. a Custom Error block). Call from a fault path with the fault message, source flow/step, and record. Source flow/element land on Error_Log__c.Apex_Class__c/Apex_Method__c.</description>
     <environments>Default</environments>
     <interviewLabel>Log Error {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Log Error</label>

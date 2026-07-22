@@ -18,7 +18,6 @@ const logoPath = (fileName) => `${LOGO_BASE}/${fileName}`;
  * - Responsive card layouts
  *
  * @author Liam Jeong
- * @date 2025-03-07
  */
 export default class PortfolioEducation extends NavigationMixin(
 	LightningElement

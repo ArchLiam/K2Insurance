@@ -138,19 +138,11 @@
     <picklistValues>
         <picklist>Type</picklist>
         <values>
-            <fullName>Competitor</fullName>
+            <fullName>C-Corp</fullName>
             <default>false</default>
         </values>
         <values>
-            <fullName>Customer</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Integrator</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Investor</fullName>
+            <fullName>LLC</fullName>
             <default>false</default>
         </values>
         <values>
@@ -158,19 +150,11 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Partner</fullName>
+            <fullName>S-Corp</fullName>
             <default>false</default>
         </values>
         <values>
-            <fullName>Press</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Prospect</fullName>
-            <default>false</default>
-        </values>
-        <values>
-            <fullName>Reseller</fullName>
+            <fullName>Sole Proprietorship</fullName>
             <default>false</default>
         </values>
     </picklistValues>

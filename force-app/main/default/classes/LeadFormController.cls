@@ -1,18 +1,16 @@
 /**
- * @description Controller class for Lead Form LWC component
- * Handles Lead creation and retrieval of picklist values
- * Follows Salesforce best practices: proper error handling, input validation
- * Note: This controller is publicly accessible (without sharing) for guest user access
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2025-11-29
+ * @description Controller for the Lead Form LWC — creates Leads from public form submissions and
+ * serves picklist values. Declared `without sharing` intentionally so Experience Cloud guest users
+ * can create Leads regardless of record-sharing context.
+ * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 public without sharing class LeadFormController {
-    // Cache lead record type lookups to avoid repeated describe calls
+
+    // Cache lead record type lookups to avoid repeated describe calls.
     private static Map<String, Id> leadRecordTypeCache = new Map<String, Id>();
-    
+
     /**
-     * @description Wrapper class for Lead form data
-     * Ensures type safety and clean data transfer between LWC and Apex
+     * @description Wrapper for Lead form data; provides type-safe transfer between LWC and Apex.
      */
     public class LeadFormData {
         @AuraEnabled public String firstName { get; set; }
@@ -31,31 +29,30 @@ public without sharing class LeadFormController {
     }
 
     /**
-     * @description Custom exception for Lead form operations
+     * @description Custom exception for Lead form validation failures.
      */
     public class LeadFormException extends Exception {}
 
     /**
-     * @description Creates a new Lead record from form data
-     * @param formDataJson JSON string containing LeadFormData
-     * @return Id of the created Lead record
-     * @throws AuraHandledException if validation fails or DML errors occur
+     * @description Creates a new Lead record from form data.
+     * @param formDataJson JSON string containing LeadFormData.
+     * @return Id of the created Lead record.
      */
     @AuraEnabled
     public static Id createLead(String formDataJson) {
         Savepoint sp = Database.setSavepoint();
-        
+
         try {
-            // Parse and validate form data
+            // Parse and validate form data.
             LeadFormData formData = parseFormData(formDataJson);
             validateFormData(formData);
 
-            // Build Lead record
+            // Build Lead record.
             Lead newLead = buildLeadRecord(formData);
 
-            // Insert Lead
+            // Insert Lead.
             Database.SaveResult result = Database.insert(newLead, false);
-            
+
             if (!result.isSuccess()) {
                 String errorMessage = getErrorMessage(result.getErrors());
                 throw new LeadFormException(errorMessage);
@@ -71,58 +68,60 @@ public without sharing class LeadFormController {
             throw new AuraHandledException(System.Label.LeadFormCapture_InvalidFormData);
         } catch (Exception e) {
             Database.rollback(sp);
-            throw new AuraHandledException(System.Label.LeadFormCapture_UnexpectedError + ': ' + e.getMessage());
+            ExceptionLogger.log('LeadFormController.createLead', null, e);
+            throw new AuraHandledException(System.Label.LeadFormCapture_UnexpectedError);
         }
     }
 
     /**
-     * @description Retrieves Gender Identity picklist values
-     * @return List of picklist options with label and value
+     * @description Retrieves Gender Identity picklist values.
+     * @return List of picklist options with label and value.
      */
     @AuraEnabled(cacheable=true)
     public static List<PicklistOption> getGenderIdentityOptions() {
         try {
             return getPicklistOptions('Lead', 'Gender_Identity__c');
         } catch (Exception e) {
-            throw new AuraHandledException(System.Label.LeadFormCapture_GenderOptionsError + ': ' + e.getMessage());
+            ExceptionLogger.log('LeadFormController.getGenderIdentityOptions', null, e);
+            throw new AuraHandledException(System.Label.LeadFormCapture_GenderOptionsError);
         }
     }
 
     /**
-     * @description Retrieves Interested Insurance picklist values
-     * Filters out Auto/Home and Commercial options
-     * @return List of picklist options with label and value
+     * @description Retrieves Interested Insurance picklist values, excluding Auto/Home and Commercial.
+     * @return List of picklist options with label and value.
      */
     @AuraEnabled
     public static List<PicklistOption> getInterestedInsuranceOptions() {
         try {
             List<PicklistOption> allOptions = getPicklistOptions('Lead', 'Interested_Insurance__c');
             List<PicklistOption> filteredOptions = new List<PicklistOption>();
-            
-            // Values to exclude from the form
-            Set<String> excludedValues = new Set<String>{'Auto/Home', 'Commercial'};
-            
+
+            // Values to exclude from the form.
+            Set<String> excludedValues = new Set<String>{ 'Auto/Home', 'Commercial' };
+
             for (PicklistOption option : allOptions) {
                 if (!excludedValues.contains(option.value)) {
                     filteredOptions.add(option);
                 }
             }
-            
+
             return filteredOptions;
         } catch (Exception e) {
-            throw new AuraHandledException(System.Label.LeadFormCapture_InsuranceOptionsError + ': ' + e.getMessage());
+            ExceptionLogger.log('LeadFormController.getInterestedInsuranceOptions', null, e);
+            throw new AuraHandledException(System.Label.LeadFormCapture_InsuranceOptionsError);
         }
     }
 
     /**
-     * @description Generic method to get picklist options for any field
-     * @param objectName API name of the object
-     * @param fieldName API name of the picklist field
-     * @return List of PicklistOption records
+     * @description Returns the active picklist options for a field.
+     * @param objectName API name of the object.
+     * @param fieldName API name of the picklist field.
+     * @return List of PicklistOption records.
      */
     private static List<PicklistOption> getPicklistOptions(String objectName, String fieldName) {
         List<PicklistOption> options = new List<PicklistOption>();
-        
+
         Schema.SObjectType objType = Schema.getGlobalDescribe().get(objectName);
         if (objType == null) {
             return options;
@@ -130,7 +129,7 @@ public without sharing class LeadFormController {
 
         Schema.DescribeFieldResult fieldDescribe = objType.getDescribe()
             .fields.getMap().get(fieldName)?.getDescribe();
-        
+
         if (fieldDescribe == null) {
             return options;
         }
@@ -145,12 +144,17 @@ public without sharing class LeadFormController {
     }
 
     /**
-     * @description Wrapper class for picklist options
+     * @description Wrapper for a picklist option (label/value pair).
      */
     public class PicklistOption {
         @AuraEnabled public String label { get; set; }
         @AuraEnabled public String value { get; set; }
 
+        /**
+         * @description Constructs a picklist option.
+         * @param label Display label.
+         * @param value Stored value.
+         */
         public PicklistOption(String label, String value) {
             this.label = label;
             this.value = value;
@@ -158,9 +162,9 @@ public without sharing class LeadFormController {
     }
 
     /**
-     * @description Parses JSON string to LeadFormData object
-     * @param formDataJson JSON string
-     * @return LeadFormData object
+     * @description Parses the JSON payload into a LeadFormData object.
+     * @param formDataJson JSON string.
+     * @return LeadFormData object.
      */
     private static LeadFormData parseFormData(String formDataJson) {
         if (String.isBlank(formDataJson)) {
@@ -170,9 +174,8 @@ public without sharing class LeadFormController {
     }
 
     /**
-     * @description Validates required form fields
-     * @param formData LeadFormData to validate
-     * @throws LeadFormException if validation fails
+     * @description Validates required form fields, throwing on the first set of failures.
+     * @param formData LeadFormData to validate.
      */
     private static void validateFormData(LeadFormData formData) {
         List<String> errors = new List<String>();
@@ -209,12 +212,12 @@ public without sharing class LeadFormController {
     }
 
     /**
-     * @description Validates email format using regex
-     * @param email Email string to validate
-     * @return Boolean indicating if email is valid
+     * @description Validates email format using a permissive regex.
+     * @param email Email string to validate.
+     * @return True when the email is well-formed.
      */
     private static Boolean isValidEmail(String email) {
-        // More permissive email regex that handles modern TLDs
+        // Permissive email regex that handles modern TLDs.
         String emailRegex = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$';
         Pattern emailPattern = Pattern.compile(emailRegex);
         Matcher matcher = emailPattern.matcher(email.trim());
@@ -222,36 +225,36 @@ public without sharing class LeadFormController {
     }
 
     /**
-     * @description Builds Lead record from form data
-     * @param formData LeadFormData containing form values
-     * @return Lead sObject ready for insert
+     * @description Builds a Lead sObject from validated form data.
+     * @param formData LeadFormData containing form values.
+     * @return Lead sObject ready for insert.
      */
     private static Lead buildLeadRecord(LeadFormData formData) {
         Lead newLead = new Lead();
-        
-        // Set name fields
+
+        // Name fields.
         newLead.FirstName = formData.firstName?.trim();
         newLead.MiddleName = formData.middleName?.trim();
         newLead.LastName = formData.lastName?.trim();
-        
-        // Set date field
+
+        // Date field.
         newLead.Birthdate__c = formData.birthdate;
-        
-        // Set picklist field
+
+        // Picklist field.
         newLead.Gender_Identity__c = formData.genderIdentity;
-        
-        // Set address fields
+
+        // Address fields.
         newLead.Street = formData.street?.trim();
         newLead.City = formData.city?.trim();
         newLead.State = formData.state?.trim();
         newLead.PostalCode = formData.postalCode?.trim();
         newLead.Country = formData.country?.trim();
-        
-        // Set contact fields
+
+        // Contact fields.
         newLead.Email = formData.email?.trim();
         newLead.Phone = formData.phone?.trim();
-        
-        // Set multi-select picklist (semicolon-separated)
+
+        // Multi-select picklist (semicolon-separated).
         if (formData.interestedInsurance != null && !formData.interestedInsurance.isEmpty()) {
             newLead.Interested_Insurance__c = String.join(formData.interestedInsurance, ';');
 
@@ -260,8 +263,8 @@ public without sharing class LeadFormController {
                 newLead.RecordTypeId = resolvedRecordTypeId;
             }
         }
-        
-        // Set default values        
+
+        // Default values.
         newLead.Company = '[Not Provided]';
         newLead.Status = 'New';
         newLead.LeadSource = 'Web';
@@ -270,9 +273,9 @@ public without sharing class LeadFormController {
     }
 
     /**
-     * @description Extracts error messages from Database errors
-     * @param errors List of Database.Error objects
-     * @return Concatenated error message string
+     * @description Concatenates messages from a list of Database errors.
+     * @param errors List of Database.Error objects.
+     * @return Concatenated error message string.
      */
     private static String getErrorMessage(List<Database.Error> errors) {
         List<String> errorMessages = new List<String>();
@@ -283,7 +286,10 @@ public without sharing class LeadFormController {
     }
 
     /**
-     * @description Checks if list contains a value ignoring case
+     * @description Case-insensitive membership check.
+     * @param values The values to search.
+     * @param targetValue The value to find.
+     * @return True when targetValue is present ignoring case.
      */
     private static Boolean containsValueIgnoreCase(List<String> values, String targetValue) {
         if (values == null || String.isBlank(targetValue)) {
@@ -298,8 +304,10 @@ public without sharing class LeadFormController {
     }
 
     /**
-     * @description Resolves Lead record type from selected interested insurance values.
+     * @description Resolves the Lead record type from the selected interests.
      * Priority: Medicare (regulated) > Health (also covers Group Health) > Others.
+     * @param interestedInsurance Selected interest values.
+     * @return Record type Id, or null when none resolves.
      */
     private static Id resolveLeadRecordTypeId(List<String> interestedInsurance) {
         if (containsValueIgnoreCase(interestedInsurance, 'Medicare')) {
@@ -313,7 +321,9 @@ public without sharing class LeadFormController {
     }
 
     /**
-     * @description Retrieves Lead record type Id by name or developer name using Schema, with caching
+     * @description Resolves a Lead record type Id by name or developer name, with caching.
+     * @param recordTypeName Record type name or developer name.
+     * @return Record type Id, or null when not found.
      */
     private static Id getLeadRecordTypeId(String recordTypeName) {
         if (String.isBlank(recordTypeName)) {

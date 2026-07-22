@@ -3,22 +3,6 @@
     <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
-        <name>Set_Name</name>
-        <label>Set Name (engrave status)</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <assignmentItems>
-            <assignToReference>$Record.Name</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>fxNamePlusStatus</elementReference>
-            </value>
-        </assignmentItems>
-        <connector>
-            <targetReference>Newly_Cancelled</targetReference>
-        </connector>
-    </assignments>
-    <assignments>
         <name>Capture_Cancellation_Date</name>
         <label>Capture Cancellation Date</label>
         <locationX>0</locationX>
@@ -35,7 +19,23 @@
         </connector>
     </assignments>
     <assignments>
-        <description>Health/Medicare only: mirror the Policy Holder Contact's Subagent (Agent__c) onto this Insurance. Contact is the source of truth.</description>
+        <name>Set_Name</name>
+        <label>Set Name (engrave status)</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Name</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>fxNamePlusStatus</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Newly_Cancelled</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Health/Medicare only: mirror the Policy Holder Contact&apos;s Subagent (Agent__c) onto this Insurance. Contact is the source of truth.</description>
         <name>Set_Subagent</name>
         <label>Set Subagent (from Policy Holder)</label>
         <locationX>0</locationX>
@@ -154,7 +154,7 @@
             <label>Yes</label>
         </rules>
     </decisions>
-    <description>2026-07-21: Before-save record-triggered flow for Insurance — inline branches: engrave Status into Name, stamp Cancellation Date on first Cancelled, and mirror the Policy Holder Contact's Subagent onto Health/Medicare policies (Contact is source of truth). Zero DML; gated by TRIGGER_ACTIVATION. Cross-object DML lives in the after-save orchestration.</description>
+    <description>2026-07-21: Before-save record-triggered flow for Insurance — inline branches: engrave Status into Name, stamp Cancellation Date on first Cancelled, and mirror the Policy Holder Contact&apos;s Subagent onto Health/Medicare policies (Contact is source of truth). Zero DML; gated by TRIGGER_ACTIVATION. Cross-object DML lives in the after-save orchestration.</description>
     <environments>Default</environments>
     <formulas>
         <description>Insurance Name with its Status engraved in parentheses; strips any existing parenthetical first. Blank status returns just the base name.</description>

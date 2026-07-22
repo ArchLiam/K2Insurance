@@ -13,24 +13,24 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Draft</fullName>
+                <fullName>In Process</fullName>
                 <default>false</default>
-                <label>Draft</label>
+                <label>In Process</label>
             </value>
             <value>
-                <fullName>Imported</fullName>
+                <fullName>Uploaded</fullName>
                 <default>false</default>
-                <label>Imported</label>
+                <label>Uploaded</label>
             </value>
             <value>
-                <fullName>Processed</fullName>
+                <fullName>Done</fullName>
                 <default>false</default>
-                <label>Processed</label>
+                <label>Done</label>
             </value>
             <value>
-                <fullName>Failed</fullName>
+                <fullName>Need Review</fullName>
                 <default>false</default>
-                <label>Failed</label>
+                <label>Need Review</label>
             </value>
         </valueSetDefinition>
     </valueSet>

@@ -1,8 +1,7 @@
 /**
  * @description Test class for InsuranceMassEmailQueueable.
  * Verifies the queueable completes and sends in batches using existing org data (SeeAllData).
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2025-03-07
+ * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 @IsTest(SeeAllData=true)
 private class InsMassEmailQueueTest {

@@ -149,10 +149,6 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Disqualified</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Draft</fullName>
             <default>false</default>
         </values>

@@ -3,7 +3,8 @@
     <fullName>Stack_Trace__c</fullName>
     <description>Detailed stack trace from the Apex exception.</description>
     <label>Stack Trace</label>
-    <required>false</required>
+    <length>32768</length>
     <trackTrending>false</trackTrending>
-    <type>TextArea</type>
+    <type>LongTextArea</type>
+    <visibleLines>10</visibleLines>
 </CustomField>

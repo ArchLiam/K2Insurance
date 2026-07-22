@@ -18,7 +18,6 @@
             <targetReference>Update_Insurance_Commission_Rate</targetReference>
         </connector>
     </assignments>
-    <description>Keeps an Insurance policy's Commission Rate in sync with its Subagent's Commission Rate. Updates only when they differ, so it is recursion-safe and adds no work when already in sync.</description>
     <decisions>
         <name>Has_Subagent</name>
         <label>Has Subagent?</label>
@@ -70,6 +69,7 @@
             <label>Differs</label>
         </rules>
     </decisions>
+    <description>Keeps an Insurance policy&apos;s Commission Rate in sync with its Subagent&apos;s Commission Rate. Updates only when they differ, so it is recursion-safe and adds no work when already in sync.</description>
     <environments>Default</environments>
     <interviewLabel>Insurance Set Commission Rate from Subagent {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Insurance Set Commission Rate from Subagent</label>
@@ -127,7 +127,7 @@
             <targetReference>Has_Subagent</targetReference>
         </connector>
     </start>
-    <status>Active</status>
+    <status>Obsolete</status>
     <variables>
         <name>varNewInsuranceRecord</name>
         <dataType>SObject</dataType>

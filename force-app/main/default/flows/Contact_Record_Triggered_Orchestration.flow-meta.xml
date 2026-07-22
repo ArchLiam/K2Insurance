@@ -3,30 +3,7 @@
     <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <decisions>
-        <description>Is custom label "TRIGGER_ACTIVATION" "ON" or "OFF".</description>
-        <name>Is_TRIGGER_ACTIVATED</name>
-        <label>Is TRIGGER ACTIVATED?</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <defaultConnectorLabel>OFF</defaultConnectorLabel>
-        <rules>
-            <name>Is_TRIGGER_ACTIVATED_ON</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>$Label.TRIGGER_ACTIVATION</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <stringValue>ON</stringValue>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Did_Subagent_Change</targetReference>
-            </connector>
-            <label>ON</label>
-        </rules>
-    </decisions>
-    <decisions>
-        <description>Only sync related Insurance policies when the Contact's Subagent (Agent__c) actually changed.</description>
+        <description>Only sync related Insurance policies when the Contact&apos;s Subagent (Agent__c) actually changed.</description>
         <name>Did_Subagent_Change</name>
         <label>Did Subagent Change?</label>
         <locationX>0</locationX>
@@ -48,7 +25,30 @@
             <label>Yes</label>
         </rules>
     </decisions>
-    <description>2026-07-21: After-save orchestration for Contact — on Subagent (Agent__c) change, delegates to the Sync_Contact_Subagent_to_Insurance subflow (background step) to mirror the Subagent onto the Contact's Health/Medicare policies. Gated by TRIGGER_ACTIVATION.</description>
+    <decisions>
+        <description>Is custom label &quot;TRIGGER_ACTIVATION&quot; &quot;ON&quot; or &quot;OFF&quot;.</description>
+        <name>Is_TRIGGER_ACTIVATED</name>
+        <label>Is TRIGGER ACTIVATED?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>OFF</defaultConnectorLabel>
+        <rules>
+            <name>Is_TRIGGER_ACTIVATED_ON</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Label.TRIGGER_ACTIVATION</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>ON</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Did_Subagent_Change</targetReference>
+            </connector>
+            <label>ON</label>
+        </rules>
+    </decisions>
+    <description>2026-07-21: After-save orchestration for Contact — on Subagent (Agent__c) change, delegates to the Sync_Contact_Subagent_to_Insurance subflow (background step) to mirror the Subagent onto the Contact&apos;s Health/Medicare policies. Gated by TRIGGER_ACTIVATION.</description>
     <environments>Default</environments>
     <formulas>
         <name>fxSubagentChanged</name>

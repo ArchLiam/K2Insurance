@@ -55,6 +55,10 @@
                     <value>false</value>
                 </componentInstanceProperties>
                 <componentInstanceProperties>
+                    <name>hideSlackAction</name>
+                    <value>false</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
                     <name>numVisibleActions</name>
                     <value>5</value>
                 </componentInstanceProperties>
@@ -385,8 +389,38 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.Policy_Number__c</fieldItem>
+                <identifier>RecordPolicy_Number_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.Plan_Name__c</fieldItem>
                 <identifier>RecordPlan_Name_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Type__c</fieldItem>
+                <identifier>RecordType_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Subtype__c</fieldItem>
+                <identifier>RecordSubtype_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -429,20 +463,6 @@
                 <identifier>RecordDescriptionField</identifier>
             </fieldInstance>
         </itemInstances>
-        <name>Facet-185a63f1-1d13-4945-8804-a64dd68500a8</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Policy_Number__c</fieldItem>
-                <identifier>RecordPolicy_Number_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
         <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>
@@ -483,7 +503,7 @@
                 <identifier>RecordPayment_Method_cField</identifier>
             </fieldInstance>
         </itemInstances>
-        <name>Facet-a457d5e3-16a2-4741-9bbb-a9449dbe267e</name>
+        <name>Facet-185a63f1-1d13-4945-8804-a64dd68500a8</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -495,16 +515,6 @@
                 </componentInstanceProperties>
                 <componentName>flexipage:column</componentName>
                 <identifier>flexipage_column3</identifier>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>body</name>
-                    <value>Facet-a457d5e3-16a2-4741-9bbb-a9449dbe267e</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:column</componentName>
-                <identifier>flexipage_column4</identifier>
             </componentInstance>
         </itemInstances>
         <name>Facet-1fd299b6-2458-4623-99bf-e7c83031a5d5</name>

@@ -1,19 +1,21 @@
 /**
- * @description Generates a K2-branded PDF from a Quote, exposes it to the
- * quotePdfGenerator LWC for preview, save (as a ContentDocument), and
- * save-and-email actions. Also serves as the Visualforce page controller
- * for K2QuotePdf.page — pre-queries the Quote with all related fields
- * referenced by the template so the page renders without relying on
- * StandardController cross-object resolution.
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2026-05-23
+ * @description Generates a K2-branded PDF from a Quote and exposes it to the quotePdfGenerator LWC
+ * for preview, save (as a ContentDocument), and save-and-email actions. Also serves as the
+ * Visualforce page controller for K2QuotePdf.page — pre-queries the Quote with all related fields
+ * referenced by the template so the page renders without relying on StandardController cross-object
+ * resolution.
+ * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 public with sharing class QuotePdfController {
 
-    /** Public getter used by K2QuotePdf.page to read the fully-loaded Quote. */
+    /**
+     * @description The fully-loaded Quote read by K2QuotePdf.page.
+     */
     public Quote q { get; private set; }
 
-    /** Visualforce page constructor. Reads `id` URL parameter and loads the Quote. */
+    /**
+     * @description Visualforce page constructor. Reads the `id` URL parameter and loads the Quote.
+     */
     public QuotePdfController() {
         String quoteId = ApexPages.currentPage().getParameters().get('id');
         if (String.isNotBlank(quoteId)) {
@@ -21,14 +23,18 @@ public with sharing class QuotePdfController {
         }
     }
 
-    /** Response DTO for generatePdf — base64-encoded PDF plus a suggested filename. */
+    /**
+     * @description Response DTO for generatePdf — base64-encoded PDF plus a suggested filename.
+     */
     public class PdfResult {
         @AuraEnabled public String base64;
         @AuraEnabled public String fileName;
         @AuraEnabled public Integer sizeBytes;
     }
 
-    /** Response DTO for saveToQuote — Id of the persisted ContentVersion and ContentDocument. */
+    /**
+     * @description Response DTO for saveToQuote — Ids of the persisted ContentVersion and document.
+     */
     public class SaveResult {
         @AuraEnabled public Id contentVersionId;
         @AuraEnabled public Id contentDocumentId;
@@ -37,6 +43,8 @@ public with sharing class QuotePdfController {
 
     /**
      * @description Renders K2QuotePdf.page as a PDF and returns its base64 content.
+     * @param quoteId Id of the Quote to render.
+     * @return PdfResult with the base64 body, filename, and size.
      */
     @AuraEnabled
     public static PdfResult generatePdf(Id quoteId) {
@@ -53,6 +61,8 @@ public with sharing class QuotePdfController {
 
     /**
      * @description Renders the PDF and saves it as a ContentVersion linked to the Quote.
+     * @param quoteId Id of the Quote to render and attach the PDF to.
+     * @return SaveResult with the persisted ContentVersion/ContentDocument Ids.
      */
     @AuraEnabled
     public static SaveResult saveToQuote(Id quoteId) {
@@ -65,8 +75,13 @@ public with sharing class QuotePdfController {
     }
 
     /**
-     * @description Renders the PDF, saves it to the Quote, then sends it as an email
-     * attachment to the supplied recipient.
+     * @description Renders the PDF, saves it to the Quote, then emails it as an attachment.
+     * @param quoteId Id of the Quote.
+     * @param toAddress Recipient email address.
+     * @param subject Email subject.
+     * @param htmlBody HTML body of the email.
+     * @param orgWideEmailAddressId OrgWideEmailAddress Id to send from (null = current user).
+     * @return SaveResult for the persisted PDF.
      */
     @AuraEnabled
     public static SaveResult saveAndEmail(
@@ -114,7 +129,8 @@ public with sharing class QuotePdfController {
         try {
             Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{ email });
         } catch (Exception ex) {
-            throw new AuraHandledException('Failed to send email: ' + ex.getMessage());
+            ExceptionLogger.log('QuotePdfController.saveAndEmail', quoteId, ex);
+            throw new AuraHandledException('Failed to send email. Please try again.');
         }
 
         return saved;
@@ -122,6 +138,11 @@ public with sharing class QuotePdfController {
 
     // ─── Helpers ──────────────────────────────────────────────────────────────
 
+    /**
+     * @description Loads a Quote with every field referenced by the PDF template.
+     * @param quoteId Id of the Quote.
+     * @return The Quote record.
+     */
     private static Quote loadQuote(Id quoteId) {
         return [
             SELECT Id, Name, QuoteNumber, Status, Description, ExpirationDate, CreatedDate,
@@ -136,6 +157,11 @@ public with sharing class QuotePdfController {
         ];
     }
 
+    /**
+     * @description Renders the K2QuotePdf page to a PDF Blob (stubbed under test).
+     * @param quoteId Id of the Quote to render.
+     * @return The rendered PDF Blob.
+     */
     private static Blob renderPdf(Id quoteId) {
         if (Test.isRunningTest()) {
             // getContentAsPDF() is not available in test context.
@@ -146,12 +172,24 @@ public with sharing class QuotePdfController {
         return pdfPage.getContentAsPDF();
     }
 
+    /**
+     * @description Builds the download filename from the Quote number or name.
+     * @param quoteId Id of the Quote.
+     * @return The PDF filename.
+     */
     private static String buildFileName(Id quoteId) {
         Quote q = [SELECT QuoteNumber, Name FROM Quote WHERE Id = :quoteId LIMIT 1];
         String stem = String.isNotBlank(q.QuoteNumber) ? q.QuoteNumber : q.Name;
         return 'K2_Quote_' + stem + '.pdf';
     }
 
+    /**
+     * @description Persists the PDF as a ContentVersion linked to the Quote.
+     * @param quoteId Id of the Quote to link the file to.
+     * @param pdf The PDF Blob.
+     * @param fileName The file name.
+     * @return SaveResult with the persisted Ids.
+     */
     private static SaveResult persistPdf(Id quoteId, Blob pdf, String fileName) {
         ContentVersion cv = new ContentVersion();
         cv.Title = fileName.removeEnd('.pdf');
@@ -174,6 +212,11 @@ public with sharing class QuotePdfController {
         return result;
     }
 
+    /**
+     * @description Returns the Quote's Contact Id for activity logging.
+     * @param quoteId Id of the Quote.
+     * @return The Contact Id, or null when the Quote has none.
+     */
     private static Id getContactIdForActivity(Id quoteId) {
         for (Quote q : [SELECT ContactId FROM Quote WHERE Id = :quoteId LIMIT 1]) {
             return q.ContactId;

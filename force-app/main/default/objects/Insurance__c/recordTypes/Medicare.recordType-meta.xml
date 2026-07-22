@@ -133,10 +133,6 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Disqualified</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Draft</fullName>
             <default>false</default>
         </values>
@@ -180,10 +176,6 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Giveback</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>H0609 051</fullName>
             <default>false</default>
         </values>
@@ -201,6 +193,10 @@
         </values>
         <values>
             <fullName>H0609 062</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>H0609 066 %28GivebackTX39%29</fullName>
             <default>false</default>
         </values>
         <values>
@@ -267,6 +263,10 @@
             <default>false</default>
         </values>
         <values>
+            <fullName>Giveback</fullName>
+            <default>false</default>
+        </values>
+        <values>
             <fullName>Med Supp</fullName>
             <default>false</default>
         </values>
@@ -279,7 +279,7 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>R-MAPD</fullName>
+            <fullName>R-MAPD %28HMO%29</fullName>
             <default>false</default>
         </values>
         <values>

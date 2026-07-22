@@ -1,7 +1,6 @@
 /**
  * @description Test class for EmailComposerController.
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2026-03-16
+ * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 @IsTest
 private class EmailComposerControllerTest {
@@ -179,8 +178,11 @@ private class EmailComposerControllerTest {
             EmailComposerController.getTemplateContent(fakeId, con.Id);
         Test.stopTest();
 
-        Assert.isFalse(result.success);
-        Assert.isTrue(result.message.startsWith('Unable to load template:'));
+        Assert.isFalse(result.success, 'Invalid template Id should not succeed');
+        Assert.isTrue(
+            result.message.startsWith('Unable to load template'),
+            'Expected an unable-to-load message but got: ' + result.message
+        );
     }
 
     // ─── sendEmail ────────────────────────────────────────────────────────────

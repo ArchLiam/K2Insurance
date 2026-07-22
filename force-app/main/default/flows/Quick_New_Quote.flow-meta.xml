@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <apiVersion>64.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
@@ -42,31 +42,6 @@
         </value>
     </choices>
     <decisions>
-        <name>Same_Provider</name>
-        <label>Same Provider?</label>
-        <locationX>176</locationX>
-        <locationY>550</locationY>
-        <defaultConnector>
-            <targetReference>Quote_Details</targetReference>
-        </defaultConnector>
-        <defaultConnectorLabel>Provider Changed</defaultConnectorLabel>
-        <rules>
-            <name>Same</name>
-            <conditionLogic>and</conditionLogic>
-            <conditions>
-                <leftValueReference>ServiceProvider</leftValueReference>
-                <operator>EqualTo</operator>
-                <rightValue>
-                    <elementReference>Get_Original_Insurance.Insurance_Provider__c</elementReference>
-                </rightValue>
-            </conditions>
-            <connector>
-                <targetReference>Carry_Defaults</targetReference>
-            </connector>
-            <label>Same</label>
-        </rules>
-    </decisions>
-    <decisions>
         <name>Auto_Sync_Decision</name>
         <label>Auto Sync?</label>
         <locationX>176</locationX>
@@ -91,29 +66,46 @@
             <label>Sync</label>
         </rules>
     </decisions>
+    <decisions>
+        <name>Same_Provider</name>
+        <label>Same Provider?</label>
+        <locationX>176</locationX>
+        <locationY>550</locationY>
+        <defaultConnector>
+            <targetReference>Quote_Details</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Provider Changed</defaultConnectorLabel>
+        <rules>
+            <name>Same</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>ServiceProvider</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <elementReference>Get_Original_Insurance.Insurance_Provider__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Carry_Defaults</targetReference>
+            </connector>
+            <label>Same</label>
+        </rules>
+    </decisions>
     <description>Quick Action on a Renewal Opportunity. Two-screen: (1) pick the Service Provider; (2) edit quote details. Premium and Policy Number default from the Original Insurance only when the provider is unchanged (blank when the provider is switched) — set via a decision + variables so no conditional field is read by a formula.</description>
     <dynamicChoiceSets>
         <name>Choice_PaymentFrequency</name>
         <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
         <picklistField>Payment_Frequency__c</picklistField>
         <picklistObject>Quote</picklistObject>
     </dynamicChoiceSets>
     <dynamicChoiceSets>
         <name>Choice_PaymentMethod</name>
         <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
         <picklistField>Payment_Method__c</picklistField>
-        <picklistObject>Quote</picklistObject>
-    </dynamicChoiceSets>
-    <dynamicChoiceSets>
-        <name>Choice_QuoteSubtype</name>
-        <dataType>Picklist</dataType>
-        <picklistField>Subtype__c</picklistField>
-        <picklistObject>Quote</picklistObject>
-    </dynamicChoiceSets>
-    <dynamicChoiceSets>
-        <name>Choice_QuoteType</name>
-        <dataType>Picklist</dataType>
-        <picklistField>Type__c</picklistField>
         <picklistObject>Quote</picklistObject>
     </dynamicChoiceSets>
     <dynamicChoiceSets>
@@ -132,6 +124,22 @@
         <sortField>Name</sortField>
         <sortOrder>Asc</sortOrder>
         <valueField>Id</valueField>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>Choice_QuoteSubtype</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Subtype__c</picklistField>
+        <picklistObject>Quote</picklistObject>
+    </dynamicChoiceSets>
+    <dynamicChoiceSets>
+        <name>Choice_QuoteType</name>
+        <dataType>Picklist</dataType>
+        <displayField xsi:nil="true"/>
+        <object xsi:nil="true"/>
+        <picklistField>Type__c</picklistField>
+        <picklistObject>Quote</picklistObject>
     </dynamicChoiceSets>
     <environments>Default</environments>
     <formulas>
@@ -222,15 +230,15 @@
             </value>
         </inputAssignments>
         <inputAssignments>
-            <field>Pricebook2Id</field>
-            <value>
-                <elementReference>Get_Standard_Pricebook.Id</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
             <field>Policy_Number__c</field>
             <value>
                 <elementReference>PolicyNumber</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Pricebook2Id</field>
+            <value>
+                <elementReference>Get_Standard_Pricebook.Id</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -330,28 +338,6 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>
-        <name>Get_Standard_Pricebook</name>
-        <label>Get Standard Pricebook</label>
-        <locationX>176</locationX>
-        <locationY>300</locationY>
-        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
-        <connector>
-            <targetReference>Get_Provider_RecordType</targetReference>
-        </connector>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>IsStandard</field>
-            <operator>EqualTo</operator>
-            <value>
-                <booleanValue>true</booleanValue>
-            </value>
-        </filters>
-        <getFirstRecordOnly>true</getFirstRecordOnly>
-        <object>Pricebook2</object>
-        <queriedFields>Id</queriedFields>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordLookups>
-    <recordLookups>
         <name>Get_Provider_RecordType</name>
         <label>Get Provider Record Type</label>
         <locationX>176</locationX>
@@ -403,30 +389,28 @@
         <queriedFields>Name</queriedFields>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
-    <recordUpdates>
-        <name>Sync_Quote</name>
-        <label>Sync Quote</label>
-        <locationX>400</locationX>
-        <locationY>1150</locationY>
+    <recordLookups>
+        <name>Get_Standard_Pricebook</name>
+        <label>Get Standard Pricebook</label>
+        <locationX>176</locationX>
+        <locationY>300</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Accept_Quote</targetReference>
+            <targetReference>Get_Provider_RecordType</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>Id</field>
+            <field>IsStandard</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>recordId</elementReference>
+                <booleanValue>true</booleanValue>
             </value>
         </filters>
-        <inputAssignments>
-            <field>SyncedQuoteId</field>
-            <value>
-                <elementReference>Create_Quote</elementReference>
-            </value>
-        </inputAssignments>
-        <object>Opportunity</object>
-    </recordUpdates>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Pricebook2</object>
+        <queriedFields>Id</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
     <recordUpdates>
         <name>Accept_Quote</name>
         <label>Set Quote Accepted</label>
@@ -451,6 +435,78 @@
         </inputAssignments>
         <object>Quote</object>
     </recordUpdates>
+    <recordUpdates>
+        <name>Sync_Quote</name>
+        <label>Sync Quote</label>
+        <locationX>400</locationX>
+        <locationY>1150</locationY>
+        <connector>
+            <targetReference>Accept_Quote</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>SyncedQuoteId</field>
+            <value>
+                <elementReference>Create_Quote</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Opportunity</object>
+    </recordUpdates>
+    <screens>
+        <name>Done</name>
+        <label>Done</label>
+        <locationX>50</locationX>
+        <locationY>1150</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>DoneMessage</name>
+            <fieldText>&lt;p&gt;✅ &lt;b&gt;Quote created:&lt;/b&gt; &lt;a href=&quot;/{!Create_Quote}&quot;&gt;{!fxQuoteName}&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Next: open the Quote (link above), click &lt;b&gt;Start Sync&lt;/b&gt;, then move this Renewal to &lt;b&gt;Closed Won&lt;/b&gt; to create the new policy.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <screens>
+        <name>Done_Synced</name>
+        <label>Done</label>
+        <locationX>400</locationX>
+        <locationY>1350</locationY>
+        <allowBack>false</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>false</allowPause>
+        <fields>
+            <name>DoneSyncedMessage</name>
+            <fieldText>&lt;p&gt;✅ &lt;b&gt;Quote created &amp; syncing:&lt;/b&gt; &lt;a href=&quot;/{!Create_Quote}&quot;&gt;{!fxQuoteName}&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Now just move this Renewal to &lt;b&gt;Closed Won&lt;/b&gt; to create the new policy.&lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
     <screens>
         <name>Pick_Provider</name>
         <label>Choose Provider</label>
@@ -466,6 +522,14 @@
             <name>ProviderHelp</name>
             <fieldText>&lt;p&gt;Pick the carrier for this renewal quote, then click &lt;b&gt;Next&lt;/b&gt;. If you keep the original carrier, the Premium and Policy Number will pre-fill; if you switch carriers, they start blank.&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>ServiceProvider</name>
@@ -477,6 +541,14 @@
             <fieldText>Service Provider</fieldText>
             <fieldType>DropdownBox</fieldType>
             <isRequired>true</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>
@@ -495,8 +567,10 @@
         <fields>
             <name>Section_Terms</name>
             <fieldText>Quote Terms</fieldText>
+            <fieldType>RegionContainer</fieldType>
             <fields>
                 <name>Section_Terms_C1</name>
+                <fieldType>Region</fieldType>
                 <fields>
                     <name>RenewalPremium</name>
                     <dataType>Currency</dataType>
@@ -507,8 +581,15 @@
                     <fieldType>InputField</fieldType>
                     <isRequired>true</isRequired>
                     <scale>2</scale>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
-                <fieldType>Region</fieldType>
                 <inputParameters>
                     <name>width</name>
                     <value>
@@ -519,6 +600,7 @@
             </fields>
             <fields>
                 <name>Section_Terms_C2</name>
+                <fieldType>Region</fieldType>
                 <fields>
                     <name>TermMonths</name>
                     <dataType>Number</dataType>
@@ -529,8 +611,15 @@
                     <fieldType>InputField</fieldType>
                     <isRequired>true</isRequired>
                     <scale>0</scale>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
-                <fieldType>Region</fieldType>
                 <inputParameters>
                     <name>width</name>
                     <value>
@@ -539,15 +628,24 @@
                 </inputParameters>
                 <isRequired>false</isRequired>
             </fields>
-            <fieldType>RegionContainer</fieldType>
             <isRequired>false</isRequired>
             <regionContainerType>SectionWithHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Section_Policy</name>
             <fieldText>Policy Details</fieldText>
+            <fieldType>RegionContainer</fieldType>
             <fields>
                 <name>Section_Policy_C1</name>
+                <fieldType>Region</fieldType>
                 <fields>
                     <name>PolicyNumber</name>
                     <dataType>String</dataType>
@@ -557,8 +655,15 @@
                     <fieldText>Policy Number</fieldText>
                     <fieldType>InputField</fieldType>
                     <isRequired>false</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
-                <fieldType>Region</fieldType>
                 <inputParameters>
                     <name>width</name>
                     <value>
@@ -569,6 +674,7 @@
             </fields>
             <fields>
                 <name>Section_Policy_C2</name>
+                <fieldType>Region</fieldType>
                 <fields>
                     <name>QuoteType</name>
                     <choiceReferences>Choice_QuoteType</choiceReferences>
@@ -579,6 +685,14 @@
                     <fieldText>Type</fieldText>
                     <fieldType>DropdownBox</fieldType>
                     <isRequired>false</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
                 <fields>
                     <name>QuoteSubtype</name>
@@ -590,8 +704,15 @@
                     <fieldText>Subtype</fieldText>
                     <fieldType>DropdownBox</fieldType>
                     <isRequired>false</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
-                <fieldType>Region</fieldType>
                 <inputParameters>
                     <name>width</name>
                     <value>
@@ -600,9 +721,16 @@
                 </inputParameters>
                 <isRequired>false</isRequired>
             </fields>
-            <fieldType>RegionContainer</fieldType>
             <isRequired>false</isRequired>
             <regionContainerType>SectionWithHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>StartDate</name>
@@ -613,12 +741,22 @@
             <fieldText>Start Date</fieldText>
             <fieldType>InputField</fieldType>
             <isRequired>true</isRequired>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Section_Payment</name>
             <fieldText>Payment</fieldText>
+            <fieldType>RegionContainer</fieldType>
             <fields>
                 <name>Section_Payment_C1</name>
+                <fieldType>Region</fieldType>
                 <fields>
                     <name>PaymentFrequency</name>
                     <choiceReferences>Choice_PaymentFrequency</choiceReferences>
@@ -629,8 +767,15 @@
                     <fieldText>Payment Frequency</fieldText>
                     <fieldType>DropdownBox</fieldType>
                     <isRequired>false</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
-                <fieldType>Region</fieldType>
                 <inputParameters>
                     <name>width</name>
                     <value>
@@ -641,6 +786,7 @@
             </fields>
             <fields>
                 <name>Section_Payment_C2</name>
+                <fieldType>Region</fieldType>
                 <fields>
                     <name>PaymentMethod</name>
                     <choiceReferences>Choice_PaymentMethod</choiceReferences>
@@ -651,8 +797,15 @@
                     <fieldText>Payment Method</fieldText>
                     <fieldType>DropdownBox</fieldType>
                     <isRequired>false</isRequired>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
-                <fieldType>Region</fieldType>
                 <inputParameters>
                     <name>width</name>
                     <value>
@@ -661,15 +814,24 @@
                 </inputParameters>
                 <isRequired>false</isRequired>
             </fields>
-            <fieldType>RegionContainer</fieldType>
             <isRequired>false</isRequired>
             <regionContainerType>SectionWithHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>Section_Coverage</name>
             <fieldText>Coverage</fieldText>
+            <fieldType>RegionContainer</fieldType>
             <fields>
                 <name>Section_Coverage_C1</name>
+                <fieldType>Region</fieldType>
                 <fields>
                     <name>Coverage</name>
                     <dataType>Currency</dataType>
@@ -680,8 +842,15 @@
                     <fieldType>InputField</fieldType>
                     <isRequired>false</isRequired>
                     <scale>2</scale>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
-                <fieldType>Region</fieldType>
                 <inputParameters>
                     <name>width</name>
                     <value>
@@ -692,6 +861,7 @@
             </fields>
             <fields>
                 <name>Section_Coverage_C2</name>
+                <fieldType>Region</fieldType>
                 <fields>
                     <name>Deductible</name>
                     <dataType>Currency</dataType>
@@ -702,8 +872,15 @@
                     <fieldType>InputField</fieldType>
                     <isRequired>false</isRequired>
                     <scale>2</scale>
+                    <styleProperties>
+                        <verticalAlignment>
+                            <stringValue>top</stringValue>
+                        </verticalAlignment>
+                        <width>
+                            <stringValue>12</stringValue>
+                        </width>
+                    </styleProperties>
                 </fields>
-                <fieldType>Region</fieldType>
                 <inputParameters>
                     <name>width</name>
                     <value>
@@ -712,9 +889,16 @@
                 </inputParameters>
                 <isRequired>false</isRequired>
             </fields>
-            <fieldType>RegionContainer</fieldType>
             <isRequired>false</isRequired>
             <regionContainerType>SectionWithHeader</regionContainerType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <fields>
             <name>AutoSync</name>
@@ -727,38 +911,14 @@
             <fieldText>Start Sync this quote now? (so the Renewal is ready to mark Closed Won)</fieldText>
             <fieldType>RadioButtons</fieldType>
             <isRequired>true</isRequired>
-        </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
-    <screens>
-        <name>Done</name>
-        <label>Done</label>
-        <locationX>50</locationX>
-        <locationY>1150</locationY>
-        <allowBack>false</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <fields>
-            <name>DoneMessage</name>
-            <fieldText>&lt;p&gt;✅ &lt;b&gt;Quote created:&lt;/b&gt; &lt;a href=&quot;/{!Create_Quote}&quot;&gt;{!fxQuoteName}&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Next: open the Quote (link above), click &lt;b&gt;Start Sync&lt;/b&gt;, then move this Renewal to &lt;b&gt;Closed Won&lt;/b&gt; to create the new policy.&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
-        </fields>
-        <showFooter>true</showFooter>
-        <showHeader>true</showHeader>
-    </screens>
-    <screens>
-        <name>Done_Synced</name>
-        <label>Done</label>
-        <locationX>400</locationX>
-        <locationY>1350</locationY>
-        <allowBack>false</allowBack>
-        <allowFinish>true</allowFinish>
-        <allowPause>false</allowPause>
-        <fields>
-            <name>DoneSyncedMessage</name>
-            <fieldText>&lt;p&gt;✅ &lt;b&gt;Quote created &amp; syncing:&lt;/b&gt; &lt;a href=&quot;/{!Create_Quote}&quot;&gt;{!fxQuoteName}&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;br&gt;&lt;/p&gt;&lt;p&gt;Now just move this Renewal to &lt;b&gt;Closed Won&lt;/b&gt; to create the new policy.&lt;/p&gt;</fieldText>
-            <fieldType>DisplayText</fieldType>
+            <styleProperties>
+                <verticalAlignment>
+                    <stringValue>top</stringValue>
+                </verticalAlignment>
+                <width>
+                    <stringValue>12</stringValue>
+                </width>
+            </styleProperties>
         </fields>
         <showFooter>true</showFooter>
         <showHeader>true</showHeader>

@@ -3,6 +3,7 @@
     <fullName>Vision__c</fullName>
     <defaultValue>false</defaultValue>
     <label>Vision</label>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Checkbox</type>
 </CustomField>

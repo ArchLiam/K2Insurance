@@ -1,8 +1,7 @@
 /**
- * @description Server-side controller for the Insurance Mass Email LWC.
- * Provides init data (recipients and templates), template preview, and enqueue of the mass email job.
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2025-03-07
+ * @description Server-side controller for the Insurance Mass Email LWC. Provides init data
+ * (recipients and templates), template preview, and enqueue of the mass email job.
+ * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 public with sharing class InsuranceMassEmailController {
 
@@ -13,6 +12,11 @@ public with sharing class InsuranceMassEmailController {
         @AuraEnabled public Id templateId;
         @AuraEnabled public String label;
 
+        /**
+         * @description Constructs a template option.
+         * @param templateId Id of the EmailTemplate.
+         * @param label Display label for the option.
+         */
         public TemplateOption(Id templateId, String label) {
             this.templateId = templateId;
             this.label = label;
@@ -55,10 +59,10 @@ public with sharing class InsuranceMassEmailController {
     }
 
     /**
-     * @description Loads recipients (from selected Insurance records) and available email templates for the mass email UI.
-     * @param insuranceIds List of Insurance__c Ids selected by the user
-     * @return InitResponse with selectedCount, validCount, skippedCount, recipients, and templates
-     * @throws AuraHandledException when insuranceIds is null or empty
+     * @description Loads recipients (from selected Insurance records) and available email templates
+     * for the mass email UI.
+     * @param insuranceIds List of Insurance__c Ids selected by the user.
+     * @return InitResponse with selectedCount, validCount, skippedCount, recipients, and templates.
      */
     @AuraEnabled(cacheable=true)
     public static InitResponse getInitData(List<Id> insuranceIds) {
@@ -127,9 +131,10 @@ public with sharing class InsuranceMassEmailController {
     }
 
     /**
-     * @description Loads template subject and body for preview (merge fields preserved as-is).
-     * @param templateId Id of the EmailTemplate to preview
-     * @return PreviewResponse with success, templateName, subject, htmlBody, plainTextBody; message set on error or empty body
+     * @description Loads a template's subject and body for preview (merge fields preserved as-is).
+     * @param templateId Id of the EmailTemplate to preview.
+     * @return PreviewResponse with success, templateName, subject, htmlBody, plainTextBody; message
+     * set on error or empty body.
      */
     @AuraEnabled(cacheable=true)
     public static PreviewResponse getTemplatePreview(Id templateId) {
@@ -165,19 +170,21 @@ public with sharing class InsuranceMassEmailController {
 
             return response;
         } catch (Exception ex) {
+            // Graceful degrade for the UI; publish telemetry so the failure is not silent.
+            ExceptionLogger.log('InsuranceMassEmailController.getTemplatePreview', templateId, ex);
             response.success = false;
-            response.message = 'Unable to load template preview. ' + ex.getMessage();
+            response.message = 'Unable to load template preview.';
             return response;
         }
     }
 
     /**
-     * @description Enqueues a Queueable job to send one templated email per selected Insurance to its Policy Holder.
-     * @param insuranceIds List of Insurance__c Ids to process
-     * @param templateId Id of the EmailTemplate to use
-     * @param saveAsActivity Whether to save each email as an activity on the related record
-     * @return Success message string
-     * @throws AuraHandledException when insuranceIds is null/empty or templateId is null
+     * @description Enqueues a Queueable job to send one templated email per selected Insurance to
+     * its Policy Holder.
+     * @param insuranceIds List of Insurance__c Ids to process.
+     * @param templateId Id of the EmailTemplate to use.
+     * @param saveAsActivity Whether to save each email as an activity on the related record.
+     * @return Success message string.
      */
     @AuraEnabled
     public static String enqueueSendEmails(List<Id> insuranceIds, Id templateId, Boolean saveAsActivity) {

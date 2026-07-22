@@ -2,6 +2,9 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Stack_Trace__c</fullName>
     <description>Optional detailed trace. Maps to Error_Log__c.Stack_Trace__c (truncated to 255 by the subscriber).</description>
+    <isFilteringDisabled>false</isFilteringDisabled>
+    <isNameField>false</isNameField>
+    <isSortingDisabled>false</isSortingDisabled>
     <label>Stack Trace</label>
     <length>32768</length>
     <type>LongTextArea</type>

@@ -4,8 +4,7 @@
  * QuotePdfController short-circuits to a test stub blob when Test.isRunningTest()
  * is true. These tests verify the surrounding behaviour (validation, persistence,
  * email send) rather than the rendered PDF bytes themselves.
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2026-05-23
+ * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 @IsTest
 private class QuotePdfControllerTest {

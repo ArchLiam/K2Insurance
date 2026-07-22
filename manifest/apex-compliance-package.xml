@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>ContentNoteCreator</members>
+        <members>ContentNoteCreatorTest</members>
+        <members>EmailComposerController</members>
+        <members>EmailComposerControllerTest</members>
+        <members>ExceptionLogger</members>
+        <members>ExceptionLoggerTest</members>
+        <members>InsuranceMassEmailController</members>
+        <members>InsuranceMassEmailListButtonController</members>
+        <members>InsuranceMassEmailQueueable</members>
+        <members>InsuranceMassEmailTestDataFactory</members>
+        <members>InsMassEmailCtrlTest</members>
+        <members>InsMassEmailListBtnCtrlTest</members>
+        <members>InsMassEmailQueueTest</members>
+        <members>LeadFormController</members>
+        <members>LeadFormControllerTest</members>
+        <members>PortfolioContactController</members>
+        <members>PortfolioContactControllerTest</members>
+        <name>ApexClass</name>
+    </types>
+    <version>65.0</version>
+</Package>

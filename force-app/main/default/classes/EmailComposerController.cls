@@ -1,9 +1,8 @@
 /**
- * @description Server-side controller for the Email Composer LWC.
- * Supports Contact and Lead record pages. Provides email templates,
- * org-wide sender addresses, native merge field resolution, and email sending.
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2026-03-16
+ * @description Server-side controller for the Email Composer LWC. Supports Contact and Lead record
+ * pages. Provides email templates, org-wide sender addresses, native merge field resolution, and
+ * email sending.
+ * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 public with sharing class EmailComposerController {
 
@@ -14,6 +13,11 @@ public with sharing class EmailComposerController {
         @AuraEnabled public Id templateId;
         @AuraEnabled public String label;
 
+        /**
+         * @description Constructs a template option.
+         * @param templateId Id of the EmailTemplate.
+         * @param label Display label for the option.
+         */
         public TemplateOption(Id templateId, String label) {
             this.templateId = templateId;
             this.label = label;
@@ -27,6 +31,11 @@ public with sharing class EmailComposerController {
         @AuraEnabled public Id id;
         @AuraEnabled public String label;
 
+        /**
+         * @description Constructs a sender option.
+         * @param id Id of the OrgWideEmailAddress.
+         * @param label Display label for the sender.
+         */
         public SenderOption(Id id, String label) {
             this.id = id;
             this.label = label;
@@ -47,7 +56,7 @@ public with sharing class EmailComposerController {
 
     /**
      * @description Returns all verified Org-Wide Email Addresses available as senders.
-     * @return List of SenderOption DTOs
+     * @return List of SenderOption DTOs.
      */
     @AuraEnabled(cacheable=true)
     public static List<SenderOption> getOrgWideEmailAddresses() {
@@ -67,7 +76,7 @@ public with sharing class EmailComposerController {
 
     /**
      * @description Returns all active email templates ordered by name.
-     * @return List of TemplateOption DTOs
+     * @return List of TemplateOption DTOs.
      */
     @AuraEnabled(cacheable=true)
     public static List<TemplateOption> getEmailTemplates() {
@@ -87,11 +96,11 @@ public with sharing class EmailComposerController {
     }
 
     /**
-     * @description Loads a template's subject and body with all merge fields resolved.
-     * Uses Salesforce native rendering — works for both Contact and Lead records.
-     * @param templateId  Id of the EmailTemplate to load
-     * @param recordId    Id of the Contact or Lead record for merge field resolution
-     * @return TemplateContent with resolved subject and body
+     * @description Loads a template's subject and body with all merge fields resolved. Uses
+     * Salesforce native rendering — works for both Contact and Lead records.
+     * @param templateId Id of the EmailTemplate to load.
+     * @param recordId Id of the Contact or Lead record for merge field resolution.
+     * @return TemplateContent with resolved subject and body.
      */
     @AuraEnabled(cacheable=true)
     public static TemplateContent getTemplateContent(Id templateId, Id recordId) {
@@ -137,8 +146,10 @@ public with sharing class EmailComposerController {
             }
 
         } catch (Exception ex) {
+            // Graceful degrade for the UI; publish telemetry so the failure is not silent.
+            ExceptionLogger.log('EmailComposerController.getTemplateContent', templateId, ex);
             result.success = false;
-            result.message = 'Unable to load template: ' + ex.getMessage();
+            result.message = 'Unable to load template.';
         }
 
         return result;
@@ -146,12 +157,11 @@ public with sharing class EmailComposerController {
 
     /**
      * @description Sends a single email and logs it as an Activity on the record.
-     * @param recordId              Id of the Contact or Lead (targetObjectId for activity logging)
-     * @param toAddress             Recipient email address
-     * @param subject               Email subject
-     * @param htmlBody              HTML body of the email
-     * @param orgWideEmailAddressId Id of the OrgWideEmailAddress to send from (null = current user)
-     * @throws AuraHandledException when toAddress or subject is blank, or on send failure
+     * @param recordId Id of the Contact or Lead (targetObjectId for activity logging).
+     * @param toAddress Recipient email address.
+     * @param subject Email subject.
+     * @param htmlBody HTML body of the email.
+     * @param orgWideEmailAddressId Id of the OrgWideEmailAddress to send from (null = current user).
      */
     @AuraEnabled
     public static void sendEmail(Id recordId, String toAddress, String subject, String htmlBody, Id orgWideEmailAddressId) {
@@ -179,8 +189,8 @@ public with sharing class EmailComposerController {
 
             Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{ email });
         } catch (Exception ex) {
-            throw new AuraHandledException('Failed to send email: ' + ex.getMessage());
+            ExceptionLogger.log('EmailComposerController.sendEmail', recordId, ex);
+            throw new AuraHandledException('Failed to send email. Please try again.');
         }
     }
-
 }

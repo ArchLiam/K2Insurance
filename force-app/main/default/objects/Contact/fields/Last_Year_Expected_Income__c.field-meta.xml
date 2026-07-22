@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Last_Year_Expected_Income__c</fullName>
+    <description>Contact&apos;s total income for the PRIOR calendar year, in whole US dollars.
+Used as a baseline/comparison against This_Year_Expected_Income__c for income trend and coverage decisions.
+Whole dollars, no cents.</description>
+    <inlineHelpText>The contact&apos;s income for LAST year (whole dollars, no cents). Example: 80000</inlineHelpText>
+    <label>Last Year Expected Income</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Currency</type>
+</CustomField>

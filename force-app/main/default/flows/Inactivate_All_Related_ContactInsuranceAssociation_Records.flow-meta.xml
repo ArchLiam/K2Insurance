@@ -94,6 +94,14 @@
         </faultConnector>
         <inputReference>varRecordsToUpdate</inputReference>
     </recordUpdates>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Get_All_Related_ContactInsuranceAssociation_Records</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
     <subflows>
         <name>Log_the_Error</name>
         <label>Log the Error</label>
@@ -137,14 +145,6 @@
             </value>
         </inputAssignments>
     </subflows>
-    <start>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <connector>
-            <targetReference>Get_All_Related_ContactInsuranceAssociation_Records</targetReference>
-        </connector>
-    </start>
-    <status>Active</status>
     <variables>
         <name>varInsuranceId</name>
         <dataType>String</dataType>

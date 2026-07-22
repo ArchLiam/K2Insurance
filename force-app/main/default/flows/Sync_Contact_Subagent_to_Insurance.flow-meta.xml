@@ -49,7 +49,7 @@
         </rules>
     </decisions>
     <decisions>
-        <description>Health/Medicare only, and only when the policy's Subagent differs from the Contact's (idempotent).</description>
+        <description>Health/Medicare only, and only when the policy&apos;s Subagent differs from the Contact&apos;s (idempotent).</description>
         <name>Should_Update_This_Insurance</name>
         <label>Should Update This Insurance?</label>
         <locationX>0</locationX>
@@ -88,7 +88,7 @@
             <label>Yes</label>
         </rules>
     </decisions>
-    <description>2026-07-21: Mirror a Contact's Subagent (Agent__c) onto its Health/Medicare Insurance policies. Called as a background step by Contact_Record_Triggered_Orchestration when Agent__c changes. Fetches the Contact's policies (one Get), filters record type + difference in a loop decision (org convention), then one Update. Blank Subagent is never propagated.</description>
+    <description>2026-07-21: Mirror a Contact&apos;s Subagent (Agent__c) onto its Health/Medicare Insurance policies. Called as a background step by Contact_Record_Triggered_Orchestration when Agent__c changes. Fetches the Contact&apos;s policies (one Get), filters record type + difference in a loop decision (org convention), then one Update. Blank Subagent is never propagated.</description>
     <environments>Default</environments>
     <interviewLabel>Sync Contact Subagent to Insurance {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Sync Contact Subagent to Insurance</label>

@@ -19,9 +19,8 @@ const logoPath = (fileName) => `${LOGO_BASE}/${fileName}`;
  * - Focus trap in mobile menu
  * - Proper focus management and visual indicators
  * - Screen reader announcements for state changes
- *
+ * 
  * @author Liam Jeong
- * @date 2025-03-07
  */
 export default class PortfolioNavigation extends NavigationMixin(LightningElement) {
     /**

@@ -12,7 +12,7 @@
         </defaultConnector>
         <defaultConnectorLabel>Updating</defaultConnectorLabel>
         <rules>
-            <name>Inserting</name>
+            <name>Is_Created_or_Updated_Inserting</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>fxisNEW</leftValueReference>
@@ -35,7 +35,7 @@
         <locationY>0</locationY>
         <defaultConnectorLabel>OFF</defaultConnectorLabel>
         <rules>
-            <name>ON</name>
+            <name>Is_TRIGGER_ACTIVATED_ON</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>$Label.TRIGGER_ACTIVATION</leftValueReference>
@@ -50,7 +50,7 @@
             <label>ON</label>
         </rules>
     </decisions>
-    <description>2026-07-21: On CIA insert, sync dates from the Group Health Insurance then recalculate the holder Contact's active-insurance rollup (Has/Count/Summary/Holding Health); on update, recalculate only. Delegates to subflows; gated by TRIGGER_ACTIVATION.</description>
+    <description>2026-07-21: On CIA insert, sync dates from the Group Health Insurance then recalculate the holder Contact&apos;s active-insurance rollup (Has/Count/Summary/Holding Health); on update, recalculate only. Delegates to subflows; gated by TRIGGER_ACTIVATION.</description>
     <environments>Default</environments>
     <formulas>
         <name>fxisNEW</name>

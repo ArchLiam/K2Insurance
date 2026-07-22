@@ -18,9 +18,8 @@ const logoPath = (fileName) => `${LOGO_BASE}/${fileName}`;
  * - Accessible focus indicators and touch targets
  * - Responsive grid layout
  * - Keyboard accessible
- *
+ * 
  * @author Liam Jeong
- * @date 2025-03-07
  */
 export default class PortfolioFooter extends NavigationMixin(LightningElement) {
     /**

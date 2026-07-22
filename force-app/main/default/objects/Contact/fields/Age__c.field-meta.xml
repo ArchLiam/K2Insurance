@@ -4,9 +4,14 @@
     <description>Automatically calculates the person’s age in years based on the Birthdate field.</description>
     <externalId>false</externalId>
     <formula>IF(
-  ISBLANK(Birthdate),
-  NULL,
-  FLOOR((TODAY() - Birthdate) / 365.25)
+    ISBLANK(Birthdate),
+    NULL,
+    YEAR(TODAY()) - YEAR(Birthdate) -
+    IF(
+        DATE(YEAR(TODAY()), MONTH(Birthdate), DAY(Birthdate)) &gt; TODAY(),
+        1,
+        0
+    )
 )</formula>
     <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
     <inlineHelpText>This field calculates the current age based on the Birthdate. It is updated dynamically and does not require manual changes.</inlineHelpText>

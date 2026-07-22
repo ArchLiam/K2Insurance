@@ -2,14 +2,11 @@
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Original_Premium__c</fullName>
     <description>Premium of the original Insurance policy being renewed. Derived from Original_Insurance__r.Premium__c. Shown on the Renewal page in place of the standard Amount field.</description>
-    <externalId>false</externalId>
     <formula>Original_Insurance__r.Premium__c</formula>
-    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
-    <inlineHelpText>Read-only — the expiring policy's premium, pulled from the linked Original Insurance.</inlineHelpText>
+    <inlineHelpText>Read-only — the expiring policy&apos;s premium, pulled from the linked Original Insurance.</inlineHelpText>
     <label>Original Premium</label>
     <precision>18</precision>
     <required>false</required>
     <scale>2</scale>
     <type>Currency</type>
-    <unique>false</unique>
 </CustomField>

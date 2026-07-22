@@ -588,16 +588,6 @@
                 </visibilityRule>
             </fieldInstance>
         </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Agent__c</fieldItem>
-                <identifier>RecordAgent_cField2</identifier>
-            </fieldInstance>
-        </itemInstances>
         <name>Facet-bb598454-9d39-403c-803c-7b7bc74229b0</name>
         <type>Facet</type>
     </flexiPageRegions>

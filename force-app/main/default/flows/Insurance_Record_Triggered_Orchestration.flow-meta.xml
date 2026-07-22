@@ -3,6 +3,32 @@
     <apiVersion>64.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <decisions>
+        <description>Only recalculate related Contact insurance fields when the policy Status actually changed.</description>
+        <name>Did_Status_Change</name>
+        <label>Did Status Change?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Record_Type</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>fxStatusChanged</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Recalculate_Contacts</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
         <description>Is custom label &quot;TRIGGER_ACTIVATION&quot; &quot;ON&quot; or &quot;OFF&quot;, AND the per-object Automation Setting active.</description>
         <name>Is_TRIGGER_ACTIVATED</name>
         <label>Is TRIGGER ACTIVATED?</label>
@@ -20,7 +46,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Record_Type</targetReference>
+                <targetReference>Did_Status_Change</targetReference>
             </connector>
             <label>ON</label>
         </rules>
@@ -47,8 +73,13 @@
             <label>Group Health</label>
         </rules>
     </decisions>
-    <description>After-save cross-object work for Insurance. Same-record field defaults (Name engrave, Cancellation Date, Commission Rate) were moved to the before-save flow Insurance_Before_Save_Defaults; this orchestration now only inactivates related ContactInsuranceAssociation records when a Group Health policy goes Inactive.</description>
+    <description>2026-07-18: Added Recalculate_Contacts stage to recompute related Contact active-insurance fields on policy Status change (all record types); existing Group Health inactivation path unchanged.</description>
     <environments>Default</environments>
+    <formulas>
+        <name>fxStatusChanged</name>
+        <dataType>Boolean</dataType>
+        <expression>ISCHANGED({!$Record.Status__c})</expression>
+    </formulas>
     <interviewLabel>Insurance {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Insurance Record-Triggered Orchestration</label>
     <orchestratedStages>
@@ -79,6 +110,43 @@
                 </value>
             </inputParameters>
             <label>Inactivate All Related ContactInsuranceAssociation</label>
+            <requiresAsyncProcessing>false</requiresAsyncProcessing>
+            <runAsUser>false</runAsUser>
+            <shouldLock>false</shouldLock>
+            <stepSubtype>BackgroundStep</stepSubtype>
+        </stageSteps>
+    </orchestratedStages>
+    <orchestratedStages>
+        <name>Recalculate_Contacts</name>
+        <label>Recalculate Contacts</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Record_Type</targetReference>
+        </connector>
+        <exitConditionLogic>and</exitConditionLogic>
+        <exitConditions>
+            <leftValueReference>fxStatusChanged</leftValueReference>
+            <operator>EqualTo</operator>
+            <rightValue>
+                <booleanValue>true</booleanValue>
+            </rightValue>
+        </exitConditions>
+        <stageSteps>
+            <name>Recalculate_Related_Contacts</name>
+            <actionName>Recalculate_Related_Contacts_Active_Insurance</actionName>
+            <actionType>stepBackground</actionType>
+            <canAssigneeEdit>false</canAssigneeEdit>
+            <debugSimulateStep>false</debugSimulateStep>
+            <entryConditionLogic>and</entryConditionLogic>
+            <exitConditionLogic>and</exitConditionLogic>
+            <inputParameters>
+                <name>varInsuranceId</name>
+                <value>
+                    <elementReference>$Record.Id</elementReference>
+                </value>
+            </inputParameters>
+            <label>Recalculate Related Contacts</label>
             <requiresAsyncProcessing>false</requiresAsyncProcessing>
             <runAsUser>false</runAsUser>
             <shouldLock>false</shouldLock>

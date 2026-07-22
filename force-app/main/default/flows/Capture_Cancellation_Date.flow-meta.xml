@@ -47,7 +47,7 @@
             <label>Cancelled</label>
         </rules>
     </decisions>
-    <description>Stamps the Cancellation Date the first time a policy's Status is Cancelled (only when the date is still blank).</description>
+    <description>Stamps the Cancellation Date the first time a policy&apos;s Status is Cancelled (only when the date is still blank).</description>
     <environments>Default</environments>
     <interviewLabel>Capture Cancellation Date {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Capture Cancellation Date</label>
@@ -84,7 +84,7 @@
             <targetReference>Newly_Cancelled</targetReference>
         </connector>
     </start>
-    <status>Active</status>
+    <status>Obsolete</status>
     <variables>
         <name>varNewInsuranceRecord</name>
         <dataType>SObject</dataType>

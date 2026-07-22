@@ -4,7 +4,7 @@
     <description>Sum of all line amounts (any status).</description>
     <inlineHelpText>Includes all lines regardless of status. Use Total Paid for net paid.</inlineHelpText>
     <label>Total Amount</label>
-    <summarizedField>Commission_Line__c.Commnission_Amount__c</summarizedField>
+    <summarizedField>Commission_Line__c.Commission_Amount__c</summarizedField>
     <summaryForeignKey>Commission_Line__c.Commission_Statement__c</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>
     <trackHistory>false</trackHistory>

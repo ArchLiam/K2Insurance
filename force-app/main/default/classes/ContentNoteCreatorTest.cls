@@ -4,8 +4,7 @@
  * rich-text HTML is sanitized to ContentNote-safe content. Assertions are
  * scoped to records linked to the test's own parent because ContentNote
  * ignores test data isolation (org-wide notes are visible in tests).
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2026-05-31
+ * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 @isTest
 private class ContentNoteCreatorTest {

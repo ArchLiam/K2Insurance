@@ -1,8 +1,7 @@
 /**
  * @description Test class for InsuranceMassEmailListButtonController.
  * Verifies selectedIdsCsv is built from list view selection using existing org data (SeeAllData).
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2025-03-07
+ * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 @IsTest(SeeAllData=true)
 private class InsMassEmailListBtnCtrlTest {

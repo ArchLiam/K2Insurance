@@ -1,17 +1,18 @@
 /**
- * @description VF list controller extension for the Mass Email flow.
- * Builds a comma-separated list of selected Insurance Ids for the VF page to pass to Lightning Out.
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2025-03-07
+ * @description Visualforce list-view button controller for the Mass Email flow. Builds a
+ * comma-separated list of the selected Insurance Ids for the VF page to pass to Lightning Out.
+ * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 public with sharing class InsuranceMassEmailListButtonController {
 
-    /** Comma-separated Insurance__c Ids from the list view selection. */
+    /**
+     * @description Comma-separated Insurance__c Ids from the list-view selection.
+     */
     public String selectedIdsCsv { get; private set; }
 
     /**
-     * @description Initializes the controller and populates selectedIdsCsv from the set controller's selected rows.
-     * @param controller StandardSetController for the Insurance__c list view
+     * @description Populates selectedIdsCsv from the set controller's selected rows.
+     * @param controller StandardSetController for the Insurance__c list view.
      */
     public InsuranceMassEmailListButtonController(ApexPages.StandardSetController controller) {
         List<Insurance__c> selectedRows = (List<Insurance__c>) controller.getSelected();

@@ -1,8 +1,7 @@
 /**
- * @description Queueable job that sends one templated email per Insurance record to its Policy Holder (Contact).
- * Sends in batches of 10; skips records without Policy Holder or email.
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2025-03-07
+ * @description Queueable job that sends one templated email per Insurance record to its Policy
+ * Holder (Contact). Sends in batches of 10; skips records without a Policy Holder or email.
+ * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 public with sharing class InsuranceMassEmailQueueable implements Queueable {
 
@@ -11,10 +10,10 @@ public with sharing class InsuranceMassEmailQueueable implements Queueable {
     private final Boolean saveAsActivity;
 
     /**
-     * @description Constructs the queueable with the given parameters.
-     * @param insuranceIds List of Insurance__c Ids to process
-     * @param templateId Id of the EmailTemplate to use
-     * @param saveAsActivity Whether to save each email as an activity
+     * @description Constructs the queueable with the records, template, and activity flag.
+     * @param insuranceIds List of Insurance__c Ids to process.
+     * @param templateId Id of the EmailTemplate to use.
+     * @param saveAsActivity Whether to save each email as an activity.
      */
     public InsuranceMassEmailQueueable(List<Id> insuranceIds, Id templateId, Boolean saveAsActivity) {
         this.insuranceIds = insuranceIds;
@@ -24,7 +23,7 @@ public with sharing class InsuranceMassEmailQueueable implements Queueable {
 
     /**
      * @description Sends templated emails to each Insurance record's Policy Holder in batches of 10.
-     * @param context QueueableContext provided by the platform
+     * @param context QueueableContext provided by the platform.
      */
     public void execute(QueueableContext context) {
         if (insuranceIds == null || insuranceIds.isEmpty()) {

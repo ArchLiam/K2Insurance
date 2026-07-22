@@ -2,12 +2,14 @@
 <ListView xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Copy_of_Open_Leads_All</fullName>
     <columns>Eligibility_Start_Date__c</columns>
+    <columns>Is_Converted__c</columns>
+    <columns>Interested_Insurance__c</columns>
     <columns>LEAD.STATUS</columns>
+    <columns>Agent__c</columns>
     <columns>FULL_NAME</columns>
     <columns>Korean_Name__c</columns>
     <columns>LEAD.PHONE</columns>
     <columns>LEAD.STATE</columns>
-    <columns>LEAD.LAST_UPDATE</columns>
     <filterScope>Everything</filterScope>
     <filters>
         <field>LEAD.STATUS</field>
@@ -17,7 +19,7 @@
     <filters>
         <field>Interested_Insurance__c</field>
         <operation>notEqual</operation>
-        <value>Medicare,Health</value>
+        <value>Medicare,Health,Group Health</value>
     </filters>
-    <label>Other Leads</label>
+    <label>Other Leads (P&amp;C, Life)</label>
 </ListView>

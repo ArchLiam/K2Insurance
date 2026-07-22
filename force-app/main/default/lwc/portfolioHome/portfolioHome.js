@@ -13,9 +13,8 @@ import CERTIFICATION_LOGOS from '@salesforce/resourceUrl/SalesforceCertification
  * - Differentiators highlighting unique strengths
  * - Testimonial carousel with keyboard navigation
  * - Quick navigation links
- *
+ * 
  * @author Liam Jeong
- * @date 2025-03-07
  */
 export default class PortfolioHome extends NavigationMixin(LightningElement) {
     // ========================================

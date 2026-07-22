@@ -5,7 +5,7 @@
     <description>Indicates whether the insurance premium has been paid in full or not.</description>
     <inlineHelpText>Check this box if the insurance premium has been fully paid by the policyholder or responsible party. Leave it unchecked if payment is still pending or partially paid.</inlineHelpText>
     <label>Paid</label>
-    <trackHistory>false</trackHistory>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Checkbox</type>
 </CustomField>

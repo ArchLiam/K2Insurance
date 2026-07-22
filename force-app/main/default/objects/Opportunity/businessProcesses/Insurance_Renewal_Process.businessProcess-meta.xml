@@ -4,24 +4,27 @@
     <description>Sales process used by the Insurance Renewal record type. Restricts the StageName picklist to renewal-specific stages.</description>
     <isActive>true</isActive>
     <values>
-        <fullName>Renewal Identified</fullName>
-    </values>
-    <values>
-        <fullName>Customer Notified</fullName>
-    </values>
-    <values>
-        <fullName>Quote Requested</fullName>
-    </values>
-    <values>
-        <fullName>Quote Received</fullName>
-    </values>
-    <values>
-        <fullName>Presented to Customer</fullName>
-    </values>
-    <values>
-        <fullName>Closed Won</fullName>
+        <fullName>Client Accepted</fullName>
+        <default>false</default>
     </values>
     <values>
         <fullName>Closed Lost</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Closed Won</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Paid</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Quote Emailed</fullName>
+        <default>false</default>
+    </values>
+    <values>
+        <fullName>Renewal Emailed</fullName>
+        <default>false</default>
     </values>
 </BusinessProcess>

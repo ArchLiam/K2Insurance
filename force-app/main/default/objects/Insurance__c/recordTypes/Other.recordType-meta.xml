@@ -137,10 +137,6 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>Disqualified</fullName>
-            <default>false</default>
-        </values>
-        <values>
             <fullName>Draft</fullName>
             <default>false</default>
         </values>
@@ -211,7 +207,7 @@
             <default>false</default>
         </values>
         <values>
-            <fullName>R-MAPD</fullName>
+            <fullName>R-MAPD %28HMO%29</fullName>
             <default>false</default>
         </values>
         <values>

@@ -11,7 +11,7 @@
     <valueSet>
         <restricted>true</restricted>
         <valueSetDefinition>
-            <sorted>false</sorted>
+            <sorted>true</sorted>
             <value>
                 <fullName>Annuity</fullName>
                 <default>false</default>
@@ -83,6 +83,11 @@
                 <label>Fully</label>
             </value>
             <value>
+                <fullName>Giveback</fullName>
+                <default>false</default>
+                <label>Giveback</label>
+            </value>
+            <value>
                 <fullName>Global</fullName>
                 <default>false</default>
                 <label>Global</label>
@@ -108,14 +113,14 @@
                 <label>Ind Health</label>
             </value>
             <value>
-                <fullName>Leveled</fullName>
-                <default>false</default>
-                <label>Leveled</label>
-            </value>
-            <value>
                 <fullName>Individual</fullName>
                 <default>false</default>
                 <label>Individual</label>
+            </value>
+            <value>
+                <fullName>Leveled</fullName>
+                <default>false</default>
+                <label>Leveled</label>
             </value>
             <value>
                 <fullName>LTC</fullName>
@@ -148,9 +153,9 @@
                 <label>Renters</label>
             </value>
             <value>
-                <fullName>R-MAPD</fullName>
+                <fullName>R-MAPD (HMO)</fullName>
                 <default>false</default>
-                <label>R-MAPD</label>
+                <label>R-MAPD (HMO)</label>
             </value>
             <value>
                 <fullName>Short Term</fullName>

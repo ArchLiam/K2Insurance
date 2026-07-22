@@ -6,7 +6,7 @@
     <inlineHelpText>Select the status that reflects the current stage of the insurance policy.</inlineHelpText>
     <label>Status</label>
     <required>false</required>
-    <trackHistory>false</trackHistory>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>
@@ -36,6 +36,7 @@
             <value>
                 <fullName>Disqualified</fullName>
                 <default>false</default>
+                <isActive>false</isActive>
                 <label>Disqualified</label>
             </value>
         </valueSetDefinition>

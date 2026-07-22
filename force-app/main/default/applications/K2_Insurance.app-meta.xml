@@ -40,17 +40,17 @@
         <actionName>View</actionName>
         <content>Renewal_Lightning_Record_Page</content>
         <formFactor>Large</formFactor>
-        <pageOrSobjectType>Opportunity</pageOrSobjectType>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Flexipage</type>
+        <pageOrSobjectType>Opportunity</pageOrSobjectType>
     </actionOverrides>
     <actionOverrides>
         <actionName>View</actionName>
         <content>Renewal_Lightning_Record_Page</content>
         <formFactor>Small</formFactor>
-        <pageOrSobjectType>Opportunity</pageOrSobjectType>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>Flexipage</type>
+        <pageOrSobjectType>Opportunity</pageOrSobjectType>
     </actionOverrides>
     <brand>
         <headerColor>#4F888F</headerColor>

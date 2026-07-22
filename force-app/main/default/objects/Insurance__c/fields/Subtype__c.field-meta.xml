@@ -61,17 +61,17 @@
             <value>
                 <fullName>H0609 061</fullName>
                 <default>false</default>
-                <label>H0609 061</label>
+                <label>H0609 061 (TX27)</label>
             </value>
             <value>
                 <fullName>H0609 062</fullName>
                 <default>false</default>
-                <label>H0609 062</label>
+                <label>H0609 062 (CSNP TX3P)</label>
             </value>
             <value>
                 <fullName>H0609 052</fullName>
                 <default>false</default>
-                <label>H0609 052</label>
+                <label>H0609 052 (TXD004)</label>
             </value>
             <value>
                 <fullName>H1278 003</fullName>
@@ -86,7 +86,7 @@
             <value>
                 <fullName>H4514 021</fullName>
                 <default>false</default>
-                <label>H4514 021</label>
+                <label>H4514 021(TXS003)</label>
             </value>
             <value>
                 <fullName>S5921 403</fullName>
@@ -97,11 +97,6 @@
                 <fullName>H1278 013</fullName>
                 <default>false</default>
                 <label>H1278 013</label>
-            </value>
-            <value>
-                <fullName>Giveback</fullName>
-                <default>false</default>
-                <label>Giveback</label>
             </value>
             <value>
                 <fullName>G</fullName>
@@ -121,7 +116,7 @@
             <value>
                 <fullName>H0609 051</fullName>
                 <default>false</default>
-                <label>H0609 051</label>
+                <label>H0609 051 (TX22)</label>
             </value>
             <value>
                 <fullName>H4527 002</fullName>
@@ -168,83 +163,18 @@
                 <default>false</default>
                 <label>Humana gold Plus (HMO D-SNP)</label>
             </value>
+            <value>
+                <fullName>H0609 066 (GivebackTX39)</fullName>
+                <default>false</default>
+                <label>H0609 066 (GivebackTX39)</label>
+            </value>
+            <value>
+                <fullName>Giveback</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Giveback</label>
+            </value>
         </valueSetDefinition>
-        <valueSettings>
-            <controllingFieldValue>Business</controllingFieldValue>
-            <controllingFieldValue>Workers Com</controllingFieldValue>
-            <controllingFieldValue>E&amp;O</controllingFieldValue>
-            <controllingFieldValue>Indexed Universal Life</controllingFieldValue>
-            <controllingFieldValue>Global</controllingFieldValue>
-            <controllingFieldValue>Leveled</controllingFieldValue>
-            <controllingFieldValue>Fully</controllingFieldValue>
-            <controllingFieldValue>PPO</controllingFieldValue>
-            <controllingFieldValue>DSNP w QMB</controllingFieldValue>
-            <controllingFieldValue>Dental</controllingFieldValue>
-            <controllingFieldValue>MA</controllingFieldValue>
-            <controllingFieldValue>Vision</controllingFieldValue>
-            <controllingFieldValue>R-MAPD</controllingFieldValue>
-            <controllingFieldValue>Commecial Auto</controllingFieldValue>
-            <controllingFieldValue>Med Supp</controllingFieldValue>
-            <controllingFieldValue>Ind Health</controllingFieldValue>
-            <controllingFieldValue>PDP</controllingFieldValue>
-            <controllingFieldValue>Cancer</controllingFieldValue>
-            <controllingFieldValue>Renters</controllingFieldValue>
-            <controllingFieldValue>Tricare</controllingFieldValue>
-            <controllingFieldValue>Short Term</controllingFieldValue>
-            <controllingFieldValue>Condo</controllingFieldValue>
-            <controllingFieldValue>Travel Insurance</controllingFieldValue>
-            <controllingFieldValue>Individual</controllingFieldValue>
-            <controllingFieldValue>Umbrella</controllingFieldValue>
-            <controllingFieldValue>CSNP</controllingFieldValue>
-            <controllingFieldValue>DSNP w MQMB</controllingFieldValue>
-            <controllingFieldValue>Annuity</controllingFieldValue>
-            <controllingFieldValue>Auto</controllingFieldValue>
-            <controllingFieldValue>Home DP3</controllingFieldValue>
-            <controllingFieldValue>Home HO3</controllingFieldValue>
-            <controllingFieldValue>Term Life</controllingFieldValue>
-            <controllingFieldValue>LTC</controllingFieldValue>
-            <controllingFieldValue>Disability</controllingFieldValue>
-            <controllingFieldValue>Cancer Insurnace</controllingFieldValue>
-            <valueName>On market</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>Business</controllingFieldValue>
-            <controllingFieldValue>Workers Com</controllingFieldValue>
-            <controllingFieldValue>E&amp;O</controllingFieldValue>
-            <controllingFieldValue>Indexed Universal Life</controllingFieldValue>
-            <controllingFieldValue>Global</controllingFieldValue>
-            <controllingFieldValue>Leveled</controllingFieldValue>
-            <controllingFieldValue>Fully</controllingFieldValue>
-            <controllingFieldValue>PPO</controllingFieldValue>
-            <controllingFieldValue>DSNP w QMB</controllingFieldValue>
-            <controllingFieldValue>Dental</controllingFieldValue>
-            <controllingFieldValue>MA</controllingFieldValue>
-            <controllingFieldValue>Vision</controllingFieldValue>
-            <controllingFieldValue>R-MAPD</controllingFieldValue>
-            <controllingFieldValue>Commecial Auto</controllingFieldValue>
-            <controllingFieldValue>Med Supp</controllingFieldValue>
-            <controllingFieldValue>Ind Health</controllingFieldValue>
-            <controllingFieldValue>PDP</controllingFieldValue>
-            <controllingFieldValue>Cancer</controllingFieldValue>
-            <controllingFieldValue>Renters</controllingFieldValue>
-            <controllingFieldValue>Tricare</controllingFieldValue>
-            <controllingFieldValue>Short Term</controllingFieldValue>
-            <controllingFieldValue>Condo</controllingFieldValue>
-            <controllingFieldValue>Travel Insurance</controllingFieldValue>
-            <controllingFieldValue>Individual</controllingFieldValue>
-            <controllingFieldValue>Umbrella</controllingFieldValue>
-            <controllingFieldValue>CSNP</controllingFieldValue>
-            <controllingFieldValue>DSNP w MQMB</controllingFieldValue>
-            <controllingFieldValue>Annuity</controllingFieldValue>
-            <controllingFieldValue>Auto</controllingFieldValue>
-            <controllingFieldValue>Home DP3</controllingFieldValue>
-            <controllingFieldValue>Home HO3</controllingFieldValue>
-            <controllingFieldValue>Term Life</controllingFieldValue>
-            <controllingFieldValue>LTC</controllingFieldValue>
-            <controllingFieldValue>Disability</controllingFieldValue>
-            <controllingFieldValue>Cancer Insurnace</controllingFieldValue>
-            <valueName>Off Market</valueName>
-        </valueSettings>
         <valueSettings>
             <controllingFieldValue>PPO</controllingFieldValue>
             <valueName>H1278 003</valueName>
@@ -270,27 +200,23 @@
             <valueName>Humana gold Plus (HMO D-SNP)</valueName>
         </valueSettings>
         <valueSettings>
-            <controllingFieldValue>R-MAPD</controllingFieldValue>
+            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
             <valueName>H0609 061</valueName>
         </valueSettings>
         <valueSettings>
-            <controllingFieldValue>R-MAPD</controllingFieldValue>
-            <valueName>Giveback</valueName>
-        </valueSettings>
-        <valueSettings>
-            <controllingFieldValue>R-MAPD</controllingFieldValue>
+            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
             <valueName>H0609 060</valueName>
         </valueSettings>
         <valueSettings>
-            <controllingFieldValue>R-MAPD</controllingFieldValue>
+            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
             <valueName>H0609 051</valueName>
         </valueSettings>
         <valueSettings>
-            <controllingFieldValue>R-MAPD</controllingFieldValue>
+            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
             <valueName>H4527 002</valueName>
         </valueSettings>
         <valueSettings>
-            <controllingFieldValue>R-MAPD</controllingFieldValue>
+            <controllingFieldValue>R-MAPD (HMO)</controllingFieldValue>
             <valueName>Humana Value Choice  PPO</valueName>
         </valueSettings>
         <valueSettings>
@@ -316,6 +242,16 @@
         <valueSettings>
             <controllingFieldValue>Med Supp</controllingFieldValue>
             <valueName>F</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Ind Health</controllingFieldValue>
+            <controllingFieldValue>Individual</controllingFieldValue>
+            <valueName>On market</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Ind Health</controllingFieldValue>
+            <controllingFieldValue>Individual</controllingFieldValue>
+            <valueName>Off Market</valueName>
         </valueSettings>
         <valueSettings>
             <controllingFieldValue>PDP</controllingFieldValue>

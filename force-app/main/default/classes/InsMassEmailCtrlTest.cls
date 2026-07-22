@@ -2,8 +2,7 @@
  * @description Test class for InsuranceMassEmailController.
  * Exercises getInitData, getTemplatePreview, and enqueueSendEmails using existing
  * org data (Insurance__c, Contact, EmailTemplate) via InsuranceMassEmailTestDataFactory.
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2025-03-07
+ * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 @IsTest(SeeAllData=true)
 private class InsMassEmailCtrlTest {

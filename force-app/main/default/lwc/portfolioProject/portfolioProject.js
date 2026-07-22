@@ -1,8 +1,3 @@
-/**
- * @description Portfolio Project card LWC. Renders a single project as featured or summary; can emit projectselect when selectable.
- * @author Liam Jeong (liam.jeong@5sinfusion.com)
- * @date 2025-03-07
- */
 import { LightningElement, api } from "lwc";
 import templateFeatured from "./portfolioProject.html";
 import templateSummary from "./portfolioProjectSummary.html";
@@ -37,54 +32,42 @@ export default class PortfolioProject extends LightningElement {
 	 */
 	@api selectable = false;
 
-	/** CSS class for the project card (includes variant and clickable modifier). */
 	get projectClass() {
 		return `project project--${this.status} ${
 			this.selectable ? "project--clickable" : ""
 		}`;
 	}
 
-	/** Tabindex for keyboard focus when selectable. */
 	get computedTabIndex() {
 		return this.selectable ? "0" : null;
 	}
 
-	/** Role when selectable (button for accessibility). */
 	get computedRole() {
 		return this.selectable ? "button" : null;
 	}
 
-	/** Aria-label for the card when selectable. */
 	get ariaLabel() {
 		return this.selectable
 			? `${this.project?.title || "Project"} – open details`
 			: null;
 	}
 
-	/** Whether the project has highlights to show. */
 	get hasHighlights() {
 		return Array.isArray(this.project?.highlights) && this.project.highlights.length > 0;
 	}
 
-	/** Whether the project has tags to show. */
 	get hasTags() {
 		return Array.isArray(this.project?.tags) && this.project.tags.length > 0;
 	}
 
-	/** Whether the project has a CTA (ctaUrl and ctaLabel). */
 	get hasCta() {
 		return Boolean(this.project?.ctaUrl && this.project?.ctaLabel);
 	}
 
-	/** Alt text for screenshot/placeholder image. */
 	get screenshotLabel() {
 		return `${this.project?.title || "Project"} screenshot placeholder`;
 	}
 
-	/**
-	 * Handles card click when selectable; dispatches projectselect with project in detail.
-	 * @param {Event} event - click event
-	 */
 	handleSelect(event) {
 		if (!this.selectable) return;
 		event.preventDefault();
@@ -97,10 +80,6 @@ export default class PortfolioProject extends LightningElement {
 		);
 	}
 
-	/**
-	 * Handles keydown when selectable; Enter/Space triggers handleSelect.
-	 * @param {KeyboardEvent} event - keydown event
-	 */
 	handleKeydown(event) {
 		if (!this.selectable) return;
 		const { key } = event;
@@ -110,10 +89,6 @@ export default class PortfolioProject extends LightningElement {
 		}
 	}
 
-	/**
-	 * Chooses template by status: summary uses portfolioProjectSummary, else portfolioProject (featured).
-	 * @returns {Template} LWC template
-	 */
 	render() {
 		return this.status === "summary" ? templateSummary : templateFeatured;
 	}

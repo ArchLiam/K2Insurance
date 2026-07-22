@@ -5,7 +5,7 @@
     <inlineHelpText>Enter any key details, special considerations, or important notes about this policy. This information will be visible to users for reference and follow-up.</inlineHelpText>
     <label>Important Note</label>
     <length>131072</length>
-    <trackHistory>false</trackHistory>
+    <trackHistory>true</trackHistory>
     <trackTrending>false</trackTrending>
     <type>LongTextArea</type>
     <visibleLines>3</visibleLines>

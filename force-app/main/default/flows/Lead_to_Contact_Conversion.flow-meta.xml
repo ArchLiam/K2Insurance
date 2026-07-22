@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>64.0</apiVersion>
-    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <actionCalls>
         <name>Create_Note_on_Contact</name>
         <label>Create Note on Contact</label>
@@ -13,6 +11,7 @@
             <targetReference>Generating_ContentDocumentLinks</targetReference>
         </connector>
         <faultConnector>
+            <isGoTo>true</isGoTo>
             <targetReference>Generating_ContentDocumentLinks</targetReference>
         </faultConnector>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
@@ -35,8 +34,10 @@
             </value>
         </inputParameters>
         <nameSegment>ContentNoteCreator</nameSegment>
-        <versionSegment>1</versionSegment>
+        <offset>0</offset>
     </actionCalls>
+    <apiVersion>64.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
         <name>Add_the_ContentDocumentLink_to_Collection</name>
         <label>Add the ContentDocumentLink to Collection</label>
@@ -193,7 +194,7 @@
             <label>Valid</label>
         </rules>
     </decisions>
-    <description>Added conversion of Company. Placeholder company names ("[Not Provided]"/"Not Provided") are treated as invalid so individual leads convert to an account-less Contact instead of creating a junk Account.</description>
+    <description>Added subagent to Create Contact element.</description>
     <environments>Default</environments>
     <formulas>
         <name>varIsPlaceholderCompany</name>
@@ -258,6 +259,12 @@
             <field>AccountId</field>
             <value>
                 <elementReference>Create_an_Account</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Agent__c</field>
+            <value>
+                <elementReference>Get_the_Lead.Agent__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
