@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>64.0</apiVersion>
+    <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Stamp_Customer_Notified_Date</name>
+        <label>Stamp Customer Notified Date</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Customer_Notified_Date__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.CurrentDate</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
     <decisions>
-        <description>Is custom label &quot;TRIGGER_ACTIVATION&quot; &quot;ON&quot; or &quot;OFF&quot;.</description>
+        <description>Global TRIGGER_ACTIVATION kill-switch label must be ON.</description>
         <name>Is_TRIGGER_ACTIVATED</name>
         <label>Is TRIGGER ACTIVATED?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnectorLabel>OFF</defaultConnectorLabel>
         <rules>
-            <name>ON</name>
+            <name>Is_TRIGGER_ACTIVATED_ON</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>$Label.TRIGGER_ACTIVATION</leftValueReference>
@@ -20,19 +33,20 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Renewal_Stage</targetReference>
+                <targetReference>Customer_Notified_Not_Stamped</targetReference>
             </connector>
             <label>ON</label>
         </rules>
     </decisions>
     <decisions>
-        <name>Renewal_Stage</name>
-        <label>Renewal Stage?</label>
+        <description>First time the renewal reaches Customer Notified and the date is still blank.</description>
+        <name>Customer_Notified_Not_Stamped</name>
+        <label>Customer Notified &amp; Date Blank?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
-        <defaultConnectorLabel>Other</defaultConnectorLabel>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
         <rules>
-            <name>Customer_Notified</name>
+            <name>Customer_Notified_Not_Stamped_Yes</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>$Record.StageName</leftValueReference>
@@ -41,43 +55,23 @@
                     <stringValue>Customer Notified</stringValue>
                 </rightValue>
             </conditions>
+            <conditions>
+                <leftValueReference>$Record.Customer_Notified_Date__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
             <connector>
-                <targetReference>Stamp_Customer_Notified_Date_Stage</targetReference>
+                <targetReference>Stamp_Customer_Notified_Date</targetReference>
             </connector>
-            <label>Customer Notified</label>
+            <label>Yes</label>
         </rules>
     </decisions>
-    <description>Record-triggered orchestration for the Renewal (Opportunity) lifecycle. Customer Notified -> stamp date (Capture_Customer_Notified_Date subflow). Closed Won handling is done by the separate Renewal_On_Closed_Won record-triggered flow. Gated by the TRIGGER_ACTIVATION label.</description>
+    <description>2026-07-21: Before-save on Renewal (Opportunity, RecordType Insurance_Renewal) — stamps Customer Notified Date with today the first time the renewal reaches the Customer Notified stage (only when blank). Zero DML, same-record default. Gated by TRIGGER_ACTIVATION. Replaces the Capture_Customer_Notified_Date subflow that ran under Renewal_Record_Triggered_Orchestration.</description>
     <environments>Default</environments>
-    <interviewLabel>Renewal Record-Triggered Orchestration {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>Renewal Record-Triggered Orchestration</label>
-    <orchestratedStages>
-        <name>Stamp_Customer_Notified_Date_Stage</name>
-        <label>Stamp Customer Notified Date</label>
-        <locationX>0</locationX>
-        <locationY>0</locationY>
-        <exitConditionLogic>and</exitConditionLogic>
-        <stageSteps>
-            <name>Stamp_Customer_Notified_Date</name>
-            <actionName>Capture_Customer_Notified_Date</actionName>
-            <actionType>stepBackground</actionType>
-            <canAssigneeEdit>false</canAssigneeEdit>
-            <debugSimulateStep>false</debugSimulateStep>
-            <entryConditionLogic>and</entryConditionLogic>
-            <exitConditionLogic>and</exitConditionLogic>
-            <inputParameters>
-                <name>varRenewalOpportunity</name>
-                <value>
-                    <elementReference>$Record</elementReference>
-                </value>
-            </inputParameters>
-            <label>Stamp Customer Notified Date</label>
-            <requiresAsyncProcessing>false</requiresAsyncProcessing>
-            <runAsUser>false</runAsUser>
-            <shouldLock>false</shouldLock>
-            <stepSubtype>BackgroundStep</stepSubtype>
-        </stageSteps>
-    </orchestratedStages>
+    <interviewLabel>Renewal | Before Save Record Triggered Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Renewal | Before Save Record Triggered Flow</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -96,7 +90,7 @@
             <stringValue>LightningFlowBuilder</stringValue>
         </value>
     </processMetadataValues>
-    <processType>Orchestrator</processType>
+    <processType>AutoLaunchedFlow</processType>
     <start>
         <locationX>0</locationX>
         <locationY>0</locationY>
@@ -105,15 +99,15 @@
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
-            <field>StageName</field>
+            <field>RecordType.DeveloperName</field>
             <operator>EqualTo</operator>
             <value>
-                <stringValue>Customer Notified</stringValue>
+                <stringValue>Insurance_Renewal</stringValue>
             </value>
         </filters>
         <object>Opportunity</object>
         <recordTriggerType>CreateAndUpdate</recordTriggerType>
-        <triggerType>RecordAfterSave</triggerType>
+        <triggerType>RecordBeforeSave</triggerType>
     </start>
     <status>Active</status>
 </Flow>

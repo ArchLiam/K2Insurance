@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>66.0</apiVersion>
+    <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <customErrors>
         <name>Invalid_Data_Error</name>
         <label>Invalid Data Error</label>
-        <locationX>446</locationX>
-        <locationY>650</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <customErrorMessages>
             <errorMessage>{!fxFriendlyError}</errorMessage>
             <isFieldError>false</isFieldError>
@@ -15,21 +15,32 @@
     <customErrors>
         <name>No_Quote_Error</name>
         <label>No Synced Quote</label>
-        <locationX>700</locationX>
-        <locationY>430</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <customErrorMessages>
             <errorMessage>Can&apos;t mark this renewal Closed Won yet: there&apos;s no synced quote to build the new policy from. Use Quick New Quote to create a quote and start its sync, then try Closed Won again.</errorMessage>
             <isFieldError>false</isFieldError>
         </customErrorMessages>
     </customErrors>
+    <customErrors>
+        <name>System_Error</name>
+        <label>System Error</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <customErrorMessages>
+            <errorMessage>Couldn&apos;t create the renewal policy — a required source record was missing or an unexpected error occurred, so the renewal was kept at its previous stage. Make sure it has an Original Policy and a synced quote, then try Closed Won again.</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
     <decisions>
+        <description>Global TRIGGER_ACTIVATION kill-switch label must be ON.</description>
         <name>Is_TRIGGER_ACTIVATED</name>
         <label>Is TRIGGER ACTIVATED?</label>
-        <locationX>176</locationX>
-        <locationY>100</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <defaultConnectorLabel>OFF</defaultConnectorLabel>
         <rules>
-            <name>ON</name>
+            <name>Is_TRIGGER_ACTIVATED_ON</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>$Label.TRIGGER_ACTIVATION</leftValueReference>
@@ -45,13 +56,14 @@
         </rules>
     </decisions>
     <decisions>
+        <description>Idempotency guard: only build the policy once per renewal.</description>
         <name>Not_Yet_Created</name>
         <label>Not Yet Created?</label>
-        <locationX>176</locationX>
-        <locationY>200</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <defaultConnectorLabel>Already Created</defaultConnectorLabel>
         <rules>
-            <name>Not_Created</name>
+            <name>Not_Yet_Created_Yes</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>$Record.New_Insurance__c</leftValueReference>
@@ -63,20 +75,20 @@
             <connector>
                 <targetReference>Get_Synced_Quote</targetReference>
             </connector>
-            <label>Not Created</label>
+            <label>Yes</label>
         </rules>
     </decisions>
     <decisions>
         <name>Has_Synced_Quote</name>
         <label>Has Synced Quote?</label>
-        <locationX>176</locationX>
-        <locationY>400</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <defaultConnector>
             <targetReference>Publish_No_Quote_Event</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>No Quote</defaultConnectorLabel>
         <rules>
-            <name>Yes</name>
+            <name>Has_Synced_Quote_Yes</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
                 <leftValueReference>Get_Synced_Quote</leftValueReference>
@@ -91,7 +103,34 @@
             <label>Yes</label>
         </rules>
     </decisions>
-    <description>Record-triggered on Renewal (Opportunity) update to Closed Won: creates the new Insurance from the synced Quote, links it, and publishes a Renewal_Notice__e success event. If the data is invalid (or there is no synced quote), a Custom Error BLOCKS the Closed Won save (rolls back — so the stage never changes and no success toast appears) and shows a plain-language message telling the user what to fix.</description>
+    <decisions>
+        <description>Null guard for the Get Original Insurance lookup before building the new policy from it.</description>
+        <name>Original_Insurance_Found</name>
+        <label>Original Insurance Found?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Publish_System_Error_Notice</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Not Found</defaultConnectorLabel>
+        <rules>
+            <name>Original_Insurance_Found_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Original_Insurance</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Create_New_Insurance</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <description>2026-07-21: After-save on Renewal (Opportunity) Closed Won (RecordType Insurance_Renewal). Builds the new Insurance from the synced Quote, links New_Insurance__c, and publishes a Renewal_Notice__e success event. On no synced quote / missing source record / invalid data, publishes an error notice, logs an Exception__e (durable, survives rollback), then a Custom Error rolls back so Closed Won never commits. Gated by TRIGGER_ACTIVATION. Must remain a synchronous after-save flow — the Custom Error rollback cannot be reproduced in an Orchestration or before-save flow.</description>
     <environments>Default</environments>
     <formulas>
         <name>fxFriendlyError</name>
@@ -113,8 +152,8 @@
         <dataType>String</dataType>
         <expression>IF(ISBLANK(TEXT({!Get_Synced_Quote.Subtype__c})), TEXT({!Get_Original_Insurance.Subtype__c}), TEXT({!Get_Synced_Quote.Subtype__c}))</expression>
     </formulas>
-    <interviewLabel>Renewal On Closed Won {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>Renewal On Closed Won</label>
+    <interviewLabel>Renewal | After Save Record Triggered Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Renewal | After Save Record Triggered Flow</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -124,7 +163,7 @@
     <processMetadataValues>
         <name>CanvasMode</name>
         <value>
-            <stringValue>FREE_FORM_CANVAS</stringValue>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
         </value>
     </processMetadataValues>
     <processMetadataValues>
@@ -137,8 +176,8 @@
     <recordCreates>
         <name>Create_New_Insurance</name>
         <label>Create New Insurance</label>
-        <locationX>176</locationX>
-        <locationY>600</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <connector>
             <targetReference>Update_Renewal_with_New_Insurance</targetReference>
         </connector>
@@ -251,10 +290,91 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
     <recordCreates>
+        <name>Publish_Create_Error_Event</name>
+        <label>Publish Create Error Notice</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Log_Invalid_Data</targetReference>
+        </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Log_the_Error</targetReference>
+        </faultConnector>
+        <inputAssignments>
+            <field>Message__c</field>
+            <value>
+                <elementReference>fxFriendlyError</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Opportunity_Id__c</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Title__c</field>
+            <value>
+                <stringValue>Couldn&apos;t create the renewal policy</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Variant__c</field>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Renewal_Notice__e</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <name>Publish_No_Quote_Event</name>
+        <label>Publish No Quote Notice</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Log_No_Quote</targetReference>
+        </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Log_the_Error</targetReference>
+        </faultConnector>
+        <inputAssignments>
+            <field>Message__c</field>
+            <value>
+                <stringValue>Can&apos;t mark this renewal Closed Won yet: there&apos;s no synced quote to build the new policy from. Use Quick New Quote to create a quote and start its sync, then try Closed Won again.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Opportunity_Id__c</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Title__c</field>
+            <value>
+                <stringValue>No synced quote</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Variant__c</field>
+            <value>
+                <stringValue>error</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Renewal_Notice__e</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
         <name>Publish_Success</name>
         <label>Publish Success Notice</label>
-        <locationX>176</locationX>
-        <locationY>800</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <faultConnector>
+            <targetReference>Log_the_Error</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Link_Id__c</field>
             <value>
@@ -289,17 +409,21 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
     <recordCreates>
-        <name>Publish_Create_Error_Event</name>
-        <label>Publish Error Notice</label>
-        <locationX>446</locationX>
-        <locationY>560</locationY>
+        <name>Publish_System_Error_Notice</name>
+        <label>Publish System Error Notice</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <connector>
-            <targetReference>Invalid_Data_Error</targetReference>
+            <targetReference>Log_System_Error</targetReference>
         </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Log_the_Error</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>Message__c</field>
             <value>
-                <elementReference>fxFriendlyError</elementReference>
+                <stringValue>Couldn&apos;t create the renewal policy because a required source record was missing or an unexpected error occurred. The renewal was kept at its previous stage. Please try again, and contact your administrator if it keeps failing.</stringValue>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -323,50 +447,19 @@
         <object>Renewal_Notice__e</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
-    <recordCreates>
-        <name>Publish_No_Quote_Event</name>
-        <label>Publish No Quote Notice</label>
-        <locationX>700</locationX>
-        <locationY>340</locationY>
-        <connector>
-            <targetReference>No_Quote_Error</targetReference>
-        </connector>
-        <inputAssignments>
-            <field>Message__c</field>
-            <value>
-                <stringValue>Can&apos;t mark this renewal Closed Won yet: there&apos;s no synced quote to build the new policy from. Use Quick New Quote to create a quote and start its sync, then try Closed Won again.</stringValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Opportunity_Id__c</field>
-            <value>
-                <elementReference>$Record.Id</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Title__c</field>
-            <value>
-                <stringValue>No synced quote</stringValue>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Variant__c</field>
-            <value>
-                <stringValue>error</stringValue>
-            </value>
-        </inputAssignments>
-        <object>Renewal_Notice__e</object>
-        <storeOutputAutomatically>true</storeOutputAutomatically>
-    </recordCreates>
     <recordLookups>
         <name>Get_Original_Insurance</name>
         <label>Get Original Insurance</label>
-        <locationX>176</locationX>
-        <locationY>500</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Create_New_Insurance</targetReference>
+            <targetReference>Original_Insurance_Found</targetReference>
         </connector>
+        <faultConnector>
+            <isGoTo>true</isGoTo>
+            <targetReference>Publish_System_Error_Notice</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Id</field>
@@ -382,12 +475,15 @@
     <recordLookups>
         <name>Get_Synced_Quote</name>
         <label>Get Synced Quote</label>
-        <locationX>176</locationX>
-        <locationY>300</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Has_Synced_Quote</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>Publish_System_Error_Notice</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>OpportunityId</field>
@@ -410,12 +506,13 @@
     <recordUpdates>
         <name>Update_Renewal_with_New_Insurance</name>
         <label>Update Renewal with New Insurance</label>
-        <locationX>176</locationX>
-        <locationY>700</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <connector>
             <targetReference>Publish_Success</targetReference>
         </connector>
         <faultConnector>
+            <isGoTo>true</isGoTo>
             <targetReference>Publish_Create_Error_Event</targetReference>
         </faultConnector>
         <filterLogic>and</filterLogic>
@@ -435,13 +532,20 @@
         <object>Opportunity</object>
     </recordUpdates>
     <start>
-        <locationX>50</locationX>
+        <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Is_TRIGGER_ACTIVATED</targetReference>
         </connector>
         <doesRequireRecordChangedToMeetCriteria>true</doesRequireRecordChangedToMeetCriteria>
         <filterLogic>and</filterLogic>
+        <filters>
+            <field>RecordType.DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Insurance_Renewal</stringValue>
+            </value>
+        </filters>
         <filters>
             <field>StageName</field>
             <operator>EqualTo</operator>
@@ -454,4 +558,179 @@
         <triggerType>RecordAfterSave</triggerType>
     </start>
     <status>Active</status>
+    <subflows>
+        <name>Log_Invalid_Data</name>
+        <label>Log Invalid Data</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Invalid_Data_Error</targetReference>
+        </connector>
+        <flowName>Log_Error</flowName>
+        <inputAssignments>
+            <name>varContext</name>
+            <value>
+                <stringValue>Renewal Closed Won: failed to create or link the new Insurance policy (often an invalid Type/Subtype combination).</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varErrorMessage</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSeverity</name>
+            <value>
+                <stringValue>Medium</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceFlow</name>
+            <value>
+                <stringValue>Renewal_After_Save_Record_Triggered_Flow</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceStep</name>
+            <value>
+                <stringValue>Create_New_Insurance</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Log_No_Quote</name>
+        <label>Log No Quote</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>No_Quote_Error</targetReference>
+        </connector>
+        <flowName>Log_Error</flowName>
+        <inputAssignments>
+            <name>varContext</name>
+            <value>
+                <stringValue>Renewal Closed Won attempted with no synced quote to build the policy from.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSeverity</name>
+            <value>
+                <stringValue>Low</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceFlow</name>
+            <value>
+                <stringValue>Renewal_After_Save_Record_Triggered_Flow</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceStep</name>
+            <value>
+                <stringValue>Has_Synced_Quote</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Log_System_Error</name>
+        <label>Log System Error</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>System_Error</targetReference>
+        </connector>
+        <flowName>Log_Error</flowName>
+        <inputAssignments>
+            <name>varContext</name>
+            <value>
+                <stringValue>Renewal Closed Won: couldn&apos;t load a required source record (synced quote or original policy) to build the new policy.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varErrorMessage</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSeverity</name>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceFlow</name>
+            <value>
+                <stringValue>Renewal_After_Save_Record_Triggered_Flow</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceStep</name>
+            <value>
+                <stringValue>Get_Synced_Quote / Get_Original_Insurance</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Log_the_Error</name>
+        <label>Log the Error</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>Log_Error</flowName>
+        <inputAssignments>
+            <name>varContext</name>
+            <value>
+                <stringValue>A Renewal Notice platform event failed to publish while processing Closed Won on the renewal.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varErrorMessage</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSeverity</name>
+            <value>
+                <stringValue>Medium</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceFlow</name>
+            <value>
+                <stringValue>Renewal_After_Save_Record_Triggered_Flow</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceStep</name>
+            <value>
+                <stringValue>Publish Renewal Notice</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
 </Flow>

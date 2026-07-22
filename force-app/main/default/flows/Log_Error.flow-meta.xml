@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>64.0</apiVersion>
+    <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
-    <description>Reusable error logger. Creates an Error_Log__c record from a caught Flow fault. Call from a fault path and pass the fault message, the source flow/step, and the record involved. Apex_Class__c/Apex_Method__c are repurposed to hold the source flow API name and element name.</description>
+    <description>2026-07-21: Reusable error logger. Publishes an Exception__e platform event (PublishImmediately) from a caught Flow fault; the Exception_Event_Logger subscriber persists the Error_Log__c row. Publishing (not direct DML) means the log survives even when the caller's transaction rolls back (e.g. a Custom Error block). Call from a fault path with the fault message, source flow/step, and record. Source flow/element land on Error_Log__c.Apex_Class__c/Apex_Method__c.</description>
     <environments>Default</environments>
     <interviewLabel>Log Error {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Log Error</label>
@@ -26,24 +26,12 @@
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <recordCreates>
-        <name>Create_Error_Log</name>
-        <label>Create Error Log</label>
+        <name>Publish_Exception</name>
+        <label>Publish Exception Event</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <inputAssignments>
-            <field>Apex_Class__c</field>
-            <value>
-                <elementReference>varSourceFlow</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Apex_Method__c</field>
-            <value>
-                <elementReference>varSourceStep</elementReference>
-            </value>
-        </inputAssignments>
-        <inputAssignments>
-            <field>Context_Info__c</field>
+            <field>Context__c</field>
             <value>
                 <elementReference>varContext</elementReference>
             </value>
@@ -55,7 +43,7 @@
             </value>
         </inputAssignments>
         <inputAssignments>
-            <field>Record_Involved__c</field>
+            <field>Record_Id__c</field>
             <value>
                 <elementReference>varRecordId</elementReference>
             </value>
@@ -67,19 +55,37 @@
             </value>
         </inputAssignments>
         <inputAssignments>
-            <field>User__c</field>
+            <field>Source_Flow__c</field>
+            <value>
+                <elementReference>varSourceFlow</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Source_Step__c</field>
+            <value>
+                <elementReference>varSourceStep</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Stack_Trace__c</field>
+            <value>
+                <elementReference>varStackTrace</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>User_Id__c</field>
             <value>
                 <elementReference>$User.Id</elementReference>
             </value>
         </inputAssignments>
-        <object>Error_Log__c</object>
+        <object>Exception__e</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
     <start>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Create_Error_Log</targetReference>
+            <targetReference>Publish_Exception</targetReference>
         </connector>
     </start>
     <status>Active</status>
@@ -123,6 +129,13 @@
     </variables>
     <variables>
         <name>varSourceStep</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>varStackTrace</name>
         <dataType>String</dataType>
         <isCollection>false</isCollection>
         <isInput>true</isInput>
