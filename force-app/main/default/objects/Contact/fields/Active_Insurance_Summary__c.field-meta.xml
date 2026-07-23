@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Active_Insurance_Summary__c</fullName>
-    <description>Auto-maintained by the Insurance recalculation flow. One line per active-policy insurance: &quot;Carrier - Policy# (Record Type)&quot;. Do not edit manually. (활성 보험 요약 - 자동 계산, 수동 편집 금지)</description>
-    <inlineHelpText>Auto-calculated list of active insurances; do not edit manually. (활성 보험 목록 자동 계산. 수동 편집 금지.)</inlineHelpText>
+    <description>Auto-maintained by the Insurance recalculation flow. One entry per active-policy insurance: &quot;Policy Name (Record Type) - Medical, Dental, Vision&quot; where the coverage list shows whichever of Medical/Dental/Vision the contact holds on that policy. Do not edit manually. (활성 보험 요약 - 정책별 Medical/Dental/Vision 포함, 자동 계산, 수동 편집 금지)</description>
+    <inlineHelpText>Auto-calculated list of active insurances with each policy&apos;s Medical/Dental/Vision coverage; do not edit manually. (활성 보험 목록 + 정책별 커버리지 자동 계산. 수동 편집 금지.)</inlineHelpText>
     <label>Active Insurance Summary</label>
     <length>2000</length>
     <trackFeedHistory>false</trackFeedHistory>

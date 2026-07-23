@@ -11,7 +11,7 @@
             <assignToReference>varCount</assignToReference>
             <operator>Add</operator>
             <value>
-                <numberValue>1.0</numberValue>
+                <elementReference>fxPlansForJunction</elementReference>
             </value>
         </assignmentItems>
         <assignmentItems>
@@ -154,7 +154,7 @@
             <label>Yes</label>
         </rules>
     </decisions>
-    <description>2026-07-18: Recalculate Contact active-insurance fields (Has Active, Count, Summary, Holding Health) for all Contacts linked to a given Insurance. Called by Insurance_Record_Triggered_Orchestration on policy Status change. Active = ContactInsuranceAssociation whose linked Insurance Status = Active (evaluated in the decision, not a Get filter, because Insurance_Status__c is a cross-object formula). Health = Insurance Record Type Group Health or Health.</description>
+    <description>2026-07-22: Active_Insurance_Count__c now = &quot;Total Plans&quot; = sum of Medical/Dental/Vision coverage across the Contact&apos;s active associations, min 1 per active policy (so any active policy still counts and Has Active Insurance = count &gt; 0 stays correct). Previously counted active associations. Active_Insurance_Summary__c now appends the per-policy coverage list, e.g. &quot;Policy (Group Health) - Medical, Dental, Vision; &quot;. Recalculates Contact active-insurance fields (Has Active, Total Plans, Summary, Holding Health) for all Contacts linked to a given Insurance. Called by Insurance_Record_Triggered_Orchestration on policy Status change. Active = ContactInsuranceAssociation whose linked Insurance Status = Active (evaluated in the decision, not a Get filter, because Insurance_Status__c is a cross-object formula). Health = Insurance Record Type Group Health or Health.</description>
     <environments>Default</environments>
     <formulas>
         <name>fxHasActive</name>
@@ -167,9 +167,20 @@
         <expression>OR({!varHoldingHealth}, {!Each_Active_Junction.Insurance_Record_Type__c} = &quot;Group Health&quot;, {!Each_Active_Junction.Insurance_Record_Type__c} = &quot;Health&quot;)</expression>
     </formulas>
     <formulas>
+        <name>fxCoverageList</name>
+        <dataType>String</dataType>
+        <expression>IF({!Each_Active_Junction.Medical__c}, &quot;Medical&quot;, &quot;&quot;) &amp; IF({!Each_Active_Junction.Dental__c}, IF({!Each_Active_Junction.Medical__c}, &quot;, &quot;, &quot;&quot;) &amp; &quot;Dental&quot;, &quot;&quot;) &amp; IF({!Each_Active_Junction.Vision__c}, IF(OR({!Each_Active_Junction.Medical__c}, {!Each_Active_Junction.Dental__c}), &quot;, &quot;, &quot;&quot;) &amp; &quot;Vision&quot;, &quot;&quot;)</expression>
+    </formulas>
+    <formulas>
         <name>fxLine</name>
         <dataType>String</dataType>
-        <expression>{!Each_Active_Junction.Insurance_Policy_Name__c} &amp; &quot; (&quot; &amp; {!Each_Active_Junction.Insurance_Record_Type__c} &amp; &quot;); &quot;</expression>
+        <expression>{!Each_Active_Junction.Insurance_Policy_Name__c} &amp; &quot; (&quot; &amp; {!Each_Active_Junction.Insurance_Record_Type__c} &amp; &quot;)&quot; &amp; IF(LEN({!fxCoverageList}) &gt; 0, &quot; - &quot; &amp; {!fxCoverageList}, &quot;&quot;) &amp; &quot;; &quot;</expression>
+    </formulas>
+    <formulas>
+        <name>fxPlansForJunction</name>
+        <dataType>Number</dataType>
+        <expression>MAX(1, IF({!Each_Active_Junction.Medical__c}, 1, 0) + IF({!Each_Active_Junction.Dental__c}, 1, 0) + IF({!Each_Active_Junction.Vision__c}, 1, 0))</expression>
+        <scale>0</scale>
     </formulas>
     <interviewLabel>Recalculate Related Contacts Active Insurance {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Recalculate Related Contacts Active Insurance</label>
@@ -281,6 +292,9 @@
         <queriedFields>Insurance_Status__c</queriedFields>
         <queriedFields>Insurance_Record_Type__c</queriedFields>
         <queriedFields>Insurance_Policy_Name__c</queriedFields>
+        <queriedFields>Medical__c</queriedFields>
+        <queriedFields>Dental__c</queriedFields>
+        <queriedFields>Vision__c</queriedFields>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
     <recordLookups>

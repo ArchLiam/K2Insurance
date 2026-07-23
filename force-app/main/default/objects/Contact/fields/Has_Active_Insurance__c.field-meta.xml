@@ -4,7 +4,7 @@
     <defaultValue>false</defaultValue>
     <description>Auto-maintained by the Insurance recalculation flow. TRUE when the contact currently holds at least one active-policy insurance (ContactInsuranceAssociation where the linked Insurance Status = Active). Do not edit manually. (활성 보험 보유 여부 - 자동 계산, 수동 편집 금지)</description>
     <inlineHelpText>Auto-calculated from the contact&apos;s active insurance associations; do not edit manually. (활성 보험 연결에서 자동 계산됩니다. 수동 편집 금지.)</inlineHelpText>
-    <label>Has Active Insurance</label>
+    <label>Active Ins</label>
     <trackFeedHistory>false</trackFeedHistory>
     <type>Checkbox</type>
 </CustomField>
