@@ -392,4 +392,228 @@
         <shortDescription>Active User/Queue Id owning auto-generated Renewal Opps/Tasks (Kay Kim)</shortDescription>
         <value>005fI000002lJXWQA2</value>
     </labels>
+    <labels>
+        <fullName>EmployeeRoster_Title</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster card title</shortDescription>
+        <value>Employees</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_ColName</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster column - Name</shortDescription>
+        <value>Name</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_ColRoles</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster column - Roles</shortDescription>
+        <value>Roles</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_ColEmpStatus</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster column - Emp.Status</shortDescription>
+        <value>Emp.Status</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_Active</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster - active employment indicator</shortDescription>
+        <value>Active</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_PlanMedical</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster - Medical coverage badge tooltip</shortDescription>
+        <value>Medical</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_PlanDental</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster - Dental coverage badge tooltip</shortDescription>
+        <value>Dental</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_PlanVision</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster - Vision coverage badge tooltip</shortDescription>
+        <value>Vision</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_Inactive</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster - inactive employment indicator</shortDescription>
+        <value>Inactive</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_ColPlans</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster column - Plans (coverage initials M / D / V)</shortDescription>
+        <value>Plans</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_ColFamily</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster column - Family</shortDescription>
+        <value>Family</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_ColActiveIns</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster column - Active Ins</shortDescription>
+        <value>Active Ins</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_Offboard</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster offboard action label</shortDescription>
+        <value>Offboard</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_NoEmployees</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster empty state</shortDescription>
+        <value>No active employees.</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_LoadError</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster load error</shortDescription>
+        <value>Unable to load employees. Please refresh and try again.</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_OffboardBody</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster offboard modal body</shortDescription>
+        <value>This ends the employee&apos;s group health coverage, turns off Emp.Status, and marks the Contact Inactive. The group policy itself is not changed.</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_EndDateLabel</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster end date input label</shortDescription>
+        <value>Coverage / Employment End Date</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_Cancel</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster cancel button</shortDescription>
+        <value>Cancel</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_SuccessTitle</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster success toast title</shortDescription>
+        <value>Employee offboarded</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_SuccessMessage</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster success toast message</shortDescription>
+        <value>Group health coverage ended, Emp.Status turned off, and the contact marked Inactive.</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_ErrorTitle</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster error toast title</shortDescription>
+        <value>Something went wrong</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_NewContact</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster new contact button</shortDescription>
+        <value>New Contact</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_AddRelationship</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster add relationship button</shortDescription>
+        <value>Add Relationship</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_OpenRelationship</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster open relationship row action</shortDescription>
+        <value>Open relationship record</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_Save</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster save button</shortDescription>
+        <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_SaveSuccess</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster save success toast</shortDescription>
+        <value>Changes saved.</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_RolesPlaceholder</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster roles combobox placeholder</shortDescription>
+        <value>Select role</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_FamilyPlaceholder</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster family combobox placeholder</shortDescription>
+        <value>Select tier</value>
+    </labels>
 </CustomLabels>

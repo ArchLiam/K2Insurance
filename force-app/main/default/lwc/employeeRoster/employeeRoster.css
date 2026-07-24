@@ -1,0 +1,77 @@
+.roster-sortable {
+    cursor: pointer;
+}
+
+/* Fixed layout so column widths follow the colgroup and stay put while resizing. */
+.roster-table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.roster-table th {
+    position: relative;
+}
+
+/* Initial column widths; a drag on the resize handle overrides these inline. */
+.col-status {
+    width: 6rem;
+}
+.col-plans {
+    width: 8rem;
+}
+.col-activeins {
+    width: 5.5rem;
+}
+.col-actions {
+    width: 12rem;
+}
+
+/* Drag handle at the right edge of each resizable header. */
+.roster-resizer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 8px;
+    height: 100%;
+    cursor: col-resize;
+    user-select: none;
+    touch-action: none;
+}
+.roster-resizer:hover {
+    background-color: #1b96ff;
+    opacity: 0.4;
+}
+
+.roster-actions-col {
+    width: 12rem;
+}
+
+/* Notion-style coverage-tier badges in the Plans column. */
+.roster-plans {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2rem;
+}
+.plan-badge {
+    display: inline-block;
+    min-width: 1.2rem;
+    padding: 0.05rem 0.4rem;
+    border-radius: 0.2rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.35;
+    text-align: center;
+    color: #ffffff;
+}
+.plan-m {
+    background-color: #1c7d6d; /* Medical - teal */
+}
+.plan-d {
+    background-color: #a06a2c; /* Dental - amber */
+}
+.plan-v {
+    background-color: #6b6b6b; /* Vision - grey */
+}
+.plan-other {
+    background-color: #8a8a8a;
+}

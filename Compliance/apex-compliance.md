@@ -31,7 +31,7 @@ Rules:
 ```apex
 /**
  * @description One line stating what this class does.
- * @author Liam Jeong <liam.jeong@coastalcloud.us>
+ * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 public with sharing class ExampleService {
 ```
@@ -73,7 +73,7 @@ public void run() {
 ```apex
 /**
  * @description Single trigger for Account; delegates to AccountTriggerHandler.
- * @author Liam Jeong <liam.jeong@coastalcloud.us>
+ * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 trigger AccountTrigger on Account (
     before insert, before update, before delete,
@@ -230,7 +230,7 @@ Failures **must never be silent**, yet a caught error in a graceful-degrade path
 
 ## §12 PR Compliance Checklist
 
-- [ ] Every file starts with the ApexDoc file/class header; `@author Liam Jeong <liam.jeong@coastalcloud.us>` present verbatim.
+- [ ] Every file starts with the ApexDoc file/class header; `@author Liam Jeong <liam.jeong@5sinfusion.com>` present verbatim.
 - [ ] Every method has an `@description` and `@param`/`@return` as applicable.
 - [ ] No ticket numbers, JIRA IDs, dates, changelogs, or memos in any header or comment.
 - [ ] Exactly one trigger per object; trigger body is logic-less and routes via `switch on Trigger.operationType` to `<Object>TriggerHandler`.

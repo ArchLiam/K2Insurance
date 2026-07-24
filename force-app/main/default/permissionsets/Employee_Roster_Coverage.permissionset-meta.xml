@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Read/edit on AccountContactRelation.Family__c (coverage tier EO/ES/ED/EF) so admins can set it inline on Related Contacts / Employee Roster. Assign to roster maintainers (new fields deploy without FLS).</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Employee Roster - Coverage Tier</label>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>AccountContactRelation.Family__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+</PermissionSet>

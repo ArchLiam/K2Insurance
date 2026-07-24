@@ -1,0 +1,259 @@
+<template>
+    <lightning-card title={label.title} icon-name="standard:groups">
+        <div slot="actions">
+            <lightning-button
+                label={label.newContact}
+                onclick={handleNewContact}
+                class="slds-var-m-left_x-small"></lightning-button>
+            <lightning-button
+                label={label.addRelationship}
+                onclick={handleAddRelationship}
+                class="slds-var-m-left_x-small"></lightning-button>
+        </div>
+
+        <template lwc:if={hasChanges}>
+            <div class="slds-grid slds-grid_align-end slds-theme_shade slds-var-p-around_x-small">
+                <lightning-button
+                    label={label.cancel}
+                    onclick={handleCancel}
+                    disabled={isSaving}
+                    class="slds-var-m-right_x-small"></lightning-button>
+                <lightning-button
+                    variant="brand"
+                    label={label.save}
+                    onclick={handleSave}
+                    disabled={isSaving}></lightning-button>
+            </div>
+        </template>
+
+        <div class="slds-var-p-horizontal_small">
+            <template lwc:if={hasEmployees}>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped roster-table">
+                    <colgroup>
+                        <col data-col="name" />
+                        <col data-col="empStatus" class="col-status" />
+                        <col data-col="roles" />
+                        <col data-col="plans" class="col-plans" />
+                        <col data-col="family" />
+                        <col data-col="activeIns" class="col-activeins" />
+                        <col data-col="actions" class="col-actions" />
+                    </colgroup>
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            <th scope="col" data-field="name" onclick={handleSort} class="roster-sortable">
+                                <div class="slds-truncate">
+                                    {label.colName}
+                                    <template lwc:if={isSortedByName}>
+                                        <lightning-icon icon-name={sortIconName} size="xx-small"></lightning-icon>
+                                    </template>
+                                </div>
+                                <span class="roster-resizer" data-field="name"
+                                    onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
+                                    onpointerup={handleResizeEnd} onclick={stopEvent}></span>
+                            </th>
+                            <th scope="col" data-field="empStatus" onclick={handleSort} class="roster-sortable">
+                                <div class="slds-truncate">
+                                    {label.colEmpStatus}
+                                    <template lwc:if={isSortedByEmpStatus}>
+                                        <lightning-icon icon-name={sortIconName} size="xx-small"></lightning-icon>
+                                    </template>
+                                </div>
+                                <span class="roster-resizer" data-field="empStatus"
+                                    onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
+                                    onpointerup={handleResizeEnd} onclick={stopEvent}></span>
+                            </th>
+                            <th scope="col" data-field="roles" onclick={handleSort} class="roster-sortable">
+                                <div class="slds-truncate">
+                                    {label.colRoles}
+                                    <template lwc:if={isSortedByRoles}>
+                                        <lightning-icon icon-name={sortIconName} size="xx-small"></lightning-icon>
+                                    </template>
+                                </div>
+                                <span class="roster-resizer" data-field="roles"
+                                    onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
+                                    onpointerup={handleResizeEnd} onclick={stopEvent}></span>
+                            </th>
+                            <th scope="col" data-field="plans" onclick={handleSort} class="roster-sortable">
+                                <div class="slds-truncate">
+                                    {label.colPlans}
+                                    <template lwc:if={isSortedByPlans}>
+                                        <lightning-icon icon-name={sortIconName} size="xx-small"></lightning-icon>
+                                    </template>
+                                </div>
+                                <span class="roster-resizer" data-field="plans"
+                                    onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
+                                    onpointerup={handleResizeEnd} onclick={stopEvent}></span>
+                            </th>
+                            <th scope="col" data-field="family" onclick={handleSort} class="roster-sortable">
+                                <div class="slds-truncate">
+                                    {label.colFamily}
+                                    <template lwc:if={isSortedByFamily}>
+                                        <lightning-icon icon-name={sortIconName} size="xx-small"></lightning-icon>
+                                    </template>
+                                </div>
+                                <span class="roster-resizer" data-field="family"
+                                    onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
+                                    onpointerup={handleResizeEnd} onclick={stopEvent}></span>
+                            </th>
+                            <th scope="col" data-field="activeIns" onclick={handleSort} class="roster-sortable">
+                                <div class="slds-truncate">
+                                    {label.colActiveIns}
+                                    <template lwc:if={isSortedByActiveIns}>
+                                        <lightning-icon icon-name={sortIconName} size="xx-small"></lightning-icon>
+                                    </template>
+                                </div>
+                                <span class="roster-resizer" data-field="activeIns"
+                                    onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
+                                    onpointerup={handleResizeEnd} onclick={stopEvent}></span>
+                            </th>
+                            <th scope="col" class="roster-actions-col"><div class="slds-truncate">&nbsp;</div></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={rows} for:item="row">
+                            <tr key={row.acrId} class="slds-hint-parent">
+                                <th scope="row" data-label={label.colName}>
+                                    <div class="slds-truncate">
+                                        <a href={row.contactUrl}>{row.name}</a>
+                                    </div>
+                                </th>
+                                <td data-label={label.colEmpStatus}>
+                                    <template lwc:if={row.empStatus}>
+                                        <lightning-icon
+                                            icon-name="utility:check"
+                                            size="x-small"
+                                            variant="success"
+                                            alternative-text={label.active}
+                                            title={label.active}></lightning-icon>
+                                    </template>
+                                    <template lwc:else>
+                                        <span class="slds-badge slds-text-color_weak">{label.inactive}</span>
+                                    </template>
+                                </td>
+                                <td data-label={label.colRoles}>
+                                    <lightning-combobox
+                                        variant="label-hidden"
+                                        label={label.colRoles}
+                                        value={row.roles}
+                                        placeholder={label.rolesPlaceholder}
+                                        options={rolesOptions}
+                                        data-acr={row.acrId}
+                                        onchange={handleRolesChange}></lightning-combobox>
+                                </td>
+                                <td data-label={label.colPlans}>
+                                    <div class="roster-plans">
+                                        <template for:each={row.planBadges} for:item="badge">
+                                            <span key={badge.key} class={badge.cssClass} title={badge.title}>{badge.label}</span>
+                                        </template>
+                                    </div>
+                                </td>
+                                <td data-label={label.colFamily}>
+                                    <lightning-combobox
+                                        variant="label-hidden"
+                                        label={label.colFamily}
+                                        value={row.family}
+                                        placeholder={label.familyPlaceholder}
+                                        options={familyOptions}
+                                        data-acr={row.acrId}
+                                        onchange={handleFamilyChange}></lightning-combobox>
+                                </td>
+                                <td data-label={label.colActiveIns}>
+                                    <template lwc:if={row.activeIns}>
+                                        <lightning-icon
+                                            icon-name="utility:check"
+                                            size="x-small"
+                                            alternative-text={label.colActiveIns}></lightning-icon>
+                                    </template>
+                                </td>
+                                <td class="roster-actions-col">
+                                    <div class="slds-grid slds-grid_align-end slds-grid_vertical-align-center">
+                                        <lightning-button-icon
+                                            icon-name="utility:open"
+                                            variant="bare"
+                                            data-acr={row.acrId}
+                                            onclick={handleOpenAcr}
+                                            title={label.openRelationship}
+                                            alternative-text={label.openRelationship}
+                                            class="slds-var-m-right_x-small"></lightning-button-icon>
+                                        <template lwc:if={row.empStatus}>
+                                            <lightning-button
+                                                variant="destructive-text"
+                                                label={label.offboard}
+                                                icon-name="utility:logout"
+                                                data-acr={row.acrId}
+                                                data-name={row.name}
+                                                onclick={handleOffboardClick}></lightning-button>
+                                        </template>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </template>
+
+            <template lwc:elseif={hasError}>
+                <div class="slds-var-p-around_medium slds-text-color_error" role="alert">
+                    {label.loadError}
+                </div>
+            </template>
+
+            <template lwc:else>
+                <div class="slds-var-p-around_medium slds-text-color_weak">
+                    {label.noEmployees}
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+
+    <template lwc:if={showModal}>
+        <section
+            role="dialog"
+            tabindex="-1"
+            aria-modal="true"
+            aria-labelledby="offboard-heading"
+            class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button
+                        class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title={label.cancel}
+                        onclick={closeModal}
+                        disabled={isSaving}>
+                        <lightning-icon
+                            icon-name="utility:close"
+                            alternative-text={label.cancel}
+                            size="small"></lightning-icon>
+                    </button>
+                    <h1 id="offboard-heading" class="slds-modal__title slds-hyphenate">
+                        {modalHeading}
+                    </h1>
+                </header>
+                <div class="slds-modal__content slds-var-p-around_medium">
+                    <p class="slds-var-m-bottom_small">{label.offboardBody}</p>
+                    <lightning-input
+                        type="date"
+                        label={label.endDate}
+                        value={endDate}
+                        onchange={handleDateChange}
+                        disabled={isSaving}></lightning-input>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button
+                        class="slds-button slds-button_neutral"
+                        onclick={closeModal}
+                        disabled={isSaving}>
+                        {label.cancel}
+                    </button>
+                    <button
+                        class="slds-button slds-button_destructive"
+                        onclick={confirmOffboard}
+                        disabled={isSaving}>
+                        {label.offboard}
+                    </button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

@@ -150,16 +150,13 @@
                             <value>ACCCONRELATION.ROLES</value>
                         </valueListItems>
                         <valueListItems>
-                            <value>Contact.Has_Active_Insurance__c</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Contact.Active_Insurance_Count__c</value>
-                        </valueListItems>
-                        <valueListItems>
-                            <value>Contact.Family__c</value>
-                        </valueListItems>
-                        <valueListItems>
                             <value>Contact.Active_Insurance_Summary__c</value>
+                        </valueListItems>
+                        <valueListItems>
+                            <value>Family__c</value>
+                        </valueListItems>
+                        <valueListItems>
+                            <value>Contact.Has_Active_Insurance__c</value>
                         </valueListItems>
                     </valueList>
                 </componentInstanceProperties>
