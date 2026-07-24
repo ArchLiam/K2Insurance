@@ -12,6 +12,12 @@
     position: relative;
 }
 
+/* Vertical dividers so columns read as separate and the resize boundary is findable. */
+.roster-table th:not(:last-child),
+.roster-table td:not(:last-child) {
+    border-right: 1px solid #e5e5e5;
+}
+
 /* Initial column widths; a drag on the resize handle overrides these inline. */
 .col-status {
     width: 6rem;
@@ -26,20 +32,34 @@
     width: 12rem;
 }
 
-/* Drag handle at the right edge of each resizable header. */
+/* Drag handle at the right edge of each resizable header, with a visible grip. */
 .roster-resizer {
     position: absolute;
     top: 0;
     right: 0;
-    width: 8px;
+    width: 10px;
     height: 100%;
     cursor: col-resize;
     user-select: none;
     touch-action: none;
+    z-index: 1;
 }
-.roster-resizer:hover {
+.roster-resizer::after {
+    content: '';
+    position: absolute;
+    top: 30%;
+    right: 3px;
+    height: 40%;
+    width: 2px;
+    border-radius: 1px;
+    background-color: #b0adab;
+}
+.roster-resizer:hover::after,
+.roster-resizer:active::after {
+    top: 0;
+    height: 100%;
+    width: 3px;
     background-color: #1b96ff;
-    opacity: 0.4;
 }
 
 .roster-actions-col {

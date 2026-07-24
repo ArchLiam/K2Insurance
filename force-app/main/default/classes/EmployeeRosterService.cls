@@ -62,24 +62,30 @@ public with sharing class EmployeeRosterService {
         @AuraEnabled public String family;
         @AuraEnabled public Boolean activeIns;
         @AuraEnabled public Boolean empStatus;
+        @AuraEnabled public String company;
+        @AuraEnabled public Id companyId;
+        @AuraEnabled public String companyUrl;
     }
 
     /**
-     * @description Returns every employee (active and inactive) related to a company account, with
-     * the roster display fields, in the running user's context. Emp.Status is display-only here;
-     * it is changed only through offboard.
-     * @param accountId The company account whose employees to list.
-     * @return The employee rows, ordered by contact name.
+     * @description Returns every employee (active and inactive) for a company account AND all of
+     * its sub-companies in the account hierarchy, with the roster display fields, in the running
+     * user's context. On a parent this rolls up the whole hierarchy so all employees are visible at
+     * once; on a leaf company it returns only that company. Emp.Status is display-only here; it is
+     * changed only through offboard.
+     * @param accountId The company account whose roster to list (root of the roll-up).
+     * @return The employee rows, ordered by company then contact name.
      */
     public List<EmployeeRow> getRoster(Id accountId) {
+        Set<Id> accountIds = collectHierarchy(accountId);
         List<EmployeeRow> rows = new List<EmployeeRow>();
         for (AccountContactRelation acr : [
-            SELECT Id, ContactId, Contact.Name, Roles, Emp_Status__c,
+            SELECT Id, ContactId, Contact.Name, Roles, Emp_Status__c, AccountId, Account.Name,
                    Family__c, Contact.Active_Insurance_Summary__c, Contact.Has_Active_Insurance__c
             FROM AccountContactRelation
-            WHERE AccountId = :accountId
+            WHERE AccountId IN :accountIds
             WITH USER_MODE
-            ORDER BY Contact.Name
+            ORDER BY Account.Name, Contact.Name
         ]) {
             EmployeeRow row = new EmployeeRow();
             row.acrId = acr.Id;
@@ -91,9 +97,36 @@ public with sharing class EmployeeRosterService {
             row.family = acr.Family__c;
             row.activeIns = acr.Contact.Has_Active_Insurance__c;
             row.empStatus = acr.Emp_Status__c;
+            row.company = acr.Account.Name;
+            row.companyId = acr.AccountId;
+            row.companyUrl = '/' + acr.AccountId;
             rows.add(row);
         }
         return rows;
+    }
+
+    /**
+     * @description Collects a company account and every descendant company in the account
+     * hierarchy, so a parent's roster rolls up all sub-company employees. Bulk-safe and
+     * cycle-safe (each account is visited once).
+     * @param rootId The account to start the walk from.
+     * @return The root account id plus every descendant account id.
+     */
+    private Set<Id> collectHierarchy(Id rootId) {
+        Set<Id> accountIds = new Set<Id>{ rootId };
+        Set<Id> frontier = new Set<Id>{ rootId };
+        while (!frontier.isEmpty()) {
+            List<Account> children = [
+                SELECT Id FROM Account WHERE ParentId IN :frontier WITH USER_MODE
+            ];
+            frontier = new Set<Id>();
+            for (Account child : children) {
+                if (accountIds.add(child.Id)) {
+                    frontier.add(child.Id);
+                }
+            }
+        }
+        return accountIds;
     }
 
     /**

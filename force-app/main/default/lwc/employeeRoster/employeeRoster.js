@@ -11,6 +11,7 @@ import saveRelationships from '@salesforce/apex/EmployeeRosterController.saveRel
 
 import LBL_TITLE from '@salesforce/label/c.EmployeeRoster_Title';
 import LBL_COL_NAME from '@salesforce/label/c.EmployeeRoster_ColName';
+import LBL_COL_COMPANY from '@salesforce/label/c.EmployeeRoster_ColCompany';
 import LBL_COL_EMP_STATUS from '@salesforce/label/c.EmployeeRoster_ColEmpStatus';
 import LBL_COL_ROLES from '@salesforce/label/c.EmployeeRoster_ColRoles';
 import LBL_COL_PLANS from '@salesforce/label/c.EmployeeRoster_ColPlans';
@@ -61,6 +62,7 @@ export default class EmployeeRoster extends NavigationMixin(LightningElement) {
     label = {
         title: LBL_TITLE,
         colName: LBL_COL_NAME,
+        colCompany: LBL_COL_COMPANY,
         colEmpStatus: LBL_COL_EMP_STATUS,
         colRoles: LBL_COL_ROLES,
         colPlans: LBL_COL_PLANS,
@@ -175,6 +177,9 @@ export default class EmployeeRoster extends NavigationMixin(LightningElement) {
 
     get isSortedByName() {
         return this.sortedBy === 'name';
+    }
+    get isSortedByCompany() {
+        return this.sortedBy === 'company';
     }
     get isSortedByEmpStatus() {
         return this.sortedBy === 'empStatus';

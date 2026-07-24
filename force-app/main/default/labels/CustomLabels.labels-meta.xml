@@ -425,6 +425,14 @@
         <value>Emp.Status</value>
     </labels>
     <labels>
+        <fullName>EmployeeRoster_ColCompany</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster column - Company</shortDescription>
+        <value>Company</value>
+    </labels>
+    <labels>
         <fullName>EmployeeRoster_Active</fullName>
         <categories>EmployeeRoster</categories>
         <language>en_US</language>

@@ -31,6 +31,7 @@
                 <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped roster-table">
                     <colgroup>
                         <col data-col="name" />
+                        <col data-col="company" />
                         <col data-col="empStatus" class="col-status" />
                         <col data-col="roles" />
                         <col data-col="plans" class="col-plans" />
@@ -48,6 +49,17 @@
                                     </template>
                                 </div>
                                 <span class="roster-resizer" data-field="name"
+                                    onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
+                                    onpointerup={handleResizeEnd} onclick={stopEvent}></span>
+                            </th>
+                            <th scope="col" data-field="company" onclick={handleSort} class="roster-sortable">
+                                <div class="slds-truncate">
+                                    {label.colCompany}
+                                    <template lwc:if={isSortedByCompany}>
+                                        <lightning-icon icon-name={sortIconName} size="xx-small"></lightning-icon>
+                                    </template>
+                                </div>
+                                <span class="roster-resizer" data-field="company"
                                     onpointerdown={handleResizeStart} onpointermove={handleResizeMove}
                                     onpointerup={handleResizeEnd} onclick={stopEvent}></span>
                             </th>
@@ -117,6 +129,11 @@
                                         <a href={row.contactUrl}>{row.name}</a>
                                     </div>
                                 </th>
+                                <td data-label={label.colCompany}>
+                                    <div class="slds-truncate">
+                                        <a href={row.companyUrl} title={row.company}>{row.company}</a>
+                                    </div>
+                                </td>
                                 <td data-label={label.colEmpStatus}>
                                     <template lwc:if={row.empStatus}>
                                         <lightning-icon

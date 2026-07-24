@@ -74,4 +74,34 @@ public with sharing class EmployeeRosterTestData {
         insert coverage;
         return relations;
     }
+
+    /**
+     * @description Creates a sub-company under the given parent account and one active employee on
+     * it, for exercising the roster's account-hierarchy roll-up.
+     * @param parentAccountId The parent company the sub-company reports to.
+     * @param childName The sub-company name.
+     * @return The sub-company employee's AccountContactRelation.
+     */
+    public static AccountContactRelation addChildCompanyEmployee(Id parentAccountId, String childName) {
+        Id clientRt = [
+            SELECT Id FROM RecordType
+            WHERE SobjectType = 'Account' AND DeveloperName = 'Client_Business'
+            LIMIT 1
+        ].Id;
+        Account child = new Account(Name = childName, RecordTypeId = clientRt, ParentId = parentAccountId);
+        insert child;
+
+        Contact employee = new Contact(LastName = childName + ' Emp', Status__c = 'Active', AccountId = child.Id);
+        insert employee; // Salesforce auto-creates the direct AccountContactRelation.
+
+        AccountContactRelation acr = [
+            SELECT Id FROM AccountContactRelation
+            WHERE AccountId = :child.Id AND ContactId = :employee.Id
+            LIMIT 1
+        ];
+        acr.Emp_Status__c = true;
+        acr.Roles = 'Employee';
+        update acr;
+        return acr;
+    }
 }

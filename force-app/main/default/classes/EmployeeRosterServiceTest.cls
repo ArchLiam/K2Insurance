@@ -34,6 +34,37 @@ private class EmployeeRosterServiceTest {
     }
 
     /**
+     * @description getRoster on a parent company rolls up employees from its sub-companies and
+     * labels each row with its own company; getRoster on the sub-company returns only its own.
+     */
+    @isTest
+    static void getRosterRollsUpChildCompanies() {
+        List<AccountContactRelation> parentRelations = EmployeeRosterTestData.buildRoster(3);
+        Id parentId = [SELECT AccountId FROM AccountContactRelation WHERE Id = :parentRelations[0].Id].AccountId;
+        AccountContactRelation childAcr =
+            EmployeeRosterTestData.addChildCompanyEmployee(parentId, 'Roster Child Co');
+        Id childId = [SELECT AccountId FROM AccountContactRelation WHERE Id = :childAcr.Id].AccountId;
+
+        Test.startTest();
+        List<EmployeeRosterService.EmployeeRow> parentRows = new EmployeeRosterService().getRoster(parentId);
+        List<EmployeeRosterService.EmployeeRow> childRows = new EmployeeRosterService().getRoster(childId);
+        Test.stopTest();
+
+        Assert.areEqual(4, parentRows.size(), 'Parent roster should roll up the sub-company employee');
+        Boolean sawChild = false;
+        for (EmployeeRosterService.EmployeeRow row : parentRows) {
+            Assert.isNotNull(row.company, 'Each row should carry its company name');
+            Assert.isNotNull(row.companyId, 'Each row should carry its company id');
+            if (row.acrId == childAcr.Id) {
+                sawChild = true;
+                Assert.areEqual('Roster Child Co', row.company, 'Sub-company employee should be labeled with it');
+            }
+        }
+        Assert.isTrue(sawChild, 'The sub-company employee should appear in the parent roster');
+        Assert.areEqual(1, childRows.size(), 'A leaf company roster should return only its own employees');
+    }
+
+    /**
      * @description Bulk offboard (>=20) ends group-health coverage, clears employment, and
      * marks each Contact inactive.
      */
