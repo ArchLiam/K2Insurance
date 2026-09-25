@@ -3,8 +3,8 @@
     <apiVersion>67.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <decisions>
-        <name>End_Date_in_60_Days</name>
-        <label>End Date in 60 Days?</label>
+        <name>End_Date_in_90_Days</name>
+        <label>End Date in 90 Days?</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnectorLabel>No — Skip</defaultConnectorLabel>
@@ -15,7 +15,7 @@
                 <leftValueReference>$Record.Insurance_End_Date__c</leftValueReference>
                 <operator>LessThan</operator>
                 <rightValue>
-                    <elementReference>Today_Plus_60</elementReference>
+                    <elementReference>Today_Plus_90</elementReference>
                 </rightValue>
             </conditions>
             <conditions>
@@ -26,7 +26,7 @@
                 </rightValue>
             </conditions>
             <connector>
-                <targetReference>Get_Renewal_RecordType</targetReference>
+                <targetReference>Is_Company_Required</targetReference>
             </connector>
             <label>Yes — Create Renewal</label>
         </rules>
@@ -38,7 +38,7 @@
         <locationX>0</locationX>
         <locationY>0</locationY>
         <defaultConnector>
-            <targetReference>End_Date_in_60_Days</targetReference>
+            <targetReference>End_Date_in_90_Days</targetReference>
         </defaultConnector>
         <defaultConnectorLabel>No — Continue</defaultConnectorLabel>
         <rules>
@@ -127,25 +127,92 @@
             <label>ON</label>
         </rules>
     </decisions>
-    <description>2026-08-09: Skip Auto/Home; add fault paths and Get null guards so every failure logs to Error_Log__c instead of an unhandled-fault email.</description>
+    <decisions>
+        <name>Is_Company_Required</name>
+        <label>Is a Company Required?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Get_Renewal_RecordType</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Is_Company_Required_Yes</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.RecordType.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Commercial</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.RecordType.DeveloperName</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Group_Health</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Is_Company_Present</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <name>Is_Company_Present</name>
+        <label>Is the Policy Company Present?</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Log_Missing_Company</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Is_Company_Present_Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Company__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Renewal_RecordType</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <description>2026-09-12: Use the policy Company for Commercial and Group Health renewal accounts and names; log and skip missing companies. Preserve the 90-day window and existing schedule.</description>
     <environments>Default</environments>
     <formulas>
         <name>Renewal_Opportunity_Name</name>
         <dataType>String</dataType>
-        <expression>&quot;Renewal - &quot; &amp; {!Get_Policy_Holder_Contact.Name} &amp; &quot; (&quot; &amp; TEXT({!$Record.Insurance_End_Date__c}) &amp; &quot;)&quot;</expression>
-    </formulas>
-    <formulas>
-        <name>Today_Plus_60</name>
-        <dataType>Date</dataType>
-        <expression>TODAY() + 60</expression>
+        <expression>"Renewal - " &amp; IF({!Is_Company_Policy}, LEFT({!$Record.Company__r.Name}, 97), {!Get_Policy_Holder_Contact.Name}) &amp; " (" &amp; TEXT({!$Record.Insurance_End_Date__c}) &amp; ")"</expression>
     </formulas>
     <formulas>
         <name>Today_Plus_7</name>
         <dataType>Date</dataType>
         <expression>TODAY()+7</expression>
     </formulas>
+    <formulas>
+        <name>Today_Plus_90</name>
+        <dataType>Date</dataType>
+        <expression>TODAY() + 90</expression>
+    </formulas>
+    <formulas>
+        <name>Is_Company_Policy</name>
+        <dataType>Boolean</dataType>
+        <expression>OR({!$Record.RecordType.DeveloperName} = "Commercial", {!$Record.RecordType.DeveloperName} = "Group_Health")</expression>
+    </formulas>
+    <formulas>
+        <name>Renewal_Account_Id</name>
+        <dataType>String</dataType>
+        <expression>IF({!Is_Company_Policy}, {!$Record.Company__c}, {!$Record.Insurance_Provider__c})</expression>
+    </formulas>
     <interviewLabel>Daily — Generate Renewal Opportunities (60 Days Out) {!$Flow.CurrentDateTime}</interviewLabel>
-    <label>Daily — Generate Renewal Opportunities (60 Days Out)</label>
+    <label>Daily — Generate Renewal Opportunities (90 Days Out)</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -240,7 +307,7 @@
         <inputAssignments>
             <field>AccountId</field>
             <value>
-                <elementReference>$Record.Insurance_Provider__c</elementReference>
+                <elementReference>Renewal_Account_Id</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -524,6 +591,49 @@
             <name>varSourceStep</name>
             <value>
                 <stringValue>Get_RecordType / Get_Contact / Create_Opp / Link_Insurance / Create_Task</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Log_Missing_Company</name>
+        <label>Log Missing Policy Company</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <flowName>Log_Error</flowName>
+        <inputAssignments>
+            <name>varContext</name>
+            <value>
+                <stringValue>Renewal creation deferred: select the customer Company on the Commercial or Group Health policy.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varErrorMessage</name>
+            <value>
+                <stringValue>Company is missing. The insurer and the policy holder account cannot be used as a substitute.</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varRecordId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSeverity</name>
+            <value>
+                <stringValue>Medium</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceFlow</name>
+            <value>
+                <stringValue>Daily_Generate_Renewal_Opportunities</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>varSourceStep</name>
+            <value>
+                <stringValue>Is_Company_Present</stringValue>
             </value>
         </inputAssignments>
     </subflows>
