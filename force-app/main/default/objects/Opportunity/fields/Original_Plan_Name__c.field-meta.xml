@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Original_Plan_Name__c</fullName>
+    <description>Plan name of the original Insurance policy being renewed. Falls back Medical -&gt; Dental -&gt; Vision. Pulled from Original_Insurance__c so it can be merged into Lightning email templates, which cannot traverse lookup relationships.</description>
+    <formula>BLANKVALUE(
+  Original_Insurance__r.Medical_Plan_Name__c,
+  BLANKVALUE(
+    Original_Insurance__r.Dental_Plan_Name__c,
+    Original_Insurance__r.Vision_Plan_Name__c
+  )
+)</formula>
+    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
+    <inlineHelpText>Read-only — the expiring policy&apos;s plan name, pulled from the linked Original Insurance.</inlineHelpText>
+    <label>Original Plan Name</label>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

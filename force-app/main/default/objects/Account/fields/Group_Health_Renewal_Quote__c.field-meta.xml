@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Group_Health_Renewal_Quote__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Explicitly selected Group Health Quote used by the Company renewal email template.</description>
+    <inlineHelpText>Select and save this company's Group Health Quote before inserting the renewal email template. Reinsert the template after changing the Quote.</inlineHelpText>
+    <label>Group Health Renewal Quote</label>
+    <lookupFilter>
+        <active>true</active>
+        <errorMessage>Select a Group Health Quote belonging to this company.</errorMessage>
+        <filterItems>
+            <field>Quote.Opportunity.AccountId</field>
+            <operation>equals</operation>
+            <valueField>$Source.Id</valueField>
+        </filterItems>
+        <filterItems>
+            <field>Quote.Opportunity.RecordType.DeveloperName</field>
+            <operation>equals</operation>
+            <value>Group_Health</value>
+        </filterItems>
+        <isOptional>false</isOptional>
+    </lookupFilter>
+    <referenceTo>Quote</referenceTo>
+    <relationshipLabel>Companies Using Renewal Quote</relationshipLabel>
+    <relationshipName>Companies_Using_Renewal_Quote</relationshipName>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Lookup</type>
+</CustomField>

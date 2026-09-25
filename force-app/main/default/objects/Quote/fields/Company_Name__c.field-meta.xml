@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Company_Name__c</fullName>
+    <description>Customer company name from the Renewal linked to this Quote. Exposes the company name for Quote email templates without changing the Account relationship.</description>
+    <formula>Opportunity.Account.Name</formula>
+    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
+    <inlineHelpText>Customer company name from the Renewal linked to this Quote. Exposes the company name for Quote email templates without changing the Account relationship.</inlineHelpText>
+    <label>Company Name for Email</label>
+    <required>false</required>
+    <type>Text</type>
+</CustomField>

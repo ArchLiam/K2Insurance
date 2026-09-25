@@ -7,6 +7,9 @@
                     <name>actionNames</name>
                     <valueList>
                         <valueListItems>
+                            <value>Opportunity.Email_Policy_Holder</value>
+                        </valueListItems>
+                        <valueListItems>
                             <value>Opportunity.Quick_New_Quote</value>
                         </valueListItems>
                         <valueListItems>
@@ -57,7 +60,7 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>numVisibleActions</name>
-                    <value>3</value>
+                    <value>4</value>
                 </componentInstanceProperties>
                 <componentName>force:highlightsPanel</componentName>
                 <identifier>force_highlightsPanel</identifier>
@@ -410,6 +413,26 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Original_Insurance__c</fieldItem>
                 <identifier>RecordOriginal_Insurance_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>readonly</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Policy_Holder_Name__c</fieldItem>
+                <identifier>RecordPolicy_Holder_Name_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>readonly</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Policy_Holder_Email__c</fieldItem>
+                <identifier>RecordPolicy_Holder_Email_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>

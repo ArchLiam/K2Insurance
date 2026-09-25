@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Insurance_Start_Date__c</fullName>
+    <description>Start date of the original Insurance policy. Pulled from Original_Insurance__c so the policy period can be merged into Lightning email templates, which cannot traverse lookup relationships.</description>
+    <formula>Original_Insurance__r.Insurance_Start_Date__c</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <inlineHelpText>Read-only — derived from the linked original Insurance policy.</inlineHelpText>
+    <label>Insurance Start Date</label>
+    <required>false</required>
+    <type>Date</type>
+</CustomField>

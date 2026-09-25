@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Policy_Holder_Email__c</fullName>
+    <description>Email address of the policy holder on the original Insurance policy. Flattened onto the Opportunity so the renewal email action can prefill the recipient without traversing the lookup, and so the address is visible on the Renewal record itself.</description>
+    <formula>Original_Insurance__r.Policy_Holder__r.Email</formula>
+    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
+    <inlineHelpText>Read-only — the policy holder&apos;s email on the linked Original Insurance. Blank means the Contact has no email on file.</inlineHelpText>
+    <label>Policy Holder Email</label>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

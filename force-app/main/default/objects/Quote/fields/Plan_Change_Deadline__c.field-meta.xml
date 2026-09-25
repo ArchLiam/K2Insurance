@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Plan_Change_Deadline__c</fullName>
+    <description>Deadline to request plan changes, one calendar month before the Quote proposed coverage start date.</description>
+    <formula>IF(
+  ISBLANK(Proposed_Start_Date__c),
+  NULL,
+  ADDMONTHS(Proposed_Start_Date__c, -1)
+)</formula>
+    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
+    <inlineHelpText>Deadline to request plan changes, one calendar month before the Quote proposed coverage start date.</inlineHelpText>
+    <label>Plan Change Deadline</label>
+    <required>false</required>
+    <type>Date</type>
+</CustomField>

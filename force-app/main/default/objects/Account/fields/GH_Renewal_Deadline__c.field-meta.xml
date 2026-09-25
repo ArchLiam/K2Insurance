@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>GH_Renewal_Deadline__c</fullName>
+    <description>Email merge value from the selected Group Health renewal Quote. Blank when no valid Quote is selected for this company.</description>
+    <formula>IF(
+  AND(
+    NOT(ISBLANK(Group_Health_Renewal_Quote__c)),
+    Group_Health_Renewal_Quote__r.Opportunity.AccountId = Id,
+    Group_Health_Renewal_Quote__r.Opportunity.RecordType.DeveloperName = "Group_Health"
+  ),
+  Group_Health_Renewal_Quote__r.Plan_Change_Deadline__c,
+  NULL
+)</formula>
+    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
+    <label>Renewal Plan Change Deadline</label>
+    <required>false</required>
+    <type>Date</type>
+</CustomField>
