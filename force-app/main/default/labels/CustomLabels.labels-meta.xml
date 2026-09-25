@@ -702,7 +702,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Employee Roster empty state</shortDescription>
-        <value>No active employees.</value>
+        <value>No employees or owners are linked to this company.</value>
     </labels>
     <labels>
         <fullName>EmployeeRoster_LoadError</fullName>
@@ -718,7 +718,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Employee Roster offboard modal body</shortDescription>
-        <value>This ends the employee&apos;s group health coverage, turns off Emp.Status, and marks the Contact Inactive. The group policy itself is not changed.</value>
+        <value>This ends group health coverage and turns off Emp.Status for the selected company relationship. Other company relationships and coverage remain unchanged. The Contact becomes Inactive only if no other current employment remains.</value>
     </labels>
     <labels>
         <fullName>EmployeeRoster_EndDateLabel</fullName>
@@ -750,7 +750,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Employee Roster success toast message</shortDescription>
-        <value>Group health coverage ended, Emp.Status turned off, and the contact marked Inactive.</value>
+        <value>Group health coverage ended and Emp.Status turned off for the selected company relationship.</value>
     </labels>
     <labels>
         <fullName>EmployeeRoster_ErrorTitle</fullName>
@@ -1559,5 +1559,13 @@
         <protected>false</protected>
         <shortDescription>Agents tab - heading above the board's state-glyph legend</shortDescription>
         <value>기호 설명</value>
+    </labels>
+    <labels>
+        <fullName>EmployeeRoster_InvalidCompanyPolicy</fullName>
+        <categories>EmployeeRoster</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Employee Roster invalid company policy</shortDescription>
+        <value>Select an active group health policy belonging to this company.</value>
     </labels>
 </CustomLabels>

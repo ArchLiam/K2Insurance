@@ -108,15 +108,14 @@ private class EmployeeRosterServiceTest {
      */
     @isTest
     static void getRosterRollsUpChildCompanies() {
-        List<AccountContactRelation> parentRelations = EmployeeRosterTestData.buildRoster(3);
+        List<AccountContactRelation> parentRelations = EmployeeRosterTestData.buildRoster(20);
         Id parentId = [SELECT AccountId FROM AccountContactRelation WHERE Id = :parentRelations[0].Id].AccountId;
         AccountContactRelation childAcr =
             EmployeeRosterTestData.addChildCompanyEmployee(parentId, 'Roster Child Co');
         AccountContactRelation childDetail =
             [SELECT AccountId, ContactId FROM AccountContactRelation WHERE Id = :childAcr.Id];
         Id childId = childDetail.AccountId;
-        // Indirect relationship of the sub-company employee back to the parent: it must NOT create
-        // a duplicate row in the parent roll-up (the roster shows direct employment only).
+        // The same Contact's two business relationships must remain individually manageable.
         insert new AccountContactRelation(ContactId = childDetail.ContactId, AccountId = parentId);
 
         Test.startTest();
@@ -124,10 +123,12 @@ private class EmployeeRosterServiceTest {
         List<EmployeeRosterService.EmployeeRow> childRows = new EmployeeRosterService().getRoster(childId);
         Test.stopTest();
 
-        Assert.areEqual(4, parentRows.size(),
-            'Parent roster should roll up the sub-company employee once, excluding the indirect relationship');
+        Assert.areEqual(22, parentRows.size(),
+            'Parent roster should include each direct and additional company relationship once');
+        Set<Id> rowIds = new Set<Id>();
         Boolean sawChild = false;
         for (EmployeeRosterService.EmployeeRow row : parentRows) {
+            Assert.isTrue(rowIds.add(row.acrId), 'A relationship must not be duplicated in the roll-up');
             Assert.isNotNull(row.company, 'Each row should carry its company name');
             Assert.isNotNull(row.companyId, 'Each row should carry its company id');
             if (row.acrId == childAcr.Id) {
@@ -288,7 +289,7 @@ private class EmployeeRosterServiceTest {
             WHERE AccountId = :companyId AND ContactId = :contactIds[0]
         ];
         Assert.areEqual(1, employment.size(), 'Exactly one relationship should exist — updated, not inserted');
-        Assert.isTrue(employment[0].IsDirect, 'The relationship must be direct so the roster lists it');
+        Assert.isTrue(employment[0].IsDirect, 'A new Contact should have this company as its primary account');
         Assert.areEqual('Employee', employment[0].Roles, 'Roles should be stamped');
         Assert.areEqual('EO', employment[0].Family__c, 'Coverage tier should be stamped');
         Assert.isTrue(employment[0].Emp_Status__c, 'The new employee should be marked employed');
@@ -358,30 +359,278 @@ private class EmployeeRosterServiceTest {
     }
 
     /**
-     * @description A contact already employed by a different company is rejected rather than
-     * silently reparented.
+     * @description Existing Contacts can own another company without changing their primary
+     * company. Existing relationships are reused and repeated requests do not create duplicates.
      */
     @isTest
-    static void onboardExistingContactAtAnotherCompanyThrows() {
-        List<AccountContactRelation> relations = EmployeeRosterTestData.buildRoster(1);
-        Id companyId = companyOf(relations[0].Id);
-        Id otherContactId = [SELECT ContactId FROM AccountContactRelation WHERE Id = :relations[0].Id].ContactId;
-        Account otherCompany = new Account(Name = 'Roster Other Co');
-        insert otherCompany;
-        update new Contact(Id = otherContactId, AccountId = otherCompany.Id);
+    static void onboardExistingContactsAtAnotherCompany() {
+        EmployeeRosterTestData.MultiBusinessRoster data =
+            EmployeeRosterTestData.buildMultiBusinessRoster(25, 12, false);
+        List<EmployeeRosterService.OnboardRequest> requests = additionalBusinessRequests(data, false);
+        Id reactivatedId = data.primaryRelations[0].ContactId;
+        update new Contact(Id = reactivatedId, Status__c = 'Inactive');
+        requests.add(requests[0]);
 
-        EmployeeRosterService.OnboardRequest req = newPersonRequest(companyId, null);
-        req.contactId = otherContactId;
+        Test.startTest();
+        EmployeeRosterService service = new EmployeeRosterService();
+        List<Id> resolved = service.onboard(requests);
+        service.onboard(requests);
+        List<EmployeeRosterService.EmployeeRow> rows = service.getRoster(data.otherCompanyId);
+        Test.stopTest();
+
+        Assert.areEqual(26, resolved.size(), 'Return an id for each request, including a repeated pair');
+        Assert.areEqual(25, rows.size(), 'Each additional relationship should appear exactly once');
+        for (Contact person : [SELECT AccountId, Status__c FROM Contact WHERE Id IN :data.contactIds]) {
+            Assert.areEqual(data.primaryCompanyId, person.AccountId, 'Primary company must be preserved');
+            Assert.areEqual('Active', person.Status__c, 'Onboarding should reactivate the existing Contact');
+        }
+        Set<Id> originalRelationIds = new Map<Id, AccountContactRelation>(data.otherRelations).keySet();
+        Integer reused = 0;
+        for (AccountContactRelation relation : [
+            SELECT Id, IsDirect, Roles, Family__c, Emp_Status__c
+            FROM AccountContactRelation WHERE AccountId = :data.otherCompanyId
+        ]) {
+            Assert.isFalse(relation.IsDirect, 'The additional company must not become the primary company');
+            Assert.areEqual('Owner', relation.Roles, 'The additional business should retain its Owner role');
+            Assert.isTrue(relation.Emp_Status__c, 'The additional relationship should be current');
+            if (originalRelationIds.contains(relation.Id)) {
+                reused++;
+                Assert.areEqual('EF', relation.Family__c, 'An unspecified tier must preserve the existing value');
+            }
+        }
+        Assert.areEqual(12, reused, 'Reuse all pre-existing relationships');
+        Assert.areEqual(25, [
+            SELECT COUNT() FROM AccountContactRelation
+            WHERE AccountId = :data.primaryCompanyId AND Roles = 'Employee' AND Emp_Status__c = true
+        ], 'The primary company relationships must remain unchanged');
+        Assert.areEqual(25, [
+            SELECT COUNT() FROM ContactInsuranceAssociation__c WHERE Contact__c IN :data.contactIds
+        ], 'Onboarding without insurance must leave existing coverage unchanged');
+    }
+
+    /**
+     * @description Builds requests that reuse the fixture's Contacts as Owners of the other business.
+     * @param data The two-business fixture.
+     * @param withCoverage Whether to request the other business's policy.
+     * @return One request per existing Contact.
+     */
+    private static List<EmployeeRosterService.OnboardRequest> additionalBusinessRequests(
+        EmployeeRosterTestData.MultiBusinessRoster data, Boolean withCoverage
+    ) {
+        List<EmployeeRosterService.OnboardRequest> requests = new List<EmployeeRosterService.OnboardRequest>();
+        for (AccountContactRelation primary : data.primaryRelations) {
+            EmployeeRosterService.OnboardRequest req = newPersonRequest(data.otherCompanyId, null);
+            req.contactId = primary.ContactId;
+            req.roles = 'Owner';
+            req.family = null;
+            if (withCoverage) {
+                req.insuranceId = data.otherPolicyId;
+                req.coverageStartDate = Date.today();
+                req.medical = true;
+            }
+            requests.add(req);
+        }
+        return requests;
+    }
+
+    /**
+     * @description Coverage shown on each business row belongs only to that business's policy.
+     */
+    @isTest
+    static void getRosterSeparatesCoverageByCompany() {
+        EmployeeRosterTestData.MultiBusinessRoster data =
+            EmployeeRosterTestData.buildMultiBusinessRoster(20, 20, true);
+        Id uncoveredContactId = data.primaryRelations[0].ContactId;
+        ContactInsuranceAssociation__c inactive = [
+            SELECT Id FROM ContactInsuranceAssociation__c
+            WHERE Contact__c = :uncoveredContactId AND Insurance__c = :data.otherPolicyId
+        ];
+        inactive.Active__c = false;
+        update inactive;
+
+        Test.startTest();
+        EmployeeRosterService service = new EmployeeRosterService();
+        List<EmployeeRosterService.EmployeeRow> primaryRows = service.getRoster(data.primaryCompanyId);
+        List<EmployeeRosterService.EmployeeRow> otherRows = service.getRoster(data.otherCompanyId);
+        Test.stopTest();
+
+        Assert.areEqual(20, primaryRows.size(), 'All primary relationships must be visible');
+        Assert.areEqual(20, otherRows.size(), 'All additional relationships must be visible');
+        for (EmployeeRosterService.EmployeeRow row : primaryRows) {
+            Assert.areEqual('M', row.plans, 'Primary company should show only its Medical coverage');
+            Assert.isTrue(row.activeIns, 'Primary company coverage remains active');
+        }
+        for (EmployeeRosterService.EmployeeRow row : otherRows) {
+            if (row.contactId == uncoveredContactId) {
+                Assert.isFalse(row.activeIns, 'Coverage at the other company cannot fill this company row');
+                Assert.isNull(row.plans, 'An inactive membership has no active plan initials');
+            } else {
+                Assert.areEqual('D', row.plans, 'Additional company should show only its Dental coverage');
+                Assert.isTrue(row.activeIns, 'The additional membership should be active');
+            }
+        }
+    }
+
+    /**
+     * @description Mixed-company bulk offboarding ends only the selected pairs and preserves the
+     * other memberships and Contact status until the final employment relationship ends.
+     */
+    @isTest
+    static void offboardPreservesOtherBusinesses() {
+        EmployeeRosterTestData.MultiBusinessRoster data =
+            EmployeeRosterTestData.buildMultiBusinessRoster(20, 20, true);
+        Map<Id, AccountContactRelation> otherByContact = new Map<Id, AccountContactRelation>();
+        for (AccountContactRelation relation : data.otherRelations) {
+            otherByContact.put(relation.ContactId, relation);
+        }
+        Set<Id> selected = new Set<Id>();
+        Set<Id> remaining = new Set<Id>();
+        Map<Id, Id> endedCompanyByContact = new Map<Id, Id>();
+        for (Integer i = 0; i < data.primaryRelations.size(); i++) {
+            AccountContactRelation primary = data.primaryRelations[i];
+            AccountContactRelation other = otherByContact.get(primary.ContactId);
+            Boolean endPrimary = Math.mod(i, 2) == 0;
+            selected.add(endPrimary ? primary.Id : other.Id);
+            remaining.add(endPrimary ? other.Id : primary.Id);
+            endedCompanyByContact.put(primary.ContactId,
+                endPrimary ? data.primaryCompanyId : data.otherCompanyId);
+        }
+        Date endDate = Date.today();
+
+        Test.startTest();
+        EmployeeRosterService service = new EmployeeRosterService();
+        service.offboard(selected, endDate);
+        List<ContactInsuranceAssociation__c> afterFirst = [
+            SELECT Contact__c, Insurance__r.Company__c, Active__c, Coverage_End_Date__c
+            FROM ContactInsuranceAssociation__c WHERE Contact__c IN :data.contactIds
+        ];
+        Integer activeContacts = [
+            SELECT COUNT() FROM Contact WHERE Id IN :data.contactIds AND Status__c = 'Active'
+        ];
+        Integer activeRelationships = [
+            SELECT COUNT() FROM AccountContactRelation WHERE Id IN :remaining AND Emp_Status__c = true
+        ];
+        service.offboard(remaining, endDate);
+        Test.stopTest();
+
+        Assert.areEqual(20, activeContacts, 'Contacts must remain active while another business is current');
+        Assert.areEqual(20, activeRelationships, 'Unselected business relationships must remain current');
+        Assert.areEqual(40, afterFirst.size(), 'Coverage records must be preserved');
+        for (ContactInsuranceAssociation__c membership : afterFirst) {
+            Boolean shouldEnd = membership.Insurance__r.Company__c == endedCompanyByContact.get(membership.Contact__c);
+            Assert.areEqual(!shouldEnd, membership.Active__c, 'Only the exact selected company/contact pair ends');
+            if (shouldEnd) {
+                Assert.areEqual(endDate, membership.Coverage_End_Date__c, 'Selected coverage receives the end date');
+            }
+        }
+        Assert.areEqual(20, [
+            SELECT COUNT() FROM Contact WHERE Id IN :data.contactIds AND Status__c = 'Inactive'
+        ], 'Contacts become inactive after their last current business relationship ends');
+        Assert.areEqual(0, [
+            SELECT COUNT() FROM AccountContactRelation WHERE ContactId IN :data.contactIds AND Emp_Status__c = true
+        ], 'Both sets of selected relationships should now be offboarded');
+        Set<Id> policyIds = new Set<Id>{ data.primaryPolicyId, data.otherPolicyId };
+        Assert.areEqual(2, [
+            SELECT COUNT() FROM Insurance__c WHERE Id IN :policyIds
+              AND Status__c = 'Active'
+        ], 'Neither shared policy may be inactivated');
+    }
+
+    /**
+     * @description Repeated onboarding reuses active coverage and preserves existing coverage terms.
+     */
+    @isTest
+    static void onboardReusesActiveCoverage() {
+        EmployeeRosterTestData.MultiBusinessRoster data =
+            EmployeeRosterTestData.buildMultiBusinessRoster(20, 10, true);
+        List<EmployeeRosterService.OnboardRequest> requests = additionalBusinessRequests(data, true);
+        Set<Id> existingMembers = new Set<Id>();
+        for (AccountContactRelation relation : data.otherRelations) {
+            existingMembers.add(relation.ContactId);
+        }
+
+        Test.startTest();
+        EmployeeRosterService service = new EmployeeRosterService();
+        service.onboard(requests);
+        service.onboard(requests);
+        Test.stopTest();
+
+        List<ContactInsuranceAssociation__c> memberships = [
+            SELECT Contact__c, Coverage_Start_Date__c, Medical__c, Dental__c
+            FROM ContactInsuranceAssociation__c WHERE Insurance__c = :data.otherPolicyId
+        ];
+        Assert.areEqual(20, memberships.size(), 'Repeated onboarding must not duplicate active memberships');
+        for (ContactInsuranceAssociation__c membership : memberships) {
+            Boolean existed = existingMembers.contains(membership.Contact__c);
+            Assert.areEqual(existed ? Date.today().addDays(-10) : Date.today(), membership.Coverage_Start_Date__c,
+                'Existing member start dates must be preserved');
+            Assert.areEqual(!existed, membership.Medical__c, 'Existing Medical selections must be preserved');
+            Assert.areEqual(existed, membership.Dental__c, 'Existing Dental selections must be preserved');
+        }
+        Assert.areEqual(20, [
+            SELECT COUNT() FROM ContactInsuranceAssociation__c
+            WHERE Insurance__c = :data.primaryPolicyId AND Active__c = true
+        ], 'Primary business coverage must remain unchanged');
+    }
+
+    /**
+     * @description A policy from another company rolls back the entire onboarding batch.
+     */
+    @isTest
+    static void onboardRejectsWrongCompanyPolicy() {
+        EmployeeRosterTestData.MultiBusinessRoster data =
+            EmployeeRosterTestData.buildMultiBusinessRoster(20, 0, false);
+        List<EmployeeRosterService.OnboardRequest> requests = new List<EmployeeRosterService.OnboardRequest>();
+        for (Integer i = 0; i < 20; i++) {
+            EmployeeRosterService.OnboardRequest req = newPersonRequest(data.otherCompanyId, 'Rejected Owner ' + i);
+            req.insuranceId = data.primaryPolicyId;
+            requests.add(req);
+        }
 
         Test.startTest();
         try {
-            new EmployeeRosterService().onboard(new List<EmployeeRosterService.OnboardRequest>{ req });
-            Assert.fail('Expected EmployeeOnboardException for a contact at another company');
+            new EmployeeRosterService().onboard(requests);
+            Assert.fail('A policy belonging to another business must be rejected');
         } catch (EmployeeRosterService.EmployeeOnboardException ex) {
-            Assert.isTrue(ex.getMessage().contains('Roster Other Co'),
-                'The message should name the company the contact already belongs to');
+            Assert.areEqual(Label.EmployeeRoster_InvalidCompanyPolicy, ex.getMessage(),
+                'The message should explain which policy can be selected');
         }
         Test.stopTest();
+
+        Assert.areEqual(0, [SELECT COUNT() FROM Contact WHERE LastName LIKE 'Rejected Owner%'],
+            'The invalid batch must not leave new Contacts behind');
+        Assert.areEqual(0, [SELECT COUNT() FROM AccountContactRelation WHERE AccountId = :data.otherCompanyId],
+            'The invalid batch must not leave employment relationships behind');
+    }
+
+    /**
+     * @description User-mode reads reject onboarding without Contact access and leave every
+     * existing business relationship intact.
+     */
+    @isTest
+    static void onboardHonorsUserPermissions() {
+        EmployeeRosterTestData.MultiBusinessRoster data =
+            EmployeeRosterTestData.buildMultiBusinessRoster(20, 0, false);
+        User restricted = EmployeeRosterTestData.createRestrictedUser();
+        List<EmployeeRosterService.OnboardRequest> requests = additionalBusinessRequests(data, false);
+        Boolean rejected = false;
+
+        Test.startTest();
+        System.runAs(restricted) {
+            try {
+                new EmployeeRosterService().onboard(requests);
+            } catch (QueryException ex) {
+                rejected = true;
+            }
+        }
+        Test.stopTest();
+
+        Assert.isTrue(rejected, 'A user without Contact access must be rejected in user mode');
+        Assert.areEqual(0, [SELECT COUNT() FROM AccountContactRelation WHERE AccountId = :data.otherCompanyId],
+            'A rejected user must not create additional business relationships');
+        Assert.areEqual(20, [
+            SELECT COUNT() FROM Contact WHERE Id IN :data.contactIds AND AccountId = :data.primaryCompanyId
+        ], 'Primary companies must be unchanged after permission failure');
     }
 
     /**

@@ -1,7 +1,6 @@
 /**
- * @description Business logic for the company Employee Roster: lists a company's active employees,
- * onboards new ones (employment relationship plus optional group-health coverage), and offboards
- * them (ends group-health coverage, clears employment, marks the Contact inactive).
+ * @description Manages company-specific employee and owner relationships and group-health
+ * coverage while preserving each Contact's primary company and other business relationships.
  * @author Liam Jeong <liam.jeong@5sinfusion.com>
  */
 public with sharing class EmployeeRosterService {
@@ -17,8 +16,7 @@ public with sharing class EmployeeRosterService {
     public class EmployeeOffboardException extends Exception {}
 
     /**
-     * @description Raised when an onboard request is incomplete, or when the person it names cannot
-     * be employed by the requested company (for example they already belong to another one).
+     * @description Raised when an onboard request cannot identify a person, company or valid policy.
      */
     public class EmployeeOnboardException extends Exception {}
 
@@ -112,24 +110,19 @@ public with sharing class EmployeeRosterService {
     }
 
     /**
-     * @description Returns every employee (active and inactive) for a company account AND all of
-     * its sub-companies in the account hierarchy, with the roster display fields, in the running
-     * user's context. On a parent this rolls up the whole hierarchy so all employees are visible at
-     * once; on a leaf company it returns only that company. Emp.Status is display-only here; it is
-     * changed only through offboard.
+     * @description Returns direct and additional company relationships, including inactive ones,
+     * for a company and its descendants. A person related to several companies has one row per
+     * company so roles, employment status and coverage remain specific to that relationship.
      * @param accountId The company account whose roster to list (root of the roll-up).
      * @return The employee rows, ordered by company then contact name.
      */
     public List<EmployeeRow> getRoster(Id accountId) {
         Set<Id> accountIds = collectHierarchy(accountId);
-        // IsDirect = true keeps the roster to people directly employed by each company; it also
-        // prevents a contact who was reparented to a sub-company (leaving an indirect relationship
-        // on the parent) from appearing twice in a parent's hierarchy roll-up.
         List<AccountContactRelation> relations = [
             SELECT Id, ContactId, Contact.Name, Roles, Emp_Status__c, AccountId, Account.Name,
                    Family__c
             FROM AccountContactRelation
-            WHERE AccountId IN :accountIds AND IsDirect = true
+            WHERE AccountId IN :accountIds
             WITH USER_MODE
             ORDER BY Account.Name, Contact.Name
         ];
@@ -138,7 +131,7 @@ public with sharing class EmployeeRosterService {
         for (AccountContactRelation acr : relations) {
             contactIds.add(acr.ContactId);
         }
-        Map<Id, String> coverageByContact = summarizeCoverage(contactIds);
+        Map<String, String> coverageByPair = summarizeCoverage(accountIds, contactIds);
 
         List<EmployeeRow> rows = new List<EmployeeRow>();
         for (AccountContactRelation acr : relations) {
@@ -148,9 +141,10 @@ public with sharing class EmployeeRosterService {
             row.name = acr.Contact.Name;
             row.contactUrl = '/' + acr.ContactId;
             row.roles = acr.Roles;
-            row.plans = coverageByContact.get(acr.ContactId);
+            String key = pairKey(acr.AccountId, acr.ContactId);
+            row.plans = coverageByPair.get(key);
             row.family = acr.Family__c;
-            row.activeIns = coverageByContact.containsKey(acr.ContactId);
+            row.activeIns = coverageByPair.containsKey(key);
             row.empStatus = acr.Emp_Status__c;
             row.company = acr.Account.Name;
             row.companyId = acr.AccountId;
@@ -161,32 +155,29 @@ public with sharing class EmployeeRosterService {
     }
 
     /**
-     * @description Summarizes each contact's coverage as the initials of the plan types they are
-     * currently enrolled in — "M / D / V", "M", and so on. Computed here rather than read from the
-     * Contact roll-up fields because those are maintained by an asynchronous orchestration, so a
-     * person onboarded moments ago would show a blank Plans column until the roll-up caught up.
-     * Coverage counts only when BOTH the junction is still Active and the linked policy is Active.
-     * The junction check is what makes leavers drop off: offboarding inactivates the junction but
-     * leaves the company's shared group policy Active for everyone still on it, so filtering on the
-     * policy alone would keep an offboarded employee showing active coverage for as long as the
-     * company keeps the plan.
+     * @description Summarizes active group-health coverage separately for each company/contact
+     * pair. Both the membership and its policy must be active.
+     * @param accountIds The companies whose coverage to summarize.
      * @param contactIds The contacts to summarize.
-     * @return The coverage summary per contact; a contact with no active coverage is absent.
+     * @return Plan initials keyed by company/contact pair; uncovered pairs are absent.
      */
-    private Map<Id, String> summarizeCoverage(Set<Id> contactIds) {
-        Map<Id, Set<String>> typesByContact = new Map<Id, Set<String>>();
+    private Map<String, String> summarizeCoverage(Set<Id> accountIds, Set<Id> contactIds) {
+        Map<String, Set<String>> typesByPair = new Map<String, Set<String>>();
         for (ContactInsuranceAssociation__c cia : [
-            SELECT Contact__c, Medical__c, Dental__c, Vision__c
+            SELECT Contact__c, Insurance__r.Company__c, Medical__c, Dental__c, Vision__c
             FROM ContactInsuranceAssociation__c
             WHERE Contact__c IN :contactIds
+              AND Insurance__r.Company__c IN :accountIds
               AND Active__c = true
               AND Insurance__r.Status__c = :INSURANCE_ACTIVE
+              AND Insurance__r.RecordType.DeveloperName = :GROUP_HEALTH_RT
             WITH USER_MODE
         ]) {
-            Set<String> types = typesByContact.get(cia.Contact__c);
+            String key = pairKey(cia.Insurance__r.Company__c, cia.Contact__c);
+            Set<String> types = typesByPair.get(key);
             if (types == null) {
                 types = new Set<String>();
-                typesByContact.put(cia.Contact__c, types);
+                typesByPair.put(key, types);
             }
             if (cia.Medical__c) {
                 types.add('M');
@@ -199,17 +190,17 @@ public with sharing class EmployeeRosterService {
             }
         }
 
-        Map<Id, String> summaryByContact = new Map<Id, String>();
-        for (Id contactId : typesByContact.keySet()) {
+        Map<String, String> summaryByPair = new Map<String, String>();
+        for (String key : typesByPair.keySet()) {
             List<String> ordered = new List<String>();
             for (String code : new List<String>{ 'M', 'D', 'V' }) {
-                if (typesByContact.get(contactId).contains(code)) {
+                if (typesByPair.get(key).contains(code)) {
                     ordered.add(code);
                 }
             }
-            summaryByContact.put(contactId, String.join(ordered, ' / '));
+            summaryByPair.put(key, String.join(ordered, ' / '));
         }
-        return summaryByContact;
+        return summaryByPair;
     }
 
     /**
@@ -237,9 +228,8 @@ public with sharing class EmployeeRosterService {
     }
 
     /**
-     * @description Offboards one or more employees: ends and inactivates their active group-health
-     * coverage junctions (the shared group policy itself is left intact), turns off employment
-     * (Emp.Status) on the relationship, and marks their Contacts inactive. Bulk-safe, user-mode DML.
+     * @description Ends employment and group-health memberships only for the selected company/
+     * contact pairs. A Contact becomes inactive only when no other employed relationship remains.
      * @param acrIds The AccountContactRelation ids to offboard.
      * @param endDate The coverage end date to stamp on the junctions; defaults to today when null.
      */
@@ -250,7 +240,7 @@ public with sharing class EmployeeRosterService {
         Date effectiveEnd = endDate == null ? Date.today() : endDate;
 
         Map<Id, AccountContactRelation> acrById = new Map<Id, AccountContactRelation>([
-            SELECT Id, ContactId
+            SELECT Id, AccountId, ContactId
             FROM AccountContactRelation
             WHERE Id IN :acrIds
             WITH USER_MODE
@@ -260,21 +250,29 @@ public with sharing class EmployeeRosterService {
         }
 
         Set<Id> contactIds = new Set<Id>();
+        Set<Id> accountIds = new Set<Id>();
+        Set<String> selectedPairs = new Set<String>();
         for (AccountContactRelation acr : acrById.values()) {
             contactIds.add(acr.ContactId);
+            accountIds.add(acr.AccountId);
+            selectedPairs.add(pairKey(acr.AccountId, acr.ContactId));
         }
 
-        List<ContactInsuranceAssociation__c> coverageToEnd = [
-            SELECT Id
+        List<ContactInsuranceAssociation__c> coverageToEnd = new List<ContactInsuranceAssociation__c>();
+        for (ContactInsuranceAssociation__c cia : [
+            SELECT Id, Contact__c, Insurance__r.Company__c
             FROM ContactInsuranceAssociation__c
             WHERE Contact__c IN :contactIds
+              AND Insurance__r.Company__c IN :accountIds
               AND Active__c = true
               AND Insurance__r.RecordType.DeveloperName = :GROUP_HEALTH_RT
             WITH USER_MODE
-        ];
-        for (ContactInsuranceAssociation__c cia : coverageToEnd) {
-            cia.Coverage_End_Date__c = effectiveEnd;
-            cia.Active__c = false;
+        ]) {
+            if (selectedPairs.contains(pairKey(cia.Insurance__r.Company__c, cia.Contact__c))) {
+                coverageToEnd.add(new ContactInsuranceAssociation__c(
+                    Id = cia.Id, Coverage_End_Date__c = effectiveEnd, Active__c = false
+                ));
+            }
         }
 
         List<AccountContactRelation> employmentUpdates = new List<AccountContactRelation>();
@@ -282,16 +280,28 @@ public with sharing class EmployeeRosterService {
             employmentUpdates.add(new AccountContactRelation(Id = acrId, Emp_Status__c = false));
         }
 
+        Set<Id> stillEmployed = new Set<Id>();
+        for (AccountContactRelation remaining : [
+            SELECT ContactId FROM AccountContactRelation
+            WHERE ContactId IN :contactIds AND Id NOT IN :acrIds AND Emp_Status__c = true
+            WITH USER_MODE
+        ]) {
+            stillEmployed.add(remaining.ContactId);
+        }
         List<Contact> contactUpdates = new List<Contact>();
         for (Id contactId : contactIds) {
-            contactUpdates.add(new Contact(Id = contactId, Status__c = CONTACT_INACTIVE));
+            if (!stillEmployed.contains(contactId)) {
+                contactUpdates.add(new Contact(Id = contactId, Status__c = CONTACT_INACTIVE));
+            }
         }
 
         if (!coverageToEnd.isEmpty()) {
             Database.update(coverageToEnd, AccessLevel.USER_MODE);
         }
         Database.update(employmentUpdates, AccessLevel.USER_MODE);
-        Database.update(contactUpdates, AccessLevel.USER_MODE);
+        if (!contactUpdates.isEmpty()) {
+            Database.update(contactUpdates, AccessLevel.USER_MODE);
+        }
     }
 
     /**
@@ -374,12 +384,9 @@ public with sharing class EmployeeRosterService {
     }
 
     /**
-     * @description Adds people to a company as employees and, where a policy is named, enrols them
-     * into it in the same transaction. The employment relationship is never inserted: setting
-     * Contact.AccountId makes the platform create the direct AccountContactRelation, which this
-     * method then updates. Inserting one instead would either collide with that record or produce
-     * an indirect relationship the roster does not list. All-or-nothing — any failure rolls the
-     * whole batch back. Bulk-safe, user-mode DML.
+     * @description Adds people to companies without replacing existing primary companies, reuses
+     * existing relationships and active memberships, and creates missing ones in user mode.
+     * Any failure rolls back the whole batch.
      * @param requests The people to onboard.
      * @return The contact id per request, in request order.
      */
@@ -417,9 +424,8 @@ public with sharing class EmployeeRosterService {
     }
 
     /**
-     * @description Resolves each request to a contact that belongs to the requested company:
-     * inserts the new people, and attaches the existing ones that are not yet tied to a company.
-     * A person already employed by a different company is rejected rather than silently reparented.
+     * @description Resolves new and existing Contacts, filling a primary company only when blank.
+     * A Contact requested for several companies keeps the first primary company assigned.
      * @param requests The onboard requests, in order.
      * @return The contact id per request, in request order.
      */
@@ -448,13 +454,13 @@ public with sharing class EmployeeRosterService {
         }
 
         Map<Id, Contact> existingById = new Map<Id, Contact>([
-            SELECT Id, AccountId, Account.Name, Status__c
+            SELECT Id, AccountId, Status__c
             FROM Contact
             WHERE Id IN :existingIds
             WITH USER_MODE
         ]);
 
-        List<Contact> toUpdate = new List<Contact>();
+        Map<Id, Contact> toUpdate = new Map<Id, Contact>();
         for (OnboardRequest req : requests) {
             if (req.contactId == null) {
                 continue;
@@ -463,18 +469,14 @@ public with sharing class EmployeeRosterService {
             if (person == null) {
                 throw new EmployeeOnboardException('The selected contact no longer exists.');
             }
-            if (person.AccountId != null && person.AccountId != req.accountId) {
-                throw new EmployeeOnboardException(
-                    person.Account.Name + ' is already this contact\'s company. ' +
-                    'Change the contact\'s Company first, or record the second company from the ' +
-                    'Related Contacts list on the account.');
-            }
             if (person.AccountId == null || person.Status__c != CONTACT_ACTIVE) {
-                toUpdate.add(new Contact(
-                    Id = person.Id,
-                    AccountId = req.accountId,
-                    Status__c = CONTACT_ACTIVE
-                ));
+                Contact changed = new Contact(Id = person.Id, Status__c = CONTACT_ACTIVE);
+                if (person.AccountId == null) {
+                    changed.AccountId = req.accountId;
+                    person.AccountId = req.accountId;
+                }
+                person.Status__c = CONTACT_ACTIVE;
+                toUpdate.put(person.Id, changed);
             }
         }
 
@@ -483,7 +485,7 @@ public with sharing class EmployeeRosterService {
             Database.insert(toInsert, AccessLevel.USER_MODE);
         }
         if (!toUpdate.isEmpty()) {
-            Database.update(toUpdate, AccessLevel.USER_MODE);
+            Database.update(toUpdate.values(), AccessLevel.USER_MODE);
         }
 
         List<Id> contactIds = new List<Id>();
@@ -497,8 +499,8 @@ public with sharing class EmployeeRosterService {
     }
 
     /**
-     * @description Stamps Roles, coverage tier and employment status onto the direct relationship
-     * the platform created for each company/contact pair.
+     * @description Reuses direct or indirect company/contact relationships and creates missing
+     * indirect ones. Unspecified roles and coverage tiers retain their existing values.
      * @param requests The onboard requests, in order.
      * @param contactIds The resolved contact id per request, in the same order.
      */
@@ -512,41 +514,90 @@ public with sharing class EmployeeRosterService {
         for (AccountContactRelation relation : [
             SELECT Id, AccountId, ContactId
             FROM AccountContactRelation
-            WHERE AccountId IN :accountIds AND ContactId IN :contactIds AND IsDirect = true
+            WHERE AccountId IN :accountIds AND ContactId IN :contactIds
             WITH USER_MODE
         ]) {
             relationByPair.put(pairKey(relation.AccountId, relation.ContactId), relation);
         }
 
-        List<AccountContactRelation> updates = new List<AccountContactRelation>();
+        Map<String, AccountContactRelation> changesByPair = new Map<String, AccountContactRelation>();
         for (Integer i = 0; i < requests.size(); i++) {
             OnboardRequest req = requests[i];
-            AccountContactRelation relation = relationByPair.get(pairKey(req.accountId, contactIds[i]));
-            if (relation == null) {
-                throw new EmployeeOnboardException('The employment relationship could not be created.');
+            String key = pairKey(req.accountId, contactIds[i]);
+            AccountContactRelation change = changesByPair.get(key);
+            if (change == null) {
+                AccountContactRelation existing = relationByPair.get(key);
+                change = existing == null
+                    ? new AccountContactRelation(AccountId = req.accountId, ContactId = contactIds[i])
+                    : new AccountContactRelation(Id = existing.Id);
+                changesByPair.put(key, change);
             }
-            updates.add(new AccountContactRelation(
-                Id = relation.Id,
-                Roles = req.roles,
-                Family__c = req.family,
-                Emp_Status__c = req.empStatus == null ? true : req.empStatus
-            ));
+            if (String.isNotBlank(req.roles)) {
+                change.Roles = req.roles;
+            }
+            if (String.isNotBlank(req.family)) {
+                change.Family__c = req.family;
+            }
+            change.Emp_Status__c = req.empStatus == null ? true : req.empStatus;
         }
-        Database.update(updates, AccessLevel.USER_MODE);
+        List<AccountContactRelation> inserts = new List<AccountContactRelation>();
+        List<AccountContactRelation> updates = new List<AccountContactRelation>();
+        for (AccountContactRelation change : changesByPair.values()) {
+            if (change.Id == null) {
+                inserts.add(change);
+            } else {
+                updates.add(change);
+            }
+        }
+        if (!inserts.isEmpty()) {
+            Database.insert(inserts, AccessLevel.USER_MODE);
+        }
+        if (!updates.isEmpty()) {
+            Database.update(updates, AccessLevel.USER_MODE);
+        }
     }
 
     /**
-     * @description Creates the group-health coverage junction for every request that named a policy.
-     * The member-level start date is taken from the request (defaulting to today) and is
-     * authoritative — the group policy's own start date does not apply to a mid-term joiner.
+     * @description Creates missing active memberships only for active group-health policies of
+     * the requested company. Existing active memberships retain their dates and coverage choices.
      * @param requests The onboard requests, in order.
      * @param contactIds The resolved contact id per request, in the same order.
      */
     private void createCoverage(List<OnboardRequest> requests, List<Id> contactIds) {
+        Set<Id> policyIds = new Set<Id>();
+        for (OnboardRequest req : requests) {
+            if (req.insuranceId != null) {
+                policyIds.add(req.insuranceId);
+            }
+        }
+        if (policyIds.isEmpty()) {
+            return;
+        }
+        Map<Id, Insurance__c> policiesById = new Map<Id, Insurance__c>([
+            SELECT Id, Company__c FROM Insurance__c
+            WHERE Id IN :policyIds AND Status__c = :INSURANCE_ACTIVE
+              AND RecordType.DeveloperName = :GROUP_HEALTH_RT
+            WITH USER_MODE
+        ]);
+        Set<String> activeMemberships = new Set<String>();
+        for (ContactInsuranceAssociation__c existing : [
+            SELECT Insurance__c, Contact__c FROM ContactInsuranceAssociation__c
+            WHERE Insurance__c IN :policyIds AND Contact__c IN :contactIds AND Active__c = true
+            WITH USER_MODE
+        ]) {
+            activeMemberships.add(pairKey(existing.Insurance__c, existing.Contact__c));
+        }
         List<ContactInsuranceAssociation__c> coverage = new List<ContactInsuranceAssociation__c>();
         for (Integer i = 0; i < requests.size(); i++) {
             OnboardRequest req = requests[i];
             if (req.insuranceId == null) {
+                continue;
+            }
+            Insurance__c policy = policiesById.get(req.insuranceId);
+            if (policy == null || policy.Company__c != req.accountId) {
+                throw new EmployeeOnboardException(Label.EmployeeRoster_InvalidCompanyPolicy);
+            }
+            if (!activeMemberships.add(pairKey(req.insuranceId, contactIds[i]))) {
                 continue;
             }
             coverage.add(new ContactInsuranceAssociation__c(
@@ -565,12 +616,12 @@ public with sharing class EmployeeRosterService {
     }
 
     /**
-     * @description Builds the map key identifying one company/contact employment pair.
-     * @param accountId The company account id.
+     * @description Builds a composite key for a company or policy and a Contact.
+     * @param parentId The company account or insurance policy id.
      * @param contactId The contact id.
      * @return The composite key.
      */
-    private String pairKey(Id accountId, Id contactId) {
-        return String.valueOf(accountId) + ':' + String.valueOf(contactId);
+    private String pairKey(Id parentId, Id contactId) {
+        return String.valueOf(parentId) + ':' + String.valueOf(contactId);
     }
 }

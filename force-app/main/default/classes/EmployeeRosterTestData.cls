@@ -53,7 +53,7 @@ public with sharing class EmployeeRosterTestData {
 
         Set<Id> employeeIds = new Map<Id, Contact>(employees).keySet();
         List<AccountContactRelation> relations = [
-            SELECT Id, ContactId FROM AccountContactRelation
+            SELECT Id, AccountId, ContactId FROM AccountContactRelation
             WHERE AccountId = :company.Id AND ContactId IN :employeeIds
         ];
         for (AccountContactRelation relation : relations) {
@@ -73,6 +73,95 @@ public with sharing class EmployeeRosterTestData {
         }
         insert coverage;
         return relations;
+    }
+
+    /**
+     * @description Two-business fixture with shared Contacts, separate policies and relationships.
+     * @author Liam Jeong <liam.jeong@5sinfusion.com>
+     */
+    public class MultiBusinessRoster {
+        public Id primaryCompanyId;
+        public Id otherCompanyId;
+        public Id primaryPolicyId;
+        public Id otherPolicyId;
+        public Set<Id> contactIds = new Set<Id>();
+        public List<AccountContactRelation> primaryRelations;
+        public List<AccountContactRelation> otherRelations = new List<AccountContactRelation>();
+    }
+
+    /**
+     * @description Builds two businesses whose relationships and coverage can share Contacts.
+     * @param employeeCount Number of Contacts at the primary company.
+     * @param relatedCount Number also linked as Owners at the other company.
+     * @param withCoverage Whether those additional relationships have Dental coverage.
+     * @return The synthetic companies, policies, Contacts and relationships.
+     */
+    public static MultiBusinessRoster buildMultiBusinessRoster(
+        Integer employeeCount, Integer relatedCount, Boolean withCoverage
+    ) {
+        MultiBusinessRoster data = new MultiBusinessRoster();
+        data.primaryRelations = buildRoster(employeeCount);
+        data.primaryCompanyId = data.primaryRelations[0].AccountId;
+        Account primary = [SELECT RecordTypeId FROM Account WHERE Id = :data.primaryCompanyId];
+        Account other = new Account(Name = 'Roster Additional Business', RecordTypeId = primary.RecordTypeId);
+        insert other;
+        data.otherCompanyId = other.Id;
+
+        Insurance__c primaryPolicy = [
+            SELECT Name, RecordTypeId, Company__c, Insurance_Provider__c, Policy_Holder__c,
+                   Status__c, Insurance_Start_Date__c, Insurance_Term_months__c
+            FROM Insurance__c WHERE Company__c = :data.primaryCompanyId LIMIT 1
+        ];
+        data.primaryPolicyId = primaryPolicy.Id;
+        Insurance__c otherPolicy = primaryPolicy.clone(false, false, false, false);
+        otherPolicy.Name = 'ROSTER-ADDITIONAL-GH-TEST';
+        otherPolicy.Company__c = other.Id;
+        insert otherPolicy;
+        data.otherPolicyId = otherPolicy.Id;
+
+        List<ContactInsuranceAssociation__c> coverage = new List<ContactInsuranceAssociation__c>();
+        for (Integer i = 0; i < data.primaryRelations.size(); i++) {
+            Id contactId = data.primaryRelations[i].ContactId;
+            data.contactIds.add(contactId);
+            if (i < relatedCount) {
+                data.otherRelations.add(new AccountContactRelation(
+                    AccountId = other.Id, ContactId = contactId, Roles = 'Owner',
+                    Family__c = 'EF', Emp_Status__c = true
+                ));
+                if (withCoverage) {
+                    coverage.add(new ContactInsuranceAssociation__c(
+                        Contact__c = contactId, Insurance__c = otherPolicy.Id,
+                        Active__c = true, Medical__c = false, Dental__c = true,
+                        Coverage_Start_Date__c = Date.today().addDays(-10)
+                    ));
+                }
+            }
+        }
+        if (!data.otherRelations.isEmpty()) {
+            insert data.otherRelations;
+        }
+        if (!coverage.isEmpty()) {
+            insert coverage;
+        }
+        return data;
+    }
+
+    /**
+     * @description Creates a minimum-access user for CRUD/FLS rejection tests.
+     * @return The synthetic user without roster permissions.
+     */
+    public static User createRestrictedUser() {
+        Id profileId = [SELECT Id FROM Profile WHERE Name = 'Minimum Access - Salesforce' LIMIT 1].Id;
+        User restricted = new User(
+            ProfileId = profileId, Username = 'roster.' + Crypto.getRandomLong() + '@example.invalid',
+            Email = 'roster@example.invalid', LastName = 'Roster Restricted', Alias = 'roster',
+            TimeZoneSidKey = 'America/Chicago', LocaleSidKey = 'en_US',
+            EmailEncodingKey = 'UTF-8', LanguageLocaleKey = 'en_US'
+        );
+        System.runAs(new User(Id = UserInfo.getUserId())) {
+            insert restricted;
+        }
+        return restricted;
     }
 
     /**
