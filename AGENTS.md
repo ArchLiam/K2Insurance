@@ -84,14 +84,15 @@
 2. 보험사와 Individual/Group 유형, `Payment_Period__c`의 `YYYY-MM`을 정합니다. 월은 폴더와 원본 명세의 의미를 대조하고 `July`도 7월로 처리합니다. 지급월·커미션 발생일·보장기간을 혼동하지 않으며, 과거 자료의 연도를 실행 시점의 현재 연도로 자동 확정하지 않습니다.
 3. 파일 해시와 원본 행을 비교해 같은 월의 사본, 다른 월에 복제된 파일, Excel/CSV 중복을 확인합니다. 내용이 같다는 이유만으로 정상 지급을 임의로 제거하지 말고 해당 지급월의 자료가 맞는지 확인합니다. Salesforce에서도 보험사 × 지급월 × 유형의 기존 Statement를 조회합니다. 추가 명세나 여러 에이전트 파일을 합칠 때는 원본 출처를 유지하고 기존 행과의 중복을 검증합니다. 스킬의 중복 재임포트 확인 규칙은 이미 해당 중복 처리를 승인한 사용자 지시가 있으면 재질문하지 않습니다.
 4. `normalize.py`와 보험사 YAML을 이용해 정규화하고 원본 대비 행 수·금액·날짜를 대조합니다. `Commission_Amount__c`가 실제 API 이름이며, `Commnission Amount`는 레이블의 오타입니다. 음수 환수액과 0을 보존하고 합계/footer를 상세 행으로 임포트하지 않습니다.
-5. `Insurance__c` 매칭은 Active/올해 계약으로만 제한하지 않습니다. `Policy_Number_Imported__c`에는 원본 증권번호를 항상 보존하고, 검증된 Insurance ID만 `Policy_Number__c`에 넣습니다. 매칭되지 않은 행은 임의로 연결하지 않습니다. 아래 보완 규칙을 적용하고, Individual은 계약자명, Group은 연결 회사 정보까지 대조합니다.
+5. `Insurance__c` 후보는 상태·계약연도와 관계없이 조회하고, 원본 증권번호와 `Insurance__c.Policy_Number__c`가 문자열 그대로 일치하는 레코드만 고려합니다. `Policy_Number_Imported__c`에는 원본 번호를 항상 보존합니다. 원본 근거로 특정 보험이 확정되면 해당 ID를 연결합니다. 그렇지 않더라도 정확히 같은 번호의 **Active 보험이 전체 후보 중 하나뿐이면 동일 보험으로 추정해** `Policy_Number__c`에 연결합니다. 이때 계약자·회사·이름·상품·기간 차이만으로 보류하지 않고, `Active 추정 연결`로 근거를 기록합니다. Active 후보가 없거나 둘 이상이고 다른 근거로도 특정할 수 없으면 룩업을 비워 둡니다.
 6. 대상 Org의 쓰기 가능한 필드와 Picklist를 재확인한 뒤 부모 `Commission_Statement__c`를 만들고 상세 `Commission_Line__c`를 연결해 임포트합니다. 로컬 메타데이터의 Statement `Name`은 AutoNumber이므로 직접 쓰지 않으며 formula/rollup 필드도 입력에서 제외합니다. 현재 상태 값은 `In Process`, `Uploaded`, `Done`, `Need Review`입니다.
 7. Bulk API 입력의 실제 줄바꿈과 `--line-ending`을 일치시킵니다. 기존 Python CSV 출력은 CRLF를 사용합니다. 성공 후 원본 파일을 관련 Statement에 첨부하고 `Total_Lines__c`/`Total_Amount__c`를 원본과 대조합니다. 상태는 스킬 절차대로 성공 시 `Uploaded`, 실패 시 `Need Review`로 처리하며, 부분 성공·실패 행·첨부 실패를 구분해 보고합니다. 실패 작업을 전체 재실행하기 전에 이미 생성된 부모와 상세 행을 조회합니다.
 
 ### 기존 스킬 재사용 시 보완할 사항
 
 - **Humana 날짜:** `CommRunDt`에는 `D-M-YY` 형식이 실제로 섞여 있고, 현재 `normalize.py`의 날짜 파서는 이를 처리하지 못합니다. 형식을 확인해 임시 사본에서 변환하고 날짜 누락을 검사합니다. Salesforce에는 원본을 첨부합니다.
-- **증권번호 충돌:** 현재 `resolve_map.py`/`stitch.py`는 앞자리 0을 제거하고, 중복 후보는 Active → 최신 시작일 → Id 순으로 줄입니다. 이를 올바른 매칭의 증거로 삼지 않습니다. 서로 다른 원본 번호가 하나로 합쳐지는 충돌과 갱신 연도별 후보를 검사하고, 번호·계약자·보장기간으로 검증되지 않은 후보는 미매칭/검토 대상으로 둡니다. 매칭률만 높이기 위해 선택하지 않습니다.
+- **증권번호와 Active 추정 연결:** 앞자리 0·대소문자·구두점·공백을 바꾸어 번호를 일치시키지 않습니다. 정확히 같은 번호에 Active 보험이 하나뿐이면 위 업무 규칙에 따라 연결하고, 이전 연도 Inactive나 이름·상품 차이가 있어도 자동 제외하지 않습니다. Active가 여러 개일 때 최신 시작일이나 Id로 임의 선택하지 않습니다. 임포트 스킬의 `resolve_map.py`/`stitch.py`도 이 정확한 문자열 비교와 유일 Active 규칙을 따라야 하므로, 실행 전 실제 스크립트 동작을 확인합니다.
+- **UHC Individual의 복수 Active 후보:** 원본 증권번호가 정확히 같고 Active 보험이 둘 이상이면 보험사·계약자·상품·담당 Agent를 대조합니다. 이 값들이 같고 명세서 지급월을 포함하는 시작일·종료일이 모두 있는 후보가 정확히 하나이며 다른 Active 후보의 기간은 비어 있다면, 기간이 명시된 후보에 **추정 연결**하고 선택 근거를 기록합니다. 지급월만으로 보장월을 확정한 것으로 표현하지 않습니다. 후보들의 신원·상품·Agent가 다르거나 날짜가 있는 후보도 여러 개라면 임의로 선택하지 않습니다. 번호가 정확히 일치하는 후보가 없으면 연결하지 않습니다.
 - **Wellpoint 합계:** `Product Subcategory`로 합계 행을 제외하는 매핑을 확인합니다. `skipped_unknown_type_rows`가 실제 합계 행 수와 맞는지 검사해 새 상품 유형의 정상 행이 함께 탈락하지 않게 합니다. 괄호 금액은 환수액으로 처리합니다.
 - **Claude의 보충 기록:** `~/.claude/projects/-Users-liamjeong-Documents-Code-K2Insurance/memory/`의 `commission-import-prod-schema-discrepancies.md`, `commission-import-broaden-insurance-match.md`, `humana-commrundt-dash-date.md`, `commission-2025-backfill-mislinked.md`에 스키마 수정과 과거 오류 조사 내용이 있습니다. 이 기록의 운영 수치·상태는 현재 사실로 단정하지 말고 대상 Org에서 재확인합니다. 과거 오류 메모 자체를 운영 데이터 수정의 승인으로 해석하지 않습니다.
 
