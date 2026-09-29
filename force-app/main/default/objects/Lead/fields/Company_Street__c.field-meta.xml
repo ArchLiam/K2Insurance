@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Company_Street__c</fullName>
+    <description>Company street address. Kept separate from the contact address and copied to the Company Billing Street during conversion.</description>
+    <inlineHelpText>Company street address. Kept separate from the contact address and copied to the Company Billing Street during conversion.</inlineHelpText>
+    <label>Company Street</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>TextArea</type>
+</CustomField>

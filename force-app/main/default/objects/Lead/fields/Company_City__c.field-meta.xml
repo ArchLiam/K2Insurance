@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Company_City__c</fullName>
+    <description>Company city. Copied to the Company Billing City during conversion.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Company city. Copied to the Company Billing City during conversion.</inlineHelpText>
+    <label>Company City</label>
+    <length>40</length>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

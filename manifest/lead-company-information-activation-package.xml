@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Lead_Convert_Collection</members>
+        <members>Lead_Convert_Single</members>
+        <members>Lead_to_Contact_Conversion</members>
+        <name>FlowDefinition</name>
+    </types>
+    <version>67.0</version>
+</Package>

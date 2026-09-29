@@ -6,6 +6,29 @@
     <description>Lead record type for prospects whose company information arrives with them - commercial lines and group health. Converts to an Account (company) alongside the Contact.</description>
     <label>Commercial / Group Health</label>
     <picklistValues>
+        <picklist>Company_Type__c</picklist>
+        <values>
+            <fullName>C-Corp</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>LLC</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>S-Corp</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sole Proprietorship</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
         <picklist>County__c</picklist>
         <values>
             <fullName>Anderson County</fullName>
@@ -1025,6 +1048,57 @@
         </values>
     </picklistValues>
     <picklistValues>
+        <picklist>Familial_Relationship__c</picklist>
+        <values>
+            <fullName>Brother</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Daughter</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Father</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Father in Law</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Grandfather</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Grandmother</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mother</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Mother in Law</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sister</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Son</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Spouse</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
         <picklist>GenderIdentity</picklist>
         <values>
             <fullName>Female</fullName>
@@ -1156,6 +1230,25 @@
         </values>
         <values>
             <fullName>Web</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>Medicaid_Eligibility__c</picklist>
+        <values>
+            <fullName>MQMB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>No</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>QMB</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SLMB</fullName>
             <default>false</default>
         </values>
     </picklistValues>

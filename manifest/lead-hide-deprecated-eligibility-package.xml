@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Commercial_Group_Health_Lead_Record_Page</members>
+        <members>Health_Lead_Record_Page</members>
+        <members>Medicare_Lead_Record_Page</members>
+        <members>Others_Lead_Lightning_Record_Page</members>
+        <name>FlexiPage</name>
+    </types>
+    <types>
+        <members>Lead-Lead Layout</members>
+        <name>Layout</name>
+    </types>
+    <version>67.0</version>
+</Package>

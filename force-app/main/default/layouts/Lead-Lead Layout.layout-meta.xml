@@ -136,10 +136,6 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Depricated_Eligibility_Start_Date__c</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
                 <field>Household_size__c</field>
             </layoutItems>
             <layoutItems>
