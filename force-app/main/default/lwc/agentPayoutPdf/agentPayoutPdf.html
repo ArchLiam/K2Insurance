@@ -1,0 +1,30 @@
+<template>
+    <lightning-card title={labels.title} icon-name="doctype:pdf">
+        <lightning-button-icon slot="actions" icon-name="utility:refresh" alternative-text={labels.refresh} title={labels.refresh} onclick={handleRefresh}></lightning-button-icon>
+        <div class="slds-p-horizontal_small slds-p-bottom_small">
+            <template lwc:if={isLoading}><lightning-spinner size="small" alternative-text={labels.title}></lightning-spinner></template>
+            <template lwc:if={error}><div role="alert" class="slds-text-color_error slds-m-bottom_small">{error}</div></template>
+            <template lwc:if={state.voided}><div role="status" class="slds-box slds-theme_error slds-m-bottom_small">{labels.voided}</div></template>
+            <template lwc:if={state.stale}><div role="status" class="slds-box slds-theme_warning slds-m-bottom_small">{labels.stale}</div></template>
+            <template lwc:if={state.detailMismatch}><p class="slds-text-color_weak slds-m-bottom_small">{labels.mismatch}</p></template>
+            <template lwc:if={showEmpty}><p class="slds-m-bottom_small">{labels.empty}</p></template>
+            <template lwc:if={showUnavailable}><p class="slds-text-color_weak slds-m-bottom_small">{labels.unavailable}</p></template>
+            <div class="actions slds-m-bottom_small">
+                <lightning-button data-action="generate" variant="brand" label={generateLabel} disabled={isDisabled} onclick={handleGenerate}></lightning-button>
+                <template lwc:if={hasFile}>
+                    <lightning-button data-action="open" label={labels.open} onclick={handleOpen}></lightning-button>
+                    <a class="slds-button slds-button_neutral" href={downloadUrl} target="_blank" rel="noopener noreferrer">{labels.download}</a>
+                </template>
+            </div>
+            <template lwc:if={hasFile}>
+                <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_small">{labels.version} {state.versionNumber} · {labels.generated}&#160;
+                    <lightning-formatted-date-time value={state.generatedAt} year="numeric" month="short" day="2-digit" hour="2-digit" minute="2-digit"></lightning-formatted-date-time>
+                </p>
+            </template>
+            <template lwc:if={showLarge}><p>{labels.large}</p></template>
+            <div class="preview">
+                <template lwc:if={pdfUrl}><iframe src={pdfUrl} title={labels.previewTitle} class="pdf-frame"></iframe></template>
+            </div>
+        </div>
+    </lightning-card>
+</template>

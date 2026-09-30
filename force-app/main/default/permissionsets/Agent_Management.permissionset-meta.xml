@@ -4,6 +4,14 @@
         <apexClass>AgentPayoutController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <classAccesses>
+        <apexClass>AgentPayoutPdfController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>AgentPayoutPdfPageController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <description>Access to the Agents tab and subagent payout records. Create/read/edit on Agent Payout, read plus the payout stamp on Commission Line, read-only on Commission Statement, Account and Insurance. Grants no delete anywhere and no write on any commission rate.</description>
     <fieldPermissions>
         <editable>true</editable>
@@ -125,6 +133,31 @@
         <field>Insurance__c.Subagent__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Agent_Payout__c.Statement_File_Id__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Agent_Payout__c.Statement_Source_Hash__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Agent_Payout__c.Statement_Generated_At__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Commission_Line__c.Policy_Number_Imported__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Insurance__c.Policy_Number__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Agent Management</label>
     <objectPermissions>
@@ -181,6 +214,14 @@
         <object>Insurance__c</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
+    <pageAccesses>
+        <apexPage>K2AgentPayoutPdfPreview</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>K2AgentPayoutPdf</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
     <tabSettings>
         <tab>Agent_Management</tab>
         <visibility>Visible</visibility>

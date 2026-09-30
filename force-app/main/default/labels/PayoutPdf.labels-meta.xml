@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>PayoutPdf_ActualPaid</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>ActualPaid</shortDescription>
+        <value>Amount paid</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Agent</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Agent</shortDescription>
+        <value>Agent</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Calculated</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Calculated</shortDescription>
+        <value>Calculated share</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Carrier</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Carrier</shortDescription>
+        <value>Carrier</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Chargebacks</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Chargebacks</shortDescription>
+        <value>Chargebacks (included in carrier net)</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Commission</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Commission</shortDescription>
+        <value>Carrier commission</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Customer</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Customer</shortDescription>
+        <value>Customer / Company</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_DetailTotals</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>DetailTotals</shortDescription>
+        <value>Current detail totals</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Difference</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Difference</shortDescription>
+        <value>Amount paid minus calculated payable</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Download</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Download</shortDescription>
+        <value>Download</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Empty</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Empty</shortDescription>
+        <value>No statement has been saved. Generate a PDF to preview it here and save it to Files.</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Generate</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Generate</shortDescription>
+        <value>Generate PDF</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Generated</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Generated</shortDescription>
+        <value>Generated</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Generating</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Generating</shortDescription>
+        <value>Generating PDF...</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Heading</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Heading</shortDescription>
+        <value>AGENT PAYOUT STATEMENT</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Historical</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Historical</shortDescription>
+        <value>Detail amounts use the linked records and rates at document generation time. They are not a historical line-level payment snapshot.</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Large</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Large</shortDescription>
+        <value>Open the saved file in the expanded viewer to preview this document.</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_LineCount</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>LineCount</shortDescription>
+        <value>Lines</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_LoadError</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>LoadError</shortDescription>
+        <value>The payout statement could not be loaded. Check your access and try again.</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Mismatch</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Mismatch</shortDescription>
+        <value>Current linked details differ from the saved payout totals. The PDF will show both separately.</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_NoAccess</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>NoAccess</shortDescription>
+        <value>You do not have access to generate this payout statement.</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_NoDetails</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>NoDetails</shortDescription>
+        <value>No commission lines are currently linked to this payout.</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_NoLines</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>NoLines</shortDescription>
+        <value>This payout has no linked commission lines to include.</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Open</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Open</shortDescription>
+        <value>Expand Preview</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Page</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Page</shortDescription>
+        <value>Page</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_PaidDate</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PaidDate</shortDescription>
+        <value>Paid date</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_PaymentMethod</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PaymentMethod</shortDescription>
+        <value>Payment method</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Payout</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Payout</shortDescription>
+        <value>Payout</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Period</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Period</shortDescription>
+        <value>Payment period</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Policy</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Policy</shortDescription>
+        <value>Policy number</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_PreviewTitle</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>PreviewTitle</shortDescription>
+        <value>Latest saved payout statement</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Rate</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Rate</shortDescription>
+        <value>Rate</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Reconciliation</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Reconciliation</shortDescription>
+        <value>Current details do not reconcile to the saved payout totals. Refer to the saved payout totals for the original recorded payment.</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Reference</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Reference</shortDescription>
+        <value>Reference</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Refresh</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Refresh</shortDescription>
+        <value>Refresh</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Regenerate</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Regenerate</shortDescription>
+        <value>Regenerate PDF</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_SaveError</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SaveError</shortDescription>
+        <value>The PDF could not be saved. Try again or contact your administrator.</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_SavedNet</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SavedNet</shortDescription>
+        <value>Carrier net at payout</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_SavedPayable</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SavedPayable</shortDescription>
+        <value>Calculated payable at payout</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_SavedTotals</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SavedTotals</shortDescription>
+        <value>Saved payout totals</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_SourceChanged</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SourceChanged</shortDescription>
+        <value>The payout details changed during generation. Refresh and generate the PDF again.</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Stale</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Stale</shortDescription>
+        <value>Payout information has changed. Regenerate the statement to save an updated version.</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Status</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Status</shortDescription>
+        <value>Status</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Success</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Success</shortDescription>
+        <value>The statement was saved to Files.</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Title</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Title</shortDescription>
+        <value>Payout Statement</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_TooManyLines</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>TooManyLines</shortDescription>
+        <value>A statement supports up to 5,000 commission lines. No partial statement was generated.</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Unavailable</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Unavailable</shortDescription>
+        <value>PDF generation is unavailable for this record or your current permissions.</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Unrated</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Unrated</shortDescription>
+        <value>Not rated</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_UnratedCount</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>UnratedCount</shortDescription>
+        <value>Unrated lines</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_UnratedNet</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>UnratedNet</shortDescription>
+        <value>Unrated carrier net</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Version</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Version</shortDescription>
+        <value>Version</value>
+    </labels>
+    <labels>
+        <fullName>PayoutPdf_Voided</fullName>
+        <categories>Agent Payout PDF</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Voided</shortDescription>
+        <value>VOIDED - This payout was cancelled. Its saved statement is retained as history.</value>
+    </labels>
+</CustomLabels>

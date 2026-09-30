@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Agent Payout PDF</masterLabel>
+    <description>Preview the latest saved payout statement and generate versioned PDF Files.</description>
+    <targets><target>lightning__RecordPage</target></targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <objects><object>Agent_Payout__c</object></objects>
+            <supportedFormFactors><supportedFormFactor type="Large"/></supportedFormFactors>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

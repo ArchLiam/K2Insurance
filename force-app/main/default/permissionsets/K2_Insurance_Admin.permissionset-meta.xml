@@ -8,6 +8,14 @@
         <apexClass>QuotePdfController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <classAccesses>
+        <apexClass>AgentPayoutPdfController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>AgentPayoutPdfPageController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <description>Full admin access to K2 Insurance domain objects: Insurance, Renewal (Opportunity), Quote, Commission Statement/Line, and Account (Insurance Provider).</description>
     <fieldPermissions>
         <editable>true</editable>
@@ -389,6 +397,21 @@
         <field>Contact.Important_Note__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Agent_Payout__c.Statement_File_Id__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Agent_Payout__c.Statement_Source_Hash__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Agent_Payout__c.Statement_Generated_At__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>K2 Insurance Admin</label>
     <license>Salesforce</license>
@@ -472,6 +495,14 @@
         <viewAllFields>false</viewAllFields>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
+    <pageAccesses>
+        <apexPage>K2AgentPayoutPdfPreview</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+    <pageAccesses>
+        <apexPage>K2AgentPayoutPdf</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
     <pageAccesses>
         <apexPage>K2QuotePdf</apexPage>
         <enabled>true</enabled>

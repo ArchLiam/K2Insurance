@@ -1,0 +1,20 @@
+<apex:page controller="AgentPayoutPdfPageController" readOnly="true" showHeader="false" sidebar="false"
+    standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" docType="html-5.0">
+<html>
+<head>
+    <meta name="referrer" content="no-referrer"/>
+    <style>html, body { margin: 0; width: 100%; height: 100%; } iframe { width: 100%; height: 100%; border: 0; }</style>
+</head>
+<body>
+    <iframe id="statement" title="{!$Label.PayoutPdf_PreviewTitle}"></iframe>
+    <script>
+        // Visualforce hosts the stored document; the Lightning parent only embeds this HTTPS page.
+        const raw = atob('{!JSENCODE(savedPdf)}');
+        const bytes = Uint8Array.from(raw, function (character) { return character.charCodeAt(0); });
+        const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+        document.getElementById('statement').src = url + '#toolbar=1&amp;navpanes=0&amp;view=FitH';
+        window.addEventListener('pagehide', function () { URL.revokeObjectURL(url); }, { once: true });
+    </script>
+</body>
+</html>
+</apex:page>

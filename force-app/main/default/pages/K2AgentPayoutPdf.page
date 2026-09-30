@@ -1,0 +1,74 @@
+<apex:page controller="AgentPayoutPdfPageController" renderAs="pdf" readOnly="true"
+    showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false">
+<html>
+<head>
+    <style type="text/css">
+        @page { size: letter landscape; margin: 0.45in 0.4in 0.5in;
+            @bottom-right { content: "Page " counter(page) " / " counter(pages); font-family: sans-serif; font-size: 8pt; color: #667085; }
+        }
+        body { font-family: 'Arial Unicode MS'; font-size: 8pt; color: #243247; }
+        h1 { margin: 0 0 4pt; font-family: sans-serif; font-size: 21pt; color: #16375a; }
+        h2 { font-size: 10pt; margin: 13pt 0 6pt; }
+        .subtitle { font-family: sans-serif; font-size: 11pt; color: #526d89; letter-spacing: 1pt; }
+        .header { width: 100%; border-bottom: 3pt solid #159abb; padding-bottom: 12pt; margin-bottom: 12pt; }
+        .right { text-align: right; }
+        .muted { color: #667085; }
+        .info { width: 100%; border-collapse: collapse; margin-bottom: 10pt; }
+        .info td { padding: 3pt 6pt 3pt 0; vertical-align: top; }
+        .label { color: #667085; width: 11%; }
+        .value { width: 22%; }
+        .notice { padding: 7pt; background: #f0f4f8; border: 1pt solid #dce3eb; margin: 8pt 0; font-size: 7pt; }
+        .warning { background: #fff6df; border-color: #d4a850; }
+        .voided { color: #a51c30; font-size: 16pt; }
+        .lines { width: 100%; table-layout: fixed; border-collapse: collapse; -fs-table-paginate: paginate; }
+        .lines thead { display: table-header-group; }
+        .lines th { background: #16375a; color: #ffffff; text-align: left; padding: 6pt 4pt; font-family: sans-serif; font-size: 8pt; }
+        .lines td { border-bottom: 0.5pt solid #dce3eb; padding: 5pt 4pt; vertical-align: top; }
+        .lines tr { page-break-inside: avoid; }
+        .lines .number { text-align: right; }
+        .totals { margin-top: 12pt; width: 100%; border-collapse: collapse; page-break-inside: avoid; }
+        .totals td { padding: 4pt 7pt; border-bottom: 0.5pt solid #dce3eb; }
+        .total { background: #eaf4f8; font-family: sans-serif; font-size: 11pt; }
+        .meta { font-size: 7pt; padding-top: 9pt; color: #667085; }
+    </style>
+</head>
+<body>
+    <table class="header"><tr><td><h1>K2 Insurance</h1><div class="subtitle">{!$Label.PayoutPdf_Heading}</div></td>
+        <td class="right"><strong><apex:outputText value="{!statement.payout.Name}"/></strong><br/>
+            <apex:outputText value="{!statement.payout.Agent__r.Name}"/><br/>
+            <apex:outputPanel rendered="{!statement.voided}"><span class="voided">VOIDED</span></apex:outputPanel>
+        </td></tr></table>
+    <table class="info">
+        <tr><td class="label">{!$Label.PayoutPdf_Period}</td><td class="value">{!statement.payout.Period_Start__c} - {!statement.payout.Period_End__c}</td>
+            <td class="label">{!$Label.PayoutPdf_PaidDate}</td><td class="value"><apex:outputField value="{!statement.payout.Paid_Date__c}"/></td>
+            <td class="label">{!$Label.PayoutPdf_Status}</td><td class="value"><apex:outputText value="{!statement.payout.Status__c}"/></td></tr>
+        <tr><td class="label">{!$Label.PayoutPdf_PaymentMethod}</td><td class="value"><apex:outputText value="{!statement.payout.Payment_Method__c}"/></td>
+            <td class="label">{!$Label.PayoutPdf_Reference}</td><td class="value"><apex:outputText value="{!statement.payout.Reference_Number__c}"/></td>
+            <td class="label">{!$Label.PayoutPdf_LineCount}</td><td class="value">{!statement.details.size}</td></tr>
+    </table>
+    <div class="notice">{!$Label.PayoutPdf_Historical}</div>
+    <apex:outputPanel rendered="{!statement.detailMismatch}"><div class="notice warning">{!$Label.PayoutPdf_Reconciliation}</div></apex:outputPanel>
+    <table class="lines">
+        <thead><tr><th style="width:9%">{!$Label.PayoutPdf_Period}</th><th style="width:21%">{!$Label.PayoutPdf_Customer}</th><th style="width:17%">{!$Label.PayoutPdf_Policy}</th><th style="width:17%">{!$Label.PayoutPdf_Carrier}</th><th style="width:12%" class="number">{!$Label.PayoutPdf_Commission}</th><th style="width:8%" class="number">{!$Label.PayoutPdf_Rate}</th><th style="width:16%" class="number">{!$Label.PayoutPdf_Calculated}</th></tr></thead>
+        <tbody><apex:repeat value="{!statement.details}" var="row"><tr>
+            <td><apex:outputText value="{!row.period}"/></td>
+            <td><apex:outputText value="{!row.client}"/><br/><span class="muted"><apex:outputText value="{!row.company}"/></span></td>
+            <td><apex:outputText value="{!row.policy}"/></td><td><apex:outputText value="{!row.carrier}"/></td>
+            <td class="number"><apex:outputText value="{0,number,#,##0.00;(#,##0.00)}"><apex:param value="{!row.commission}"/></apex:outputText></td>
+            <td class="number"><apex:outputText rendered="{!NOT(row.unrated)}" value="{0,number,0.##}%"><apex:param value="{!row.rate}"/></apex:outputText></td>
+            <td class="number"><apex:outputText rendered="{!NOT(row.unrated)}" value="{0,number,#,##0.00;(#,##0.00)}"><apex:param value="{!row.payable}"/></apex:outputText><apex:outputText rendered="{!row.unrated}" value="{!$Label.PayoutPdf_Unrated}"/></td>
+        </tr></apex:repeat></tbody>
+    </table>
+    <apex:outputPanel rendered="{!statement.details.size == 0}"><div class="notice">{!$Label.PayoutPdf_NoDetails}</div></apex:outputPanel>
+    <table class="totals">
+        <tr><td colspan="2"><strong>{!$Label.PayoutPdf_DetailTotals}</strong></td><td colspan="2"><strong>{!$Label.PayoutPdf_SavedTotals}</strong></td></tr>
+        <tr><td>{!$Label.PayoutPdf_Commission}</td><td class="right"><apex:outputText value="{0,number,#,##0.00;(#,##0.00)}"><apex:param value="{!statement.detailNet}"/></apex:outputText></td><td>{!$Label.PayoutPdf_SavedNet}</td><td class="right"><apex:outputField value="{!statement.payout.Lines_Net_Amount__c}"/></td></tr>
+        <tr><td>{!$Label.PayoutPdf_Calculated}</td><td class="right"><apex:outputText value="{0,number,#,##0.00;(#,##0.00)}"><apex:param value="{!statement.detailPayable}"/></apex:outputText></td><td>{!$Label.PayoutPdf_SavedPayable}</td><td class="right"><apex:outputField value="{!statement.payout.Payable_Amount__c}"/></td></tr>
+        <tr><td>{!$Label.PayoutPdf_UnratedCount}</td><td class="right">{!statement.unratedCount}</td><td>{!$Label.PayoutPdf_Chargebacks}</td><td class="right"><apex:outputField value="{!statement.payout.Chargeback_Amount__c}"/></td></tr>
+        <tr class="total"><td colspan="2"></td><td>{!$Label.PayoutPdf_ActualPaid}</td><td class="right"><apex:outputField value="{!statement.payout.Amount_Paid__c}"/></td></tr>
+        <apex:outputPanel layout="none" rendered="{!statement.hasDifference}"><tr><td colspan="2"></td><td>{!$Label.PayoutPdf_Difference}</td><td class="right"><apex:outputText value="{0,number,#,##0.00;(#,##0.00)}"><apex:param value="{!statement.difference}"/></apex:outputText></td></tr></apex:outputPanel>
+    </table>
+    <div class="meta">{!$Label.PayoutPdf_Generated}: <apex:outputText value="{0,date,yyyy-MM-dd HH:mm 'UTC'}"><apex:param value="{!statement.generatedAt}"/></apex:outputText></div>
+</body>
+</html>
+</apex:page>
