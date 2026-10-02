@@ -158,6 +158,11 @@
         <field>Insurance__c.Policy_Number__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Commission_Line__c.Payment_Period_Date__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>Agent Management</label>
     <objectPermissions>

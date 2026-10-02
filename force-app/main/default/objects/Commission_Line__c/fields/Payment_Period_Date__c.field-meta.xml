@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Payment_Period_Date__c</fullName>
+    <description>First day of the parent statement payment month, for calendar and relative-date report filters. This is a reporting month anchor, not the actual commission date or agent paid date. The source payment period remains YYYY-MM text.</description>
+    <externalId>false</externalId>
+    <formula>IF(
+    ISBLANK(Payment_Period__c),
+    NULL,
+    DATEVALUE(Payment_Period__c &amp; &quot;-01&quot;)
+)</formula>
+    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
+    <inlineHelpText>Payment Period의 첫날입니다. 예: 2026-07 → 2026-07-01. 리포트의 지난달·지난 분기 필터에 사용하며 실제 지급일을 의미하지 않습니다.</inlineHelpText>
+    <label>Payment Period Date</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <type>Date</type>
+    <unique>false</unique>
+</CustomField>

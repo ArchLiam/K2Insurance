@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Commission_Line__c.Payment_Period_Date__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Insurance_with_Commission_Line_Item</members>
+        <name>ReportType</name>
+    </types>
+    <types>
+        <members>Agent_Management</members>
+        <members>K2_Insurance_Admin</members>
+        <name>PermissionSet</name>
+    </types>
+    <version>67.0</version>
+</Package>
